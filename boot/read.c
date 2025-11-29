@@ -198,7 +198,7 @@ Hidden string getstring()
 	return savestr((string)buf);
 }
 
-Hidden Procedure storename(name, pi, pt) string name; item *pi; char *pt; {
+Hidden Procedure storename(string name, item *pi, char *pt) {
 	int iname;
 	struct nameinfo *pname;
 	char *pc;
@@ -289,7 +289,7 @@ Hidden Procedure getdefinition()
 	dname= NULL;
 }
 
-Hidden Procedure getclassdef(defname, defitem) string defname; item defitem; {
+Hidden Procedure getclassdef(string defname, item defitem) {
 	int iclass;
 	string sname;
 	item sitem;
@@ -343,7 +343,7 @@ Hidden Procedure getclassdef(defname, defitem) string defname; item defitem; {
 	classdef[iclass].c_join= NULL;
 }
 
-Hidden Procedure getsymdef(defname, defitem) string defname; item defitem; {
+Hidden Procedure getsymdef(string defname, item defitem) {
 	int isym;
 	struct syminfo *psym;
 	string str;
@@ -425,7 +425,7 @@ Hidden item nilarray[]= {Nilitem, Nilitem};
 
 Forward string bodyname();
 
-Hidden Procedure getlexdef(defname, defitem) string defname; item defitem; {
+Hidden Procedure getlexdef(string defname, item defitem) {
 	int ilex;
 	struct lexinfo *plex;
 	string str1;
@@ -532,7 +532,7 @@ Hidden Procedure getlexdef(defname, defitem) string defname; item defitem; {
 	plex->l_class= nclass++;
 }
 
-Hidden string bodyname(s) string s; {
+Hidden string bodyname(string s) {
 	char lexbuffer[NAMELEN];
 	
 	strcpy(lexbuffer, s);
@@ -541,7 +541,7 @@ Hidden string bodyname(s) string s; {
 	return savestr((string)lexbuffer);
 }
 
-Hidden Procedure symname(s) string s; {	
+Hidden Procedure symname(string s) {	
 	string t= s+1;
 	char c;
 	
@@ -554,7 +554,7 @@ Hidden Procedure symname(s) string s; {
 	}
 }
 
-Hidden Procedure classname(s) string s; {	
+Hidden Procedure classname(string s) {	
 	string t= s;
 	char c;
 	
@@ -603,8 +603,7 @@ Hidden Procedure add_special_definitions() {
 	symdef[nhole].s_repr[0]= "?";
 }
 
-Hidden Procedure add_symbol(name, pn, referenced)
-string name; int *pn; bool referenced;
+Hidden Procedure add_symbol(string name, int *pn, bool referenced)
 {
 	struct syminfo *psym;
 	item i;

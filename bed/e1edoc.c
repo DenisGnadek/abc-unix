@@ -39,13 +39,7 @@ Forward Hidden Procedure writetext();
  * Edit a unit or target, using the environment offered as a parameter.
  */
 
-Visible bool dofile(ep, filename, linenumber, kind, creating, changed)
-     environ *ep;
-     string filename;
-     int linenumber;
-     literal kind;
-     bool creating;
-     bool *changed;
+Visible bool dofile(environ *ep, string filename, int linenumber, literal kind, bool creating, bool *changed)
 {
 	bool read_bad= No;
 	bool readfile();
@@ -107,10 +101,7 @@ Visible bool suspendabc() {
 	return r;
 }
 
-Visible bool
-editdocument(ep, bad_file)
-	environ *ep;
-	bool bad_file;
+Visible bool editdocument(environ *ep, bool bad_file)
 {
 	int k;
 	int first = 0;
@@ -341,10 +332,7 @@ editdocument(ep, bad_file)
 
 extern bool justgoon;
 
-Hidden bool
-execute(ep, cmd)
-	register environ *ep;
-	register int cmd;
+Hidden bool execute(register environ *ep, register int cmd)
 {
 	register bool spflag = ep->spflag;
 	register int i;
@@ -535,9 +523,7 @@ execute(ep, cmd)
  * Initialize an environment variable.	Most things are set to 0 or NULL.
  */
 
-Visible Procedure
-clrenv(ep)
-	environ *ep;
+Visible Procedure clrenv(environ *ep)
 {
 	ep->focus = newpath(NilPath, gram(Optional), 1);
 	ep->mode = WHOLE;
@@ -561,9 +547,7 @@ clrenv(ep)
  * (Higher() is called VERY often, so this pays).
  */
 
-Visible Procedure
-higher(ep)
-	register environ *ep;
+Visible Procedure higher(register environ *ep)
 {
 	register path p = ep->focus;
 	register int pl = 0;
@@ -584,9 +568,7 @@ higher(ep)
  * Issue debug status message.
  */
 
-Visible Procedure
-dbmess(ep)
-	register environ *ep;
+Visible Procedure dbmess(register environ *ep)
 {
 #ifndef SMALLSYS
 	char stuff[80];
@@ -640,9 +622,7 @@ dbmess(ep)
 
 #ifndef SMALLSYS
 
-Hidden bool
-canexit(ep)
-	environ *ep;
+Hidden bool canexit(environ *ep)
 {
 	environ ev;
 
@@ -666,9 +646,7 @@ canexit(ep)
 }
 
 
-Hidden bool
-findhole(pp)
-	register path *pp;
+Hidden bool findhole(register path *pp)
 {
 	register node n = tree(*pp);
 
@@ -704,9 +682,7 @@ Visible Procedure
 #else
 Hidden Procedure
 #endif
-writenode(n, fp)
-	node n;
-	FILE *fp;
+int writenode(node n, FILE *fp)
 {
 	int nch;
 	int i;
@@ -729,10 +705,7 @@ writenode(n, fp)
 }
 
 
-Hidden Procedure
-writetext(v, fp)
-	value v;
-	FILE *fp;
+Hidden Procedure writetext(value v, FILE *fp)
 {
 	intlet k, len;
 	int c;
@@ -754,10 +727,7 @@ writetext(v, fp)
 }
 
 
-Visible bool
-savequeue(v, filename)
-	value v;
-	string filename;
+Visible bool savequeue(value v, string filename)
 {
 	register FILE *fp;
 	auto queue q = (queue)v;
@@ -787,8 +757,7 @@ savequeue(v, filename)
 #ifdef EDITRACE
 extern FILE *dumpfp;
 
-Visible Procedure dumpev(ep, m) register environ *ep; string m;
-{
+Visible Procedure dumpev(register environ *ep, string m) {
 	char stuff[80];
 	register string str = stuff;
 	path pa;

@@ -36,20 +36,17 @@ Forward Hidden Procedure repwidth();
  */
 
 #ifdef lint
-Visible node nodecopy(n)
-     node n;
+Visible node nodecopy(node n)
 {
 	return (node) copy((value) n);
 }
 
-Visible Procedure noderelease(n)
-     node n;
+Visible Procedure noderelease(node n)
 {
 	release((value)n);
 }
 
-Visible Procedure nodeuniql(pn)
-     node *pn;
+Visible Procedure nodeuniql(node *pn)
 {
 	uniql((value*)pn);
 }
@@ -59,9 +56,7 @@ Visible Procedure nodeuniql(pn)
  * Allocate a new node.
  */
 
-Hidden node
-mk_node(nch)
-	register int nch;
+Hidden node mk_node(register int nch)
 {
 	register node n = (node) grab(Nod, nch);
 	register int i;
@@ -74,11 +69,7 @@ mk_node(nch)
 	return n;
 }
 
-Visible node
-newnode(nch, sym, children)
-	register int nch;
-	Register int sym;
-	register node children[];
+Visible node newnode(register int nch, Register int sym, register node children[])
 {
 	register node n = (node) mk_node(nch); /* Must preset with zeros! */
 
@@ -89,7 +80,7 @@ newnode(nch, sym, children)
 	return n;
 }
 
-Visible int nodewidth(n) node n; {
+Visible int nodewidth(node n) {
 	if (Is_etext(n))
 		return e_length((value) n);
 	else
@@ -113,11 +104,7 @@ Visible int nodewidth(n) node n; {
  * Like treereplace(), it does not increase the reference count of n.
  */
 
-Visible Procedure
-setchild(pn, i, n)
-	register node *pn;
-	register int i;
-	Register node n;
+Visible Procedure setchild(register node *pn, register int i, Register node n)
 {
 	register node *pch;
 	register node oldchild;
@@ -148,23 +135,17 @@ setchild(pn, i, n)
  */
 
 #ifdef lint
-Visible path
-pathcopy(p)
-	path p;
+Visible path pathcopy(path p)
 {
 	return (path) copy((value) p);
 }
 
-Visible Procedure
-pathrelease(p)
-	path p;
+Visible Procedure pathrelease(path p)
 {
 	release((value)p);
 }
 
-Visible Procedure
-pathuniql(pp)
-	path *pp;
+Visible Procedure pathuniql(path *pp)
 {
 	uniql((value*)pp);
 }
@@ -190,11 +171,7 @@ mk_path()
 	return p;
 }
 
-Visible path
-newpath(pa, n, i)
-	register path pa;
-	register node n;
-	Register int i;
+Visible path newpath(register path pa, register node n, Register int i)
 {
 	register path p = (path) mk_path();
 
@@ -232,11 +209,7 @@ newpath(pa, n, i)
  * be the major caller of noderepr() and fwidth().
  */
 
-Hidden Procedure
-repwidth(pn, old, new)
-	register node *pn;
-	Register node old;
-	Register node new;
+Hidden Procedure repwidth(register node *pn, Register node old, Register node new)
 {
 	register int w = Width(*pn);
 	register int oldwidth = nodewidth(old);
@@ -266,10 +239,7 @@ repwidth(pn, old, new)
 }
 
 
-Visible Procedure
-markpath(pp, new)
-	register path *pp;
-	register markbits new;
+Visible Procedure markpath(register path *pp, register markbits new)
 {
 	register node *pn;
 	register markbits old;
@@ -285,10 +255,7 @@ markpath(pp, new)
 }
 
 
-Visible Procedure
-unmkpath(pp, del)
-	register path *pp;
-	register int del;
+Visible Procedure unmkpath(register path *pp, register int del)
 {
 	register node *pn;
 	register markbits old;
@@ -304,9 +271,7 @@ unmkpath(pp, del)
 }
 
 
-Hidden Procedure
-clearmarks(pn)
-	register node *pn;
+Hidden Procedure clearmarks(register node *pn)
 {
 	register int i;
 
@@ -323,15 +288,7 @@ clearmarks(pn)
 /*
  * Replace the focus' tree by a new node.
  * WARNING: n's reference count is not increased!
- * You can also think of this as: treereplace(pp, n) implies noderelease(n).
- * Mark bits are copied from the node being replaced.
- */
-
-Visible Procedure
-treereplace(pp, n)
-	register path *pp;
-	register node n;
-{
+ * You can also think of this as: treereplace(implies noderelease( n). * Mark bits are copied from the node being replaced. */ Visible Procedure treereplace(pp, n) register path *pp, register node n) {
 	register node *pn;
 	register markbits old;
 
@@ -352,9 +309,7 @@ treereplace(pp, n)
 }
 
 
-Visible bool
-up(pp)
-	register path *pp;
+Visible bool up(register path *pp)
 {
 	register path p = *pp;
 	register path pa = Parent(p);
@@ -410,10 +365,7 @@ up(pp)
 }
 
 
-Visible bool
-downi(pp, i)
-	register path *pp;
-	register int i;
+Visible bool downi(register path *pp, register int i)
 {
 	register node n;
 	auto int y;
@@ -434,9 +386,7 @@ downi(pp, i)
 }
 
 
-Visible bool
-downrite(pp)
-	register path *pp;
+Visible bool downrite(register path *pp)
 {
 	if (!Isnode(Tree(*pp)))
 		return No;
@@ -444,9 +394,7 @@ downrite(pp)
 }
 
 
-Visible bool
-left(pp)
-	register path *pp;
+Visible bool left(register path *pp)
 {
 	register int i;
 
@@ -459,9 +407,7 @@ left(pp)
 }
 
 
-Visible bool
-rite(pp)
-	register path *pp;
+Visible bool rite(register path *pp)
 {
 	register int i;
 	register path pa = Parent(*pp);
@@ -486,18 +432,14 @@ rite(pp)
  * ones (lint will tell you which they are).
  */
 
-Visible Procedure
-top(pp)
-	register path *pp;
+Visible Procedure top(register path *pp)
 {
 	while (up(pp))
 		;
 }
 
 #ifdef NOT_USED
-Visible bool
-nextnode(pp)
-	register path *pp;
+Visible bool nextnode(register path *pp)
 {
 	while (!rite(pp)) {
 		if (!up(pp))
@@ -508,9 +450,7 @@ nextnode(pp)
 #endif
 
 #ifdef NOT_USED
-Visible Procedure
-firstleaf(pp)
-	register path *pp;
+Visible Procedure firstleaf(register path *pp)
 {
 	while (down(pp))
 		;
@@ -518,9 +458,7 @@ firstleaf(pp)
 #endif
 
 #ifdef NOT_USED
-Visible bool
-nextleaf(pp)
-	register path *pp;
+Visible bool nextleaf(register path *pp)
 {
 	if (!nextnode(pp))
 		return No;
@@ -530,9 +468,7 @@ nextleaf(pp)
 #endif
 
 #ifdef NOT_USED
-Visible bool
-prevnode(pp)
-	register path *pp;
+Visible bool prevnode(register path *pp)
 {
 	while (!left(pp)) {
 		if (!up(pp))
@@ -543,9 +479,7 @@ prevnode(pp)
 #endif
 
 #ifdef NOT_USED
-Visible Procedure
-lastleaf(pp)
-	register path *pp;
+Visible Procedure lastleaf(register path *pp)
 {
 	while (downrite(pp))
 			;
@@ -553,9 +487,7 @@ lastleaf(pp)
 #endif
 
 #ifdef NOT_USED
-Visible bool
-prevleaf(pp)
-	register path *pp;
+Visible bool prevleaf(register path *pp)
 {
 	if (!prevnode(pp))
 		return No;
@@ -565,10 +497,7 @@ prevleaf(pp)
 #endif
 
 #ifdef NOT_USED
-Visible bool
-nextmarked(pp, x)
-	register path *pp;
-	register markbits x;
+Visible bool nextmarked(register path *pp, register markbits x)
 {
 	do {
 		if (!nextnode(pp))
@@ -586,10 +515,7 @@ nextmarked(pp, x)
 }
 #endif
 
-Visible bool
-firstmarked(pp, x)
-	register path *pp;
-	register markbits x;
+Visible bool firstmarked(register path *pp, register markbits x)
 {
 	while (!marked(*pp, x)) {
 		if (!up(pp))
@@ -607,10 +533,7 @@ firstmarked(pp, x)
 }
 
 #ifdef NOT_USED
-Visible bool
-prevmarked(pp, x)
-	register path *pp;
-	register markbits x;
+Visible bool prevmarked(register path *pp, register markbits x)
 {
 	do {
 		if (!prevnode(pp))
@@ -633,9 +556,7 @@ prevmarked(pp, x)
  */
 
 
-Visible int
-pathlength(p)
-	register path p;
+Visible int pathlength(register path p)
 {
 	register int n;
 
@@ -644,12 +565,7 @@ pathlength(p)
 	return n;
 }
 
-Visible Procedure
-putintrim(pn, head, tail, str)
-	register value *pn;
-	register int head;
-	Register int tail;
-	Register string str;
+Visible Procedure putintrim(register value *pn, register int head, Register int tail, Register string str)
 {
 	register value v = *pn; 
 	value t1, t2, t3;
@@ -671,9 +587,7 @@ putintrim(pn, head, tail, str)
  * Touch the node in focus.
  */
 
-Visible Procedure
-touchpath(pp)
-	register path *pp;
+Visible Procedure touchpath(register path *pp)
 {
 	nodeuniql(Loctree(pp));
 }

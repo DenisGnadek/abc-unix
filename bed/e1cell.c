@@ -45,12 +45,7 @@ Hidden cell *freelist;
  * Returns a pointer to the deleted chain (with a Nil end pointer).
  */
 
-Visible cell *
-replist(tops, rep, oldlno, oldlcnt)
-	cell *tops;
-	cell *rep;
-	int oldlno;
-	register int oldlcnt;
+Visible cell * replist(cell *tops, cell *rep, int oldlno, register int oldlcnt)
 {
 	cell head;
 	register cell *p;
@@ -138,9 +133,7 @@ feedfreelist()
  * Discard all entries of a list of cells.
  */
 
-Visible Procedure
-discard(p)
-	register cell *p;
+Visible Procedure discard(register cell *p)
 {
 	register cell *savefreelist;
 
@@ -164,12 +157,7 @@ discard(p)
  * in the old chain, if they match.
  */
 
-Hidden Procedure
-dupmatch(old, rep, oldcnt, repcnt)
-	register cell *old;
-	register cell *rep;
-	int oldcnt;
-	int repcnt;
+Hidden Procedure dupmatch(register cell *old, register cell *rep, int oldcnt, int repcnt)
 {
 	register int delta = repcnt - oldcnt;
 
@@ -207,11 +195,8 @@ dupmatch(old, rep, oldcnt, repcnt)
  * Build a list of cells consisting of the first `lcnt' lines of the tree.
  */
 
-Visible cell *
-build(p, lcnt)
-	/*auto*/ path p;
-	register int lcnt;
-{
+Visible cell * build(path p, register int lcnt)
+	/*auto*/ {
 	cell head;
 	register cell *q = &head;
 
@@ -255,9 +240,7 @@ build(p, lcnt)
  *   screen.
  */
 
-Visible cell *
-gettop(tops)
-	cell *tops;
+Visible cell * gettop(cell *tops)
 {
 	register cell *pfwa = tops; /* First line of sliding window */
 	register cell *plwa = tops; /* Last+1 line of sliding window */

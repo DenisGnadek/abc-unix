@@ -18,10 +18,7 @@ int	optind = 1;
 int	optopt = 0;
 char	*optarg = 0;
 
-int
-getopt(argc, argv, opts)
-int	argc;
-char	**argv, *opts;
+int getopt(int argc, char **argv, char *opts)
 {
 	static int sp = 1;
 	register int c;

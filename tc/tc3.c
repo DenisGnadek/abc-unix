@@ -40,8 +40,7 @@ main(argc, argv) char **argv; {
 	}
 }
 
-pr(p)
-register char *p;
+int pr(register char *p)
 {
 	for (; *p; p++)
 		printf("%s", rdchar(*p));
@@ -51,8 +50,7 @@ register char *p;
  * rdchar: returns a readable representation of an ASCII char, using ^ notation.
  */
 #include <ctype.h>
-char *rdchar(c)
-char c;
+char * rdchar(char c)
 {
 	static char ret[4];
 	register char *p;

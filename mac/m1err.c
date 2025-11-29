@@ -12,7 +12,7 @@
  *     and don't want to spoil the screen.
  */
 
-Visible Procedure macerrS(m, s) int m; string s; {
+Visible Procedure macerrS(int m, string s) {
 	char *fmt;
 	char buf[ERRBUFSIZE];
 	char *getmess();
@@ -29,7 +29,7 @@ Visible Procedure macerrS(m, s) int m; string s; {
 	Alert(MACERRALERT, (ProcPtr) NULL);
 }
 
-Visible Procedure macerr(m) int m; {
+Visible Procedure macerr(int m) {
 	macerrS(m, "");
 }
 

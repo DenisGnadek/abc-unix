@@ -10,7 +10,7 @@
 
 /* list howto's */
 
-Visible Procedure abclist(ofp) FILE *ofp; {
+Visible Procedure abclist(FILE *ofp) {
 	intlet k, len;
 	FILE *fp;
 	value fname;

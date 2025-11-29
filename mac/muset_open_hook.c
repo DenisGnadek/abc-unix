@@ -42,11 +42,7 @@ static ProcPtr open_hook;
    It is not necessary to check whether open_hook is NULL,
    since we are only installed after open_hook is set non-NULL. */
 
-static long
-my_faccess(file, cmd, arg)
-	char *file;
-	int cmd;
-	short *arg;
+static long my_faccess(char *file, int cmd, short *arg)
 {
 	long res= _fsFAccess(file, cmd, arg);
 	
@@ -67,11 +63,7 @@ my_faccess(file, cmd, arg)
 OSType std_type=	'TEXT';
 OSType std_creator=	'MPS ';
 
-int
-std_open_hook(file, mode, fd)
-	char *file;
-	int mode;
-	int fd;
+int std_open_hook(char *file, int mode, int fd)
 {
 	FInfo info;
 	int err= noErr;
@@ -103,8 +95,7 @@ std_open_hook(file, mode, fd)
    for faccess, otherwise we would have to save and restore
    the old function, instead of blindly assuming _fsFAccess. */
 
-set_open_hook(hook)
-	ProcPtr hook;
+int set_open_hook(ProcPtr hook)
 {
 	if (hook == NULL)
 		_StdDevs[DEV_FSYS].dev_faccess= _fsFAccess;

@@ -16,7 +16,7 @@
 #define S_dya  '2'
 #define S_mon  '3'
 
-Hidden Procedure f_unparsed(pt, fct) parsetree *pt, (*fct)(); {
+Hidden Procedure f_unparsed(parsetree *pt, parsetree (*fct)()) {
 	parsetree t= *pt;
 	expadm adm;
 	struct state v;
@@ -32,12 +32,12 @@ Hidden Procedure f_unparsed(pt, fct) parsetree *pt, (*fct)(); {
 	let_go(&v);
 }
 
-Hidden parsetree fix_expr(adm, root) expadm *adm; parsetree root; {
+Hidden parsetree fix_expr(expadm *adm, parsetree root) {
 	parsetree w;
 	value *p_i, i;
 	int state= S_dya;
 
-	for (; Nfld(adm) < Nfields(root); ++Nfld(adm)) {
+	for (; Nfld(++Nfld( adm))) {
 		p_i= Field(root, Nfld(adm));
 		i= copy(*p_i);
 		if (!Valid(i)) {
@@ -101,7 +101,7 @@ Hidden parsetree fix_expr(adm, root) expadm *adm; parsetree root; {
 	return Pop(adm);
 }
 
-Hidden parsetree fix_test(adm, root) expadm *adm; parsetree root; {
+Hidden parsetree fix_test(expadm *adm, parsetree root) {
 	parsetree v, w;
 	value i, f, *aa;
 	int lastn= Nfields(root) - 1;
@@ -153,15 +153,15 @@ Hidden parsetree fix_test(adm, root) expadm *adm; parsetree root; {
 	return node5(DYAPRD, v, copy(i), w, copystddef(f));
 }
 
-Visible Procedure f_eunparsed(pt) parsetree *pt; {
+Visible Procedure f_eunparsed(parsetree *pt) {
 	f_unparsed(pt, fix_expr);
 }
 
-Visible Procedure f_cunparsed(pt) parsetree *pt; {
+Visible Procedure f_cunparsed(parsetree *pt) {
 	f_unparsed(pt, fix_test);
 }
 
-Visible Procedure f_trim_target(v, trim) parsetree v; char trim; {
+Visible Procedure f_trim_target(parsetree v, char trim) {
 	parsetree w= *Branch(v, TRIM_RIGHT);
 	struct prio *ptrim, *pdya;
 	value name;

@@ -23,7 +23,7 @@
 	   It works for MS-DOS because I have ported readdir
 	   to MS-DOS, too.  Guido. */
 
-Visible value get_names(path, isabc) char *path; bool (*isabc)(); {
+Visible value get_names(char *path, bool ( *isabc)()) {
 	DIR *dp;
 	struct direct *dirp;
 	value v;
@@ -96,7 +96,7 @@ Hidden struct class classes[]= {
 
 #define NCLASSES (sizeof classes / sizeof classes[0])
 
-Hidden literal classfile(fname) value fname; {
+Hidden literal classfile(value fname) {
 	char *sfname, *end;
 	struct class *cp;
 
@@ -119,7 +119,7 @@ Hidden literal classfile(fname) value fname; {
 }
 
 /*ARGSUSED*/
-Visible bool abcfile(path, name) char *path, *name; {
+Visible bool abcfile(char *path, char *name) {
 	/* path argument needed, but not used */
 	bool isfile;
 	value f= mk_text(name);
@@ -129,7 +129,7 @@ Visible bool abcfile(path, name) char *path, *name; {
 	return isfile;
 }
 
-Visible bool abcworkspace(path, name) char *path, *name; {
+Visible bool abcworkspace(char *path, char *name) {
 	bool isws= No;
 	
 	if (is_directory(path, name)) {
@@ -142,7 +142,7 @@ Visible bool abcworkspace(path, name) char *path, *name; {
 	return isws;
 }
 
-Visible bool targetfile(fname) value fname; {
+Visible bool targetfile(value fname) {
 	switch (classfile(fname)) {
 		case Tar: case OldTar:
 			return Yes;
@@ -151,7 +151,7 @@ Visible bool targetfile(fname) value fname; {
 	}
 }
 
-Visible bool unitfile(fname) value fname; {
+Visible bool unitfile(value fname) {
 	switch (classfile(fname)) {
 		case Tar: case OldTar: case DumClass:
 			return No;
@@ -160,7 +160,7 @@ Visible bool unitfile(fname) value fname; {
 	}
 }
 
-Visible char *base_fname(fname) value fname; {
+Visible char * base_fname(value fname) {
 	char *sname;
 	char *base;
 	char *pext;
@@ -178,6 +178,6 @@ Visible char *base_fname(fname) value fname; {
 	return base;
 }
 
-Visible bool typeclash(pname, fname) value pname, fname; {
+Visible bool typeclash(value pname, value fname) {
 	return classfile(fname) != Permtype(pname) ? Yes : No;
 }

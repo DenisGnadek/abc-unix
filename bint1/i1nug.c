@@ -16,7 +16,7 @@
 
 /* Single-precision gcd for integers > 0 */
 
-Hidden digit dig_gcd(u, v) register digit u, v; {
+Hidden digit dig_gcd(register digit u, register digit v) {
 	register digit temp;
 	register int k = 0;
 
@@ -44,7 +44,7 @@ Hidden digit dig_gcd(u, v) register digit u, v; {
 	return u * (1<<k);
 }
 
-Visible integer int_half(v) integer v; {
+Visible integer int_half(integer v) {
 	register int i;
 	register long carry;
 
@@ -82,7 +82,7 @@ Visible integer int_half(v) integer v; {
  * multiply with twopow
  */
  
-Hidden integer gcd_small(u, v, twopow) integer u, v, twopow; {
+Hidden integer gcd_small(integer u, integer v, integer twopow) {
 	integer g;
 
 	if (!IsSmallInt(u) && !IsSmallInt(v))
@@ -119,7 +119,7 @@ Hidden int lwb_lendiff = (3 / tenlogBASE) + 1;
 
 /* Multi-precision gcd of integers > 0 */
 
-Visible integer int_gcd(u1, v1) integer u1, v1; {
+Visible integer int_gcd(integer u1, integer v1) {
 	integer t, u, v;
 	integer twopow= int_1;
 	long k = 0;

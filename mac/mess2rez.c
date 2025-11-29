@@ -10,9 +10,7 @@ char *strchr();
 
 int progress;
 
-main(argc, argv)
-	int argc;
-	char **argv;
+int main(int argc, char **argv)
 {
 	char buf[512];
 	int id= 0;
@@ -59,8 +57,7 @@ main(argc, argv)
 	exit(0);
 }
 
-start(id)
-	int id;
+int start(int id)
 {
 	printf("resource 'STR#' (%d) {{\n", id);
 	if (progress) {
@@ -69,8 +66,7 @@ start(id)
 	}
 }
 
-finish(nstr)
-	int nstr;
+int finish(int nstr)
 {
 	if (nstr > 0) {
 		printf("\n}};\n");

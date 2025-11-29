@@ -41,7 +41,7 @@ Hidden Procedure comp_classes()
 
 Forward int fwidth();
 
-Hidden Procedure defclass(pclass) struct classinfo *pclass; {
+Hidden Procedure defclass(struct classinfo *pclass) {
 	itemptr psymbol;
 	struct syminfo *psym;
 	string rep0;
@@ -144,7 +144,7 @@ Hidden Procedure defclass(pclass) struct classinfo *pclass; {
 	}
 }
 
-Visible bool maystart(c, ilex) char c; item ilex; {
+Visible bool maystart(char c, item ilex) {
 	string cp;
 
 	ilex -= nlexical;
@@ -164,7 +164,7 @@ Visible bool maystart(c, ilex) char c; item ilex; {
  * character, and \b or \t only as last.
  */
 
-Hidden int fwidth(str) string str; {
+Hidden int fwidth(string str) {
 	register int c;
 	register int n = 0;
 

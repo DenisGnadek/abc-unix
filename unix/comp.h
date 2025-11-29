@@ -13,7 +13,7 @@ typedef int expint;	/*The 2nd argument of frexp points to this */
 /* can we #include <signal.h>: (check man 3 signal) */
 #define SIGNAL
 /* type returned by signal handler function: (used to be int) */
-#define SIGTYPE void
+#define SIGTYPE int
 
 /* can #include <setjmp.h> */
 #define SETJMP

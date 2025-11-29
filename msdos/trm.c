@@ -162,7 +162,7 @@ Hidden bool wasbreak;
  * Return Yes if succeeded, No if trouble (which doesn't apply here).
  */
 
-Visible int trmstart(plines, pcols, pflags) int *plines, *pcols, *pflags; {
+Visible int trmstart(int *plines, int *pcols, int *pflags) {
 	static char setup = No;
 	int err;
 
@@ -235,7 +235,7 @@ Hidden int set_screen_up() {
 	return TE_OK;
 }
 
-Hidden int get_screen_env(pheight, pwidth) int *pheight, *pwidth; {
+Hidden int get_screen_env(int *pheight, int *pwidth) {
 	string s;
 	int mode;
 	char screrr;
@@ -289,13 +289,13 @@ Hidden int get_screen_env(pheight, pwidth) int *pheight, *pwidth; {
 	return mode;
 }
 
-Hidden string strip(s) string s; {
+Hidden string strip(string s) {
 	while (*s == ' ' || *s == '\t')
 		++s;
 	return s;
 }
 
-Hidden string skip(s, pat) string s, pat; {
+Hidden string skip(string s, string pat) {
 	while (*s && *s == *pat)
 		++s, ++pat;
 	return s;
@@ -381,7 +381,7 @@ Visible Procedure trmundefined() {
 }
 
 #ifdef DEBUG
-Hidden Procedure check_started(m) char *m; {
+Hidden Procedure check_started(char *m) {
 	if (!started) {
 		putsSerr("Not started: %s\n", m);
 		immexit(TE_TWICE);
@@ -403,7 +403,7 @@ Hidden Procedure check_started(m) char *m; {
  * or if the string returned by the terminal is garbled,
  * the position is made Undefined.
  */
-Visible Procedure trmsense(py, px) int *py, *px; {
+Visible Procedure trmsense(int *py, int *px) {
 /*	bool getpos(); */
 #ifdef VTRMTRACE
 	if (vtrmfp) fprintf(vtrmfp, "\ttrmsense(&yy, &xx);\n");
@@ -430,9 +430,8 @@ Visible Procedure trmsense(py, px) int *py, *px; {
  * Characters for which the corresponding chars in "mode" have the value
  * STANDOUT must be put in inverse video.
  */
-Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
-	int yfirst, ylast; register int indent;
-	register string data; string mode; {
+Visible Procedure trmputdata(int yfirst, int ylast, register int indent, register string data, string mode)
+{
 	register int y;
 	int x, len, lendata, space;
 
@@ -496,11 +495,7 @@ Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
  *	od = length of Differing end on screen,
  *	nd = length of Differing end in data to be put.
  */
-Hidden Procedure put_line(y, xskip, data, mode, len)
-     int y, xskip;
-     string data;
-     string mode;
-     int len;
+Hidden Procedure put_line(int y, int xskip, string data, string mode, int len)
 {
 	register char *op, *oq, *mp;
 	char *np, *nq, *mo;
@@ -553,8 +548,7 @@ Hidden Procedure put_line(y, xskip, data, mode, len)
  * Scrolling (part of) the screen up (or down, dy<0).
  */
 
-Visible Procedure trmscrollup(yfirst, ylast, by) register int yfirst;
-		register int ylast; register int by; {
+Visible Procedure trmscrollup(register int yfirst, register int ylast, register int by) {
 #ifdef VTRMTRACE
 	if (vtrmfp) fprintf(vtrmfp, "\ttrmscrollup(%d, %d, %d);\n", yfirst, ylast, by);
 #endif
@@ -606,7 +600,7 @@ Visible Procedure trmscrollup(yfirst, ylast, by) register int yfirst;
  * Synchronization, move cursor to given position (or previous if < 0).
  */
 
-Visible Procedure trmsync(y, x) int y, x; {
+Visible Procedure trmsync(int y, int x) {
 #ifdef VTRMTRACE
 	if (vtrmfp) fprintf(vtrmfp, "\ttrmsync(%d, %d);\n", y, x);
 #endif
@@ -678,7 +672,7 @@ Hidden get_cols() {
  * The following routine is the time bottleneck, I believe!
  */
 
-Hidden Procedure put_str(data, mode, n) char *data, *mode; int n; {
+Hidden Procedure put_str(char *data, char *mode, int n) {
 	register char c, mo, so;
 
 	so = so_mode;
@@ -729,7 +723,7 @@ Hidden Procedure put_str(data, mode, n) char *data, *mode; int n; {
  * Move to position y,x on the screen
  */
 
-Hidden Procedure move(y, x) int y, x; {
+Hidden Procedure move(int y, int x) {
 	if (scr_mode != BIOS && cur_y == y && cur_x == x)
 		return;
 	switch (scr_mode) {
@@ -771,7 +765,7 @@ Hidden Procedure standend() {
 	}
 }
 
-Hidden Procedure clear_lines(yfirst, ylast) int yfirst, ylast; {
+Hidden Procedure clear_lines(int yfirst, int ylast) {
 	register int y;
 
 	if (scr_mode == BIOS) {
@@ -825,7 +819,7 @@ Hidden Procedure clr_to_eol() {
 
 /* scrolling for BIOS */
 
-Hidden Procedure biosscrollup(yfirst, ylast, by) int yfirst, ylast, by; {
+Hidden Procedure biosscrollup(int yfirst, int ylast, int by) {
 	regs.h.al = (by < 0 ? -by : by);
 	regs.h.ch = yfirst;
 	regs.h.cl = 0;
@@ -842,7 +836,7 @@ Hidden Procedure biosscrollup(yfirst, ylast, by) int yfirst, ylast, by; {
 
 /* Reset internal administration accordingly */
 
-Hidden Procedure scr_lines(yfrom, yto, n, dy) int yfrom, yto, n, dy; {
+Hidden Procedure scr_lines(int yfrom, int yto, int n, int dy) {
 	register int y, x;
 	char *savedata;
 	char *savemode;
@@ -865,7 +859,7 @@ Hidden Procedure scr_lines(yfrom, yto, n, dy) int yfrom, yto, n, dy; {
 	}
 }
 
-Hidden Procedure lf_scroll(yto, by) int yto, by; {
+Hidden Procedure lf_scroll(int yto, int by) {
 	register int n = by;
 
 	move(lines-1, 0);
@@ -879,7 +873,7 @@ Hidden Procedure lf_scroll(yto, by) int yto, by; {
 
 /* for dumb scrolling, uses and updates internal administration */
 
-Hidden Procedure move_lines(yfrom, yto, n, dy) int yfrom, yto, n, dy; {
+Hidden Procedure move_lines(int yfrom, int yto, int n, int dy) {
 	while (n-- > 0) {
 		put_line(yto, 0, linedata[yfrom], linemode[yfrom], lenline[yfrom]);
 		yfrom += dy;
@@ -906,7 +900,7 @@ Hidden Procedure ring_bell() {
  */
 
 #ifdef SHOW
-Visible Procedure trmshow(s) char *s; {
+Visible Procedure trmshow(char *s) {
 	int y, x;
 
 	if (!vtrmfp)
@@ -1019,7 +1013,7 @@ Visible bool trmavail() {
 
 /* Issue an IOCTL to turn RAW for a device on or off. */
 
-Hidden Procedure setraw(handle, raw) int handle; bool raw; {
+Hidden Procedure setraw(int handle, bool raw) {
 	regs.x.ax= IOCTL_GETDATA;
 	regs.x.bx= handle;
 	intdos(&regs, &regs);
@@ -1037,7 +1031,7 @@ Hidden Procedure setraw(handle, raw) int handle; bool raw; {
 
 /* Get the raw bit of a device. */
 
-Hidden int getraw(handle) int handle; {
+Hidden int getraw(int handle) {
 	regs.x.ax= IOCTL_GETDATA;
 	regs.x.bx= handle;
 	intdos(&regs, &regs);
@@ -1047,7 +1041,7 @@ Hidden int getraw(handle) int handle; {
 
 /* Set the break status. */
 
-Hidden Procedure setbreak(on) bool on; {
+Hidden Procedure setbreak(bool on) {
 	bdos(BREAKCK, on, SET);
 }
 

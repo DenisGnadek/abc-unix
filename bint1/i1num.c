@@ -29,7 +29,7 @@
  * a huge value when overflow occurs (but giving no error).
  */
 
-Hidden double ival(u) integer u; {
+Hidden double ival(integer u) {
 	double x = 0;
 	register int i;
 
@@ -48,7 +48,7 @@ Hidden double ival(u) integer u; {
 
 #define NO_INTEGER	MESS(1300, "number not an integer")
 
-Visible bool large(v) value v; {
+Visible bool large(value v) {
 	double r;
 	if (!Is_number(v) || !integral(v)) {
 		interr(NO_INTEGER);
@@ -64,7 +64,7 @@ Visible bool large(v) value v; {
 
 #define LARGE_INTEGER	MESS(1301, "exceedingly large integer")
 
-Visible int intval(v) value v; {
+Visible int intval(value v) {
 	/* v must be an Integral number or a Rational with Denominator==1
 	    which may result from n round x [via mk_exact]!. */
 	double i;
@@ -88,7 +88,7 @@ Visible int intval(v) value v; {
 
 /* convert an int to an intlet */
 
-Visible int propintlet(i) int i; {
+Visible int propintlet(int i) {
 	if (i > Maxintlet || i < -Maxintlet) {
 		interr(LARGE_INTEGER);
 		return 0;
@@ -101,7 +101,7 @@ Visible int propintlet(i) int i; {
  * determine if a number is integer
  */
 
-Visible bool integral(v) value v; {
+Visible bool integral(value v) {
 	if (Integral(v) || (Rational(v) && Denominator((rational)v) == int_1))
 		return Yes;
 	else return No;
@@ -117,7 +117,7 @@ Visible bool integral(v) value v; {
  * (cf. definition of Rational(v) etc.).
  */
 
-Visible value mk_exact(p, q, len) integer p, q; int len; {
+Visible value mk_exact(integer p, integer q, int len) {
 	rational r = mk_rat(p, q, len, Yes);
 
 	if (Denominator(r) == int_1 && len <= 0) {
@@ -138,7 +138,7 @@ Visible value mk_exact(p, q, len) integer p, q; int len; {
 #define vRAT 64
 #define vAPP 128
 
-Visible relation numcomp(u, v) value u, v; {
+Visible relation numcomp(value u, value v) {
 	int tu, tv; relation s;
 
 	if (IsSmallInt(u)) tu = uSMALL;
@@ -214,7 +214,7 @@ Visible relation numcomp(u, v) value u, v; {
  * the following function is used in convert() and wri().
  */
 
-Visible bool is_increment(a, b) value a, b; {
+Visible bool is_increment(value a, value b) {
 	value v;
 	relation c;
 	
@@ -233,7 +233,7 @@ Visible bool is_increment(a, b) value a, b; {
  * The result is a value (integer or rational, actually).
  */
 
-Visible value tento(n) int n; {
+Visible value tento(int n) {
 	/* If int_tento fails, so will tento; caveat invocator */
 	if (n < 0) {
 		integer i= int_tento(-n); value v;
@@ -251,7 +251,7 @@ Visible value tento(n) int n; {
  * as a C `double'.
  */
 
-Visible double numval(u) value u; {
+Visible double numval(value u) {
 	double expo, frac;
 
 	if (!Is_number(u)) {
@@ -284,13 +284,13 @@ Visible double numval(u) value u; {
 
 /* The following is an auxiliary function for scrambling integers. */
 
-Hidden double inthash(v) double v; {
+Hidden double inthash(double v) {
 	long i= ((long) v)^0x96696996;
 	v= 987.6543210987654321*v;
 	return .666*(((long) (v*.543))^((long) v)^i)+.747+v;
 }
 
-Visible double numhash(v) value v; {
+Visible double numhash(value v) {
 	if (Integral(v)) {
 		double d = 0;
 		register int i;
@@ -317,7 +317,7 @@ Visible double numhash(v) value v; {
 
 Hidden double lastran;
 
-Hidden Procedure setran (seed) double seed; {
+Hidden Procedure setran(double seed) {
 	double x;
 
 	/* Here is a change to make SETRANDOM -x differ from SETRANDOM x: */
@@ -329,7 +329,7 @@ Hidden Procedure setran (seed) double seed; {
 	lastran = floor(67108864.0*x);
 }
 
-Visible Procedure set_random(v) value v; {
+Visible Procedure set_random(value v) {
 	setran((double) hash(v));
 }
 
@@ -387,7 +387,7 @@ Visible Procedure endnum() {
 }
 
 
-Visible value grab_num(len) register int len; {
+Visible value grab_num(register int len) {
 	integer v;
 	register int i;
 
@@ -401,22 +401,20 @@ Visible value grab_num(len) register int len; {
 	return (value) v;
 }
 
-Visible value grab_rat(len) register int len; {
+Visible value grab_rat(register int len) {
 	if (len > 0 && len+2 <= Maxintlet);
 	else len= 0;
 		
 	return grab(Num, -2 - len);
 }
 
-Visible value regrab_num(v, len) value v; register int len; {
+Visible value regrab_num(value v, register int len) {
 	uniql(&v);
 	regrab(&v, len);
 	return v;
 }
 
-Visible unsigned numsyze(len, nptrs)
-	intlet len;
-	int *nptrs;
+Visible unsigned numsyze(intlet len, int *nptrs)
 {
 	register unsigned syze= 0;
 	*nptrs= 0;

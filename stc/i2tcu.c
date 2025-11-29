@@ -13,8 +13,7 @@ Forward Hidden Procedure textify();
 
 Hidden bool bad;
 
-Visible Procedure unify(a, b, pu)
-polytype a, b, *pu;
+Visible Procedure unify(polytype a, polytype b, polytype *pu)
 {
 	bad = No;
 	setreprtable();
@@ -31,8 +30,7 @@ polytype a, b, *pu;
 	delreprtable();
 }
 
-Hidden Procedure u_unify(a, b, pu)
-polytype a, b, *pu;
+Hidden Procedure u_unify(polytype a, polytype b, polytype *pu)
 {
 	typekind a_kind, b_kind;
 	polytype res;
@@ -99,8 +97,7 @@ polytype a, b, *pu;
 		adderrvar(b);
 }
 
-Hidden Procedure unify_subtypes(a, b, pu)
-polytype a, b, *pu;
+Hidden Procedure unify_subtypes(polytype a, polytype b, polytype *pu)
 {
 	polytype sa, sb, s;
 	intlet nsub, is;
@@ -125,8 +122,7 @@ polytype a, b, *pu;
 Forward bool contains();
 Forward bool equal_vars();
 
-Hidden Procedure substitute_for(a, b, pu)
-polytype a, b, *pu;
+Hidden Procedure substitute_for(polytype a, polytype b, polytype *pu)
 {
 	typekind a_kind, b_kind;
 	polytype ta, tb, tu, tt;
@@ -175,8 +171,7 @@ polytype a, b, *pu;
 	p_release(tu);
 }
 
-Hidden Procedure textify(a, pu)
-polytype a, *pu;
+Hidden Procedure textify(polytype a, polytype *pu)
 {
 	polytype ttext, text_hopefully;
 	
@@ -198,7 +193,7 @@ polytype a, *pu;
 	p_release(text_hopefully);
 }
 
-Visible bool contains(u, a) polytype u, a; {
+Visible bool contains(polytype u, polytype a) {
 	bool result;
 	
 	result = No;
@@ -222,6 +217,6 @@ Visible bool contains(u, a) polytype u, a; {
 	return (result);
 }
 
-Visible bool equal_vars(s, a) polytype s, a; {
+Visible bool equal_vars(polytype s, polytype a) {
 	return (are_same_types(bottomvar(s), a));
 }

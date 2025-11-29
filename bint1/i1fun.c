@@ -34,11 +34,7 @@ typedef double (*mathfun)();
  * See `quot' below.
  */
 
-Hidden value dyop(u, v, int_fun, rat_fun, app_fun)
-	value u, v;
-	valfun int_fun;
-	ratfun rat_fun;
-	appfun app_fun;
+Hidden value dyop(value u, value v, valfun int_fun, ratfun rat_fun, appfun app_fun)
 {
 	if (Integral(u) && Integral(v))	/* Use integral operation */
 		return (*int_fun)((integer)u, (integer)v);
@@ -80,21 +76,21 @@ Hidden value dyop(u, v, int_fun, rat_fun, app_fun)
 }
 
 
-Visible value sum(u, v) value u, v; {
+Visible value sum(value u, value v) {
 	if (IsSmallInt(u) && IsSmallInt(v))
 		return (value) mk_int(
 			(double)SmallIntVal(u) + (double)SmallIntVal(v));
 	return dyop(u, v, (value (*)())int_sum, rat_sum, app_sum);
 }
 
-Visible value diff(u, v) value u, v; {
+Visible value diff(value u, value v) {
 	if (IsSmallInt(u) && IsSmallInt(v))
 		return (value) mk_int(
 			(double)SmallIntVal(u) - (double)SmallIntVal(v));
 	return dyop(u, v, (value (*)())int_diff, rat_diff, app_diff);
 }
 
-Visible value prod(u, v) value u, v; {
+Visible value prod(value u, value v) {
 	if (IsSmallInt(u) && IsSmallInt(v))
 		return (value) mk_int(
 			(double)SmallIntVal(u) * (double)SmallIntVal(v));
@@ -107,7 +103,7 @@ Visible value prod(u, v) value u, v; {
  * Here is the routine we need.
  */
 
-Hidden value xxx_quot(u, v) integer u, v; {
+Hidden value xxx_quot(integer u, integer v) {
 
 	if (v == int_0) {
 		interr(ZERO_DIVIDE);
@@ -117,7 +113,7 @@ Hidden value xxx_quot(u, v) integer u, v; {
 	return mk_exact(u, v, 0);
 }
 
-Visible value quot(u, v) value u, v; {
+Visible value quot(value u, value v) {
 	return dyop(u, v, xxx_quot, rat_quot, app_quot);
 }
 
@@ -126,7 +122,7 @@ Visible value quot(u, v) value u, v; {
  * Unary minus and abs follow the same principle but with only one operand.
  */
 
-Visible value negated(u) value u; {
+Visible value negated(value u) {
 	if (IsSmallInt(u)) return mk_integer(-SmallIntVal(u));
 	if (Integral(u))
 		return (value) int_neg((integer)u);
@@ -136,7 +132,7 @@ Visible value negated(u) value u; {
 }
 
 
-Visible value absval(u) value u; {
+Visible value absval(value u) {
 	if (Integral(u)) {
 		if (Msd((integer)u) < 0)
 			return (value) int_neg((integer)u);
@@ -155,7 +151,7 @@ Visible value absval(u) value u; {
  * them contain quite subtle code.
  */
 
-Visible value mod(u, v) value u, v; {
+Visible value mod(value u, value v) {
 	value q, f, d, p;
 
 	if (v == (value)int_0 ||
@@ -187,7 +183,7 @@ Visible value mod(u, v) value u, v; {
  * u**v has the most special cases of all the predefined arithmetic functions.
  */
 
-Visible value power(u, v) value u, v; {
+Visible value power(value u, value v) {
 	real ru, rv, rw;
 	if (Exact(u) && (Integral(v) ||
 			/* Next check catches for integers disguised as rationals: */
@@ -283,7 +279,7 @@ Visible value power(u, v) value u, v; {
  * u - (u mod 1).
  */
 
-Visible value floor_f(u) value u; {
+Visible value floor_f(value u) {
 	integer quo, rem, v;
 	digit div;
 
@@ -309,7 +305,7 @@ Visible value floor_f(u) value u; {
  * and that's how it's implemented, except for integers.
  */
 
-Visible value ceil_f(u) value u; {
+Visible value ceil_f(value u) {
 	value v;
 	if (Integral(u)) return Copy(u);
 	u = negated(u);
@@ -328,7 +324,7 @@ Visible value ceil_f(u) value u; {
  * that because of the division in floor_f()
  */
 
-Visible value round1(u) value u; {
+Visible value round1(value u) {
 	value v, w; bool neg = No;
 
 	if (Integral(u)) return Copy(u);
@@ -378,7 +374,7 @@ Visible value round1(u) value u; {
  * and does not simplify a rational result sometimes.
  */
 
-Visible value round2(n, v) value n, v; {
+Visible value round2(value n, value v) {
 	value w;
 	int i;
 
@@ -420,7 +416,7 @@ Visible value round2(n, v) value n, v; {
  * sign u inspects the sign of either u, u's numerator or u's fractional part.
  */
 
-Visible value signum(u) value u; {
+Visible value signum(value u) {
 	int s;
 
 	if (Exact(u)) {
@@ -438,7 +434,7 @@ Visible value signum(u) value u; {
  * ~u makes an approximate number of any numerical value.
  */
 
-Visible value approximate(u) value u; {
+Visible value approximate(value u) {
 	if (Approximate(u))
 		return Copy(u);
 	else if (IsSmallInt(u))
@@ -452,7 +448,7 @@ Visible value approximate(u) value u; {
  * exact(v) returns whether a number isn'y approximate
  */
 
-Visible bool exact(v) value v; {
+Visible bool exact(value v) {
 	return (bool) Exact(v);
 }
 
@@ -461,7 +457,7 @@ Visible bool exact(v) value v; {
  * For integers, that is v itself.
  */
 
-Visible value numerator(v) value v; {
+Visible value numerator(value v) {
 	if (!Exact(v)) {
 		interr(MESS(602, "in */n, n is an approximate number"));
 		return zero;
@@ -478,7 +474,7 @@ Visible value numerator(v) value v; {
  * For integers, that is 1.
  */
 
-Visible value denominator(v) value v; {
+Visible value denominator(value v) {
 	if (!Exact(v)) {
 		interr(MESS(603, "in /*n, n is an approximate number"));
 		return zero;
@@ -495,7 +491,7 @@ Visible value denominator(v) value v; {
  * an integer.
  */
 
-Visible value root2(u, v) value u, v; {
+Visible value root2(value u, value v) {
 	if (u == (value)int_0 ||
 		Rational(u) && Numerator((rational)u) == int_0 ||
 		Approximate(u) && Frac((real)u) == 0) {
@@ -513,7 +509,7 @@ Visible value root2(u, v) value u, v; {
 /* root x is computed more exactly than n root x, by doing
    one iteration step extra.  This ~guarantees root(n**2) = n. */
 
-Visible value root1(v) value v; {
+Visible value root1(value v) {
 	value r, v_over_r, theirsum, result;
 	if (numcomp(v, zero) < 0) {
 		interr(MESS(605, "in root x, x is negative"));
@@ -535,17 +531,14 @@ Visible value pi() {
 Visible value e_natural() {
 	return (value) mk_approx(2.718281828459045235360, 0.0);
 }
-Hidden real over_two_pi(v) value v; {
+Hidden real over_two_pi(value v) {
 	real two_pi = mk_approx(6.283185307179586476926, 0.0);
 	real w = (real) approximate(v);
 	real res = app_quot(w, two_pi);
 	Release(two_pi); Release(w);
 	return res;
 }
-Hidden value trig(u, v, ffun, zeroflag)
-	value u, v;
-	mathfun ffun;
-	bool zeroflag;
+Hidden value trig(value u, value v, mathfun ffun, bool zeroflag)
 {
 	real w;
 	double expo, frac, x, result;
@@ -586,14 +579,14 @@ Hidden value trig(u, v, ffun, zeroflag)
 	return (value) mk_approx(result, 0.0);
 }
 
-Visible value sin1(v) value v; { return trig(Vnil, v, sin, Yes); }
-Visible value cos1(v) value v; { return trig(Vnil, v, cos, No); }
-Visible value tan1(v) value v; { return trig(Vnil, v, tan, Yes); }
-Visible value sin2(u, v) value u, v; { return trig(u, v, sin, Yes); }
-Visible value cos2(u, v) value u, v; { return trig(u, v, cos, No); }
-Visible value tan2(u, v) value u, v; { return trig(u, v, tan, Yes); }
+Visible value sin1(value v) { return trig(Vnil, v, sin, Yes); }
+Visible value cos1(value v) { return trig(Vnil, v, cos, No); }
+Visible value tan1(value v) { return trig(Vnil, v, tan, Yes); }
+Visible value sin2(value u, value v) { return trig(u, v, sin, Yes); }
+Visible value cos2(value u, value v) { return trig(u, v, cos, No); }
+Visible value tan2(value u, value v) { return trig(u, v, tan, Yes); }
 
-Visible value arctan1(v) value v; {
+Visible value arctan1(value v) {
 	real w = (real) approximate(v);
 	double expo = Expo(w), frac = Frac(w);
 	if (expo <= Minexpo + 2) return (value) w; /* atan of small x = x */
@@ -602,7 +595,7 @@ Visible value arctan1(v) value v; {
 	return (value) mk_approx(atan(ldexp(frac, (int)expo)), 0.0);
 }
 
-Visible value arctan2(u, v) value u, v; {
+Visible value arctan2(value u, value v) {
 	real av = (real) arctan1(v);
 	real f = over_two_pi(u);
 	real r = app_prod(av, f);
@@ -610,14 +603,14 @@ Visible value arctan2(u, v) value u, v; {
 	return (value) r;
 }
 
-Hidden double atn2(x, y) double x, y; {
+Hidden double atn2(double x, double y) {
 	if (x == 0.0 && y == 0.0)
 		return 0.0;
 	else
 		return atan2(x, y);
 }
 
-Visible value angle1(u, v) value u, v; {
+Visible value angle1(value u, value v) {
 	real ru = (real) approximate(u), rv = (real) approximate(v);
 	double uexpo = Expo(ru), ufrac = Frac(ru);
 	double vexpo = Expo(rv), vfrac = Frac(rv);
@@ -631,7 +624,7 @@ Visible value angle1(u, v) value u, v; {
 		0.0);
 }
 
-Visible value angle2(c, u, v) value c, u, v; {
+Visible value angle2(value c, value u, value v) {
 	real av = (real) angle1(u, v);
 	real f = over_two_pi(c);
 	real r = app_prod(av, f);
@@ -639,7 +632,7 @@ Visible value angle2(c, u, v) value c, u, v; {
 	return (value) r;
 }
 
-Visible value radius(u, v) value u, v; {
+Visible value radius(value u, value v) {
 	real x = (real) approximate(u);
 	real y = (real) approximate(v);
 	real x2 = app_prod(x, x);
@@ -651,14 +644,14 @@ Visible value radius(u, v) value u, v; {
 	return rad;
 }
 
-Visible value exp1(v) value v; {
+Visible value exp1(value v) {
 	real w = (real) approximate(v);
 	real x = app_exp(w);
 	Release(w);
 	return (value) x;
 }
 
-Visible value log1(v) value v; {
+Visible value log1(value v) {
 	real w, x;
 	if (numcomp(v, zero) <= 0) {
 		interr(MESS(609, "in log x, x <= 0"));
@@ -670,7 +663,7 @@ Visible value log1(v) value v; {
 	return (value) x;
 }
 
-Visible value log2(u, v) value u, v;{
+Visible value log2(value u, value v) {
 	value w;
 	if (numcomp(u, zero) <= 0) {
 		interr(MESS(610, "in b log x, b <= 0"));
@@ -689,7 +682,7 @@ Visible value log2(u, v) value u, v;{
 
 /* exactly() converts a approximate number to an exact number */
 
-Visible value exactly(v) value v; {
+Visible value exactly(value v) {
 	if (exact(v))
 		return Copy(v);
 	else

@@ -115,7 +115,7 @@ help()
 	return Yes;
 }
 
-Visible bool ask_for(nr) int nr; {
+Visible bool ask_for(int nr) {
 	int c;
 
 	trmputdata(winheight, winheight, 0, "", (string)0);
@@ -157,7 +157,7 @@ Hidden Procedure start_help()
 	}
 }
 
-Hidden Procedure getentryfor(code) int code; {
+Hidden Procedure getentryfor(int code) {
 	int d;
 	char *bufp= buffer;
 	bool first= Yes;
@@ -182,7 +182,7 @@ Hidden Procedure getentryfor(code) int code; {
 		bufp= addstr(bufp, "", 0);
 }
 
-Hidden char *addstr(bp, s, minw) char * bp; string s; int minw; {
+Hidden char * addstr(char *bp, string s, int minw) {
 	while (*s && bp < buffer+MAXBUFFER) {
 		*bp++= *s++;
 		minw--;

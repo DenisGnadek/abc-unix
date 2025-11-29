@@ -23,7 +23,7 @@ Forward Hidden bool in_locenv();
 
 #define Loc_indirect(ll) ((ll) != Pnil && *(ll) != Vnil && Is_indirect(*(ll)))
 
-Hidden value* location(l, err) loc l; bool err; {
+Hidden value* location(loc l, bool err) {
 	value *ll= Pnil, lv;
 	
 	if (Is_locloc(l)) {
@@ -70,7 +70,7 @@ Hidden value* location(l, err) loc l; bool err; {
 	}
 }
 
-Visible value locvalue(l, ll, err) loc l; value **ll; bool err; {
+Visible value locvalue(loc l, value **ll, bool err) {
 	*ll= location(l, err);
 	if (*ll == Pnil || **ll == Vnil)
 		return Vnil;
@@ -79,7 +79,7 @@ Visible value locvalue(l, ll, err) loc l; value **ll; bool err; {
 	else return **ll;
 }
 
-Hidden bool in_locenv(t, k, ll) value t, k, **ll; {
+Hidden bool in_locenv(value t, value k, value **ll) {
 	*ll= envassoc(t, k);
 	if (*ll == Pnil || **ll == Vnil)
 		return No;
@@ -88,7 +88,7 @@ Hidden bool in_locenv(t, k, ll) value t, k, **ll; {
 	else return Yes;
 }
 
-Visible Procedure uniquify(l) loc l; {
+Visible Procedure uniquify(loc l) {
 	if (Is_simploc(l)) {
 		simploc *sl= Simploc(l);
 		value *ta= &(sl->e->tab), ke= sl->i;
@@ -130,12 +130,12 @@ Visible Procedure uniquify(l) loc l; {
 	else syserr(MESS(3610, "uniquifying non-location"));
 }
 
-Visible Procedure check_location(l) loc l; {
+Visible Procedure check_location(loc l) {
 	VOID location(l, Yes);
 	/* location may produce an error message */
 }
 
-Hidden value content(l) loc l; {
+Hidden value content(loc l) {
 	value *ll;
 	value lv= locvalue(l, &ll, Yes);
 	return still_ok ? copy(lv) : Vnil;
@@ -145,7 +145,7 @@ Hidden value content(l) loc l; {
 #define TRIM_TARG_TEXT MESS(3612, "in the location t@p or t|p, t does not contain a text")
 #define TRIM_TARG_BND  MESS(3613, "in the location t@p or t|p, p is out of bounds")
 
-Visible loc trim_loc(l, N, sign) loc l; value N; char sign; {
+Visible loc trim_loc(loc l, value N, char sign) {
 	loc root, res= Lnil;
 	value text, B, C;
 	
@@ -197,17 +197,17 @@ Visible loc trim_loc(l, N, sign) loc l; value N; char sign; {
 	return res;
 }
 
-Visible loc tbsel_loc(R, K) loc R; value K; {
+Visible loc tbsel_loc(loc R, value K) {
 	if (Is_simploc(R) || Is_tbseloc(R)) return mk_tbseloc(R, K);
 	else interr(MESS(3614, "selection on location of improper type"));
 	return Lnil;
 }
 
-Visible loc local_loc(i) basidf i; { return mk_simploc(i, curnv); }
+Visible loc local_loc(basidf i) { return mk_simploc(i, curnv); }
 
-Visible loc global_loc(i) basidf i; { return mk_simploc(i, prmnv); }
+Visible loc global_loc(basidf i) { return mk_simploc(i, prmnv); }
 
-Hidden Procedure put_trim(v, tl) value v; trimloc *tl; {
+Hidden Procedure put_trim(value v, trimloc *tl) {
 	value rr, nn, head, tail, part, *ll;
 	value B= tl->B, C= tl->C, len, b_plus_c, tail_start;
 	
@@ -233,7 +233,7 @@ Hidden Procedure put_trim(v, tl) value v; trimloc *tl; {
 	release(len); release(b_plus_c);
 }
 
-Hidden Procedure rm_indirection(l) loc l; {
+Hidden Procedure rm_indirection(loc l) {
 	for (; Is_tbseloc(l); l= Tbseloc(l)->R)
 		;
 	if (Is_simploc(l)) {
@@ -248,7 +248,7 @@ Hidden Procedure rm_indirection(l) loc l; {
 	}
 }
 
-Visible Procedure put(v, l) value v; loc l; {
+Visible Procedure put(value v, loc l) {
 	if (Is_locloc(l)) {
 		e_replace(v, &curnv->tab, l);
 	}
@@ -290,7 +290,7 @@ Visible Procedure put(v, l) value v; loc l; {
    For trimmed-texts, no checks are made because the language definition
    itself causes problem (try PUT "abc", "" IN x@2|1, x@3|1). */
 
-Hidden bool putck(v, l) value v; loc l; {
+Hidden bool putck(value v, loc l) {
 	intlet k, len;
 	value *ll, lv;
 	if (!still_ok) return No;
@@ -311,7 +311,7 @@ Hidden bool putck(v, l) value v; loc l; {
    twice.  Moreover, we don't want to clutter up put, which is called
    internally in, many places. */
 
-Visible Procedure put_with_check(v, l) value v; loc l; {
+Visible Procedure put_with_check(value v, loc l) {
 	intlet i, k, len; bool ok;
 	put(v, l);
 	if (!still_ok || !Is_compound(l))
@@ -334,7 +334,7 @@ Visible Procedure put_with_check(v, l) value v; loc l; {
 #define DEL_NO_TARGET	MESS(3621, "deleting non-location")
 #define DEL_TRIM_TARGET	MESS(3622, "deleting text-selection (@ or |) location")
 
-Hidden bool l_exists(l) loc l; {
+Hidden bool l_exists(loc l) {
 	if (Is_simploc(l)) {
 		simploc *sl= Simploc(l);
 		value ta= sl->e->tab, *ll;
@@ -370,7 +370,7 @@ Hidden bool l_exists(l) loc l; {
 
 /* Delete a location if it exists */
 
-Visible Procedure l_del(l) loc l; {
+Visible Procedure l_del(loc l) {
 	if (Is_simploc(l)) {
 		simploc *sl= Simploc(l);
 		e_delete(&(sl->e->tab), sl->i);
@@ -399,12 +399,12 @@ Visible Procedure l_del(l) loc l; {
 	else interr(DEL_NO_TARGET);
 }
 
-Visible Procedure l_delete(l) loc l; {
+Visible Procedure l_delete(loc l) {
 	if (l_exists(l)) l_del(l);
 	else interr(MESS(3623, "deleting non-existent location"));
 }
 
-Visible Procedure l_insert(v, l) value v; loc l; {
+Visible Procedure l_insert(value v, loc l) {
 	value *ll, lv;
 	uniquify(l);
 	if (still_ok) {
@@ -418,7 +418,7 @@ Visible Procedure l_insert(v, l) value v; loc l; {
 	}
 }
 
-Visible Procedure l_remove(v, l) value v; loc l; {
+Visible Procedure l_remove(value v, loc l) {
 	value *ll, lv;
 	uniquify(l);
 	if (still_ok) {
@@ -434,7 +434,7 @@ Visible Procedure l_remove(v, l) value v; loc l; {
 	}
 }
 
-Visible Procedure bindlocation(l) loc l; {
+Visible Procedure bindlocation(loc l) {
 	if (*bndtgs != Vnil) {
 		if (Is_simploc(l)) {
 			simploc *ll= Simploc(l);
@@ -450,7 +450,7 @@ Visible Procedure bindlocation(l) loc l; {
 	l_del(l);
 }
 
-Visible Procedure unbind(l) loc l; {
+Visible Procedure unbind(loc l) {
 	if (*bndtgs != Vnil) {
 		if (Is_simploc(l)) {
 			simploc *ll= Simploc(l);

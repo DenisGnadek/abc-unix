@@ -108,10 +108,7 @@ Hidden char plain[1]= {PLAIN};
  * Return TE_OK if succeeded, error code (see ehdrs/trm.h) if trouble
  */
 
-Visible int trmstart(plines, pcols, pflags)
-     int *plines;
-     int *pcols;
-     int *pflags;
+Visible int trmstart(int *plines, int *pcols, int *pflags)
 {
 	int err;
 
@@ -261,11 +258,7 @@ Visible Procedure trmsense(sense, format, py, px)
  * Characters for which the corresponding chars in "mode" have the value
  * STANDOUT must be put in inverse video.
  */
-Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
-	int yfirst, ylast;
-	register int indent;
-	register string data;
-	register string mode;
+Visible Procedure trmputdata(int yfirst, int ylast, register int indent, register string data, register string mode)
 {
 	register int y;
 	int x, len, lendata, space;
@@ -327,11 +320,7 @@ Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
  *	nd = length of Differing end in data to be put.
  */
 
-Hidden int put_line(y, xskip, data, mode, len)
-	int y, xskip;
-	string data;
-	string mode;
-	int len;
+Hidden int put_line(int y, int xskip, string data, string mode, int len)
 {
 	register char *op, *oq, *mp;
 	register char *np, *nq, *mo;
@@ -383,10 +372,7 @@ Hidden int put_line(y, xskip, data, mode, len)
  * Scrolling (part of) the screen up (or down, dy<0).
  */
 
-Visible Procedure trmscrollup(yfirst, ylast, by)
-     register int yfirst;
-     register int ylast;
-     register int by;
+Visible Procedure trmscrollup(register int yfirst, register int ylast, register int by)
 {
 	if (by == 0)
 		return;
@@ -434,9 +420,7 @@ Visible Procedure trmscrollup(yfirst, ylast, by)
  * Synchronization, move cursor to given position (or previous if < 0).
  */
 
-Visible Procedure trmsync(y, x)
-     int y;
-     int x;
+Visible Procedure trmsync(int y, int x)
 {
 	if (0 <= y && y < lines && 0 <= x && x < cols) {
 		move(y, x);
@@ -453,16 +437,7 @@ Visible Procedure trmbell()
 	low_trmbell();
 }
 
-#define low_put_char(c) Bconout(BC_CON, (c))
-
-/*
- * The following routine is the time bottleneck, I believe!
- */
-
-Hidden Procedure put_str(data, mode, n)
-	char *data, *mode;
-	int n;
-{
+#define low_put_char(Bconout(BC_CON, ( c)) /* * The following routine is the time bottleneck) {
 	register char c, mo, so;
 
 	hidemouse();
@@ -483,9 +458,7 @@ Hidden Procedure put_str(data, mode, n)
 	showmouse();
 }
 
-Hidden Procedure clear_lines(yfirst, ylast)
-     int yfirst;
-     int ylast;
+Hidden Procedure clear_lines(int yfirst, int ylast)
 {
 	register int y;
 
@@ -516,11 +489,7 @@ Hidden Procedure clr_to_eol()
 
 /* Reset internal administration accordingly */
 
-Hidden Procedure scr_lines(yfrom, yto, n, dy)
-     int yfrom;
-     int yto;
-     int n;
-     int dy;
+Hidden Procedure scr_lines(int yfrom, int yto, int n, int dy)
 {
 	register int y, x;
 	char *savedata;
@@ -544,9 +513,7 @@ Hidden Procedure scr_lines(yfrom, yto, n, dy)
 	}
 }
 
-Hidden Procedure lf_scroll(yto, by)
-     int yto;
-     int by;
+Hidden Procedure lf_scroll(int yto, int by)
 {
 	register int n = by;
 
@@ -561,11 +528,7 @@ Hidden Procedure lf_scroll(yto, by)
 
 /* for dumb scrolling, uses and updates internal administration */
 
-Hidden Procedure move_lines(yfrom, yto, n, dy)
-     int yfrom;
-     int yto;
-     int n;
-     int dy;
+Hidden Procedure move_lines(int yfrom, int yto, int n, int dy)
 {
 	while (n-- > 0) {
 		put_line(yto, 0, linedata[yfrom], linemode[yfrom], lenline[yfrom]);
@@ -578,9 +541,7 @@ Hidden Procedure move_lines(yfrom, yto, n, dy)
  * Move to position y,x on the screen
  */
 
-Hidden Procedure move(y, x)
-     int y;
-     int x;
+Hidden Procedure move(int y, int x)
 {
 	if (cur_y == y && cur_x == x) return;
 	low_move(y, x);
@@ -689,8 +650,7 @@ Hidden int	mouse_x,	/* Mouse x coordinate */
 #define A_ED	"\033E"   /* erase display (and cursor home) */
 #define A_EL	"\033K"   /* erase (to end of) line */
 
-Hidden Procedure low_putstr(s)
-     char *s;
+Hidden Procedure low_putstr(char *s)
 {
 	for (; *s; ++s)
 	  low_put_char(*s);
@@ -773,10 +733,7 @@ Hidden bool low_trmsense(sense, format, py, px)
 	return Yes;
 }
 
-Hidden Procedure low_trmscrollup(yfirst, ylast, by)
-     int yfirst;
-     int ylast;
-     int by;
+Hidden Procedure low_trmscrollup(int yfirst, int ylast, int by)
 {
 }
 
@@ -794,9 +751,7 @@ Hidden Procedure low_clr_to_eol()
 	low_putstr(A_EL);
 }
 
-Hidden Procedure low_move(y, x)
-     int y;
-     int x;
+Hidden Procedure low_move(int y, int x)
 {
 	hidemouse();
 	low_putstr(A_CUP);
@@ -842,8 +797,7 @@ Hidden Procedure low_home_and_clear()
 Hidden bool Extended;				/* Set if extended char */
 Hidden unsigned char exbuff;			/* Extension buffer */
 
-Hidden unsigned char encode_input (in_value)
-     long in_value;
+Hidden unsigned char encode_input(long in_value)
 {
 	register short c  = in_value;		/* get low word */
 	register unsigned char ch = c;		/* low byte low word */
@@ -887,8 +841,7 @@ Hidden unsigned char encode_input (in_value)
  *	
  */
 
-Hidden bool mouse_click(char_ptr)
-     char *char_ptr;
+Hidden bool mouse_click(char *char_ptr)
 {
 	int mouse_button;		        /* For saving button state */
 	

@@ -51,7 +51,7 @@ Visible Procedure rec_wsgroup() {
 	gr_recovered= Yes;
 }
 
-Hidden Procedure rec_dirname(dname) value dname; {
+Hidden Procedure rec_dirname(value dname) {
 	value name;
 	intlet k, len;
 	
@@ -80,7 +80,7 @@ Hidden Procedure rec_dirname(dname) value dname; {
 	release(name);
 }
 
-Hidden bool is_wsname(name) value name; {
+Hidden bool is_wsname(value name) {
 	if (!is_abcname(name))
 		return No;
 	if (compare(name, curwskey) == 0 || compare(name, lastwskey) == 0)
@@ -88,7 +88,7 @@ Hidden bool is_wsname(name) value name; {
 	return Yes;
 }
 
-Hidden Procedure mk_groupentry(name, dname) value name, dname; {
+Hidden Procedure mk_groupentry(value name, value dname) {
 	if (in_keys(name, newgroup)) {
 		grperrV(G_EXIST, dname);
 		return;
@@ -106,7 +106,7 @@ Hidden Procedure rec_curlast() {
 		replace(*aa, &newgroup, lastwskey);
 }
 
-Hidden Procedure grperrV(m, v) int m; value v; {
+Hidden Procedure grperrV(int m, value v) {
 	if (rec_ok) {
 		bioerr(G_ERROR);
 		rec_ok= No;

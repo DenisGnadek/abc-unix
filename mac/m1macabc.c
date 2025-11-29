@@ -21,7 +21,7 @@
 
 /* for AppFiles: */
 
-Visible bool is_howto(fname) char *fname; {
+Visible bool is_howto(char *fname) {
 	char *p;
 	
 	p= strchr(fname, C_POINT);
@@ -33,7 +33,7 @@ Visible bool is_howto(fname) char *fname; {
 
 value get_unit();
 
-Visible Procedure run_howto(fname) char *fname; {
+Visible Procedure run_howto(char *fname) {
 	value v;
 	value pname;
 	parsetree howto;
@@ -124,21 +124,21 @@ Hidden Procedure wait_for_return() {
 	trmsync(winheight, 0);
 }
 
-Visible bool is_internal(fname) char *fname; {
+Visible bool is_internal(char *fname) {
 	int len= strlen(fname);
 	return len >= 4 && strcmp(fname+len-4, ".abc") == 0;
 }
 
-Visible bool is_wsgroup(fname) char *fname; {
+Visible bool is_wsgroup(char *fname) {
 	return strcmp(fname, WSGROUPFILE) == 0;
 }
 
-Visible bool is_copybuffer(fname) char *fname; {
+Visible bool is_copybuffer(char *fname) {
 	return 	strcmp(fname, BUFFILE) == 0;
 }
 
 #ifdef UNUSED
-Visible bool is_wsp(fname) char *fname; {
+Visible bool is_wsp(char *fname) {
 	return 	strcmp(fname, PERMFILE) == 0
 			|| strcmp(fname, POSFILE) == 0
 			|| strcmp(fname, SUGGFILE) == 0;
@@ -149,7 +149,7 @@ Visible bool is_wsp(fname) char *fname; {
 
 /* Replace mac folder name (without path components) into ABC wsname */
 
-Visible value abc_wsname(wsp) char *wsp; {
+Visible value abc_wsname(char *wsp) {
 	value macname;
 	value abcname;
 	value name;
@@ -188,7 +188,7 @@ Visible string curwsname() {
 
 /* for m1askperm.c: */
 
-Visible bool goodtag(name) char *name; {
+Visible bool goodtag(char *name) {
 	value v;
 	bool r;
 	
@@ -197,7 +197,7 @@ Visible bool goodtag(name) char *name; {
 	return r;
 }
 
-Visible bool existinglocation(str) char *str; {
+Visible bool existinglocation(char *str) {
 	value name;
 	value pname;
 	value *aa;
@@ -210,7 +210,7 @@ Visible bool existinglocation(str) char *str; {
 	return r;
 }
 
-Visible bool goodhowto(name) char *name; {
+Visible bool goodhowto(char *name) {
 	char *kw;
 	
 	tx= name;
@@ -218,7 +218,7 @@ Visible bool goodhowto(name) char *name; {
 	return is_cmdname(ceol, &kw) || goodtag(name);
 }
 
-Visible bool existinghowto(str) char *str; {
+Visible bool existinghowto(char *str) {
 	value name;
 	value pname;
 	bool r;
@@ -242,7 +242,7 @@ Visible bool existinghowto(str) char *str; {
 #define MAXBUFFER 81
 extern int winheight;
 
-Visible bool ask_for(nr) int nr; {
+Visible bool ask_for(int nr) {
 	string cp;
 	int c;
 	char buffer[MAXBUFFER];

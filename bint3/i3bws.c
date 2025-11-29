@@ -59,12 +59,12 @@ Hidden bool ckws_once= Yes;             /* flag to give just one read-only
 
 Visible char *cur_dir;               /* keeps track of the current directory */
 
-Hidden Procedure setcurdir(path) char *path; {
+Hidden Procedure setcurdir(char *path) {
 	if (cur_dir != NULL) freestr(cur_dir);
 	cur_dir= savestr(path);
 }
 
-Hidden bool ch_dir(path) char *path; {
+Hidden bool ch_dir(char *path) {
 	if (Chdir(path) == 0) {
 		setcurdir(path);
 		return Yes;
@@ -106,7 +106,7 @@ Hidden Procedure endgroup() {
 	put_wsgroup();
 }
 
-Hidden Procedure save_curlast(wskey, ws) value wskey, ws; {
+Hidden Procedure save_curlast(value wskey, value ws) {
 	value *aa;
 	
 	if (Valid(ws) && (!gr_exists(wskey, &aa) || (compare(ws, *aa) != 0)))
@@ -154,7 +154,7 @@ Hidden Procedure put_wsgroup()
 
 /* ******************************************************************** */
 
-Hidden bool wschange(ws) value ws; {
+Hidden bool wschange(value ws) {
 	value name, *aa;
 	bool new= No, changed;
 	char *path;
@@ -181,13 +181,13 @@ Hidden bool wschange(ws) value ws; {
 	return changed;
 }
 
-Hidden bool rm_dir(path) char *path; {
+Hidden bool rm_dir(char *path) {
 	if (strcmp(startdir, path) == 0) return No;
 	else if (rmdir(path) != 0) return No;
 	else return Yes;
 }
 
-Hidden Procedure wsempty(ws) value ws; {
+Hidden Procedure wsempty(value ws) {
 	char *path, *permpath;
 	value *aa;
 	
@@ -279,9 +279,7 @@ Visible Procedure lst_wss() {
 	release(wslist);
 }
 
-Hidden Procedure lst_wsname(ws, current)
-	value ws;
-	bool current;
+Hidden Procedure lst_wsname(value ws, bool current)
 {
 	if (current) c_putstr(">");
 	c_putstr(strval(ws));
@@ -298,13 +296,13 @@ Hidden Procedure lst_wsname(ws, current)
 #define TRY_DEFAULT	MESS(2909, "*** I shall try the default workspace\n")
 #define NO_CENTRAL      MESS(2910, "*** I cannot find the central workspace\n")
 
-Hidden Procedure wserr(m, use_cur) int m; bool use_cur; {
+Hidden Procedure wserr(int m, bool use_cur) {
 	putmess(m);
 	if (use_cur)
 		wscurrent();
 }
 
-Hidden Procedure wserrV(m, v, use_cur) int m; value v; bool use_cur; {
+Hidden Procedure wserrV(int m, value v, bool use_cur) {
 	putSmess(m, strval(v));
 	if (use_cur)
 		wscurrent();
@@ -472,9 +470,7 @@ Hidden Procedure wsrelease() {
 
 /************************************************************************/
 
-Hidden Procedure init_workspace(startup, prname)
-  bool startup;
-	bool prname;
+Hidden Procedure init_workspace(bool startup, bool prname)
 {
 	if (startup) {
 		initfpr();                  /* init standard funs/prds */
@@ -509,8 +505,7 @@ Visible Procedure initworkspace() {
 	initperm();
 }
 
-Hidden Procedure end_workspace(last)
-     bool last;
+Hidden Procedure end_workspace(bool last)
 {
 	endcentralworkspace(last);
 	     /* must be called before endworkspace();
@@ -563,7 +558,7 @@ Hidden bool wsp_writable() {
 	return D_writable(wsp) ? Yes : No;
 }
 
-Visible bool ckws_writable(m) int m; {
+Visible bool ckws_writable(int m) {
 	/* check if the workspace is writable and
 	 * if it isn't give a warning, once a workspace (change)
 	 */

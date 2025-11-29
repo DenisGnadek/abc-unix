@@ -8,11 +8,11 @@
 
 Forward Hidden parsetree singtarg();
 
-Visible parsetree targ(q) txptr q; {
+Visible parsetree targ(txptr q) {
 	return collateral(q, singtarg);
 }
 
-Hidden parsetree singtarg(q) txptr q; {
+Hidden parsetree singtarg(txptr q) {
 	parsetree v; value t;
 	skipsp(&tx);
 	if (nothing(q, MESS(2500, "nothing where address expected"))) 

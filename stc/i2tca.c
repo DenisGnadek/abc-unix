@@ -356,7 +356,7 @@ Forward Hidden polytype external_type();
 Forward Hidden string get_code();
 Forward Hidden string fpr_code();
 
-Visible Procedure type_check(v) parsetree v; {
+Visible Procedure type_check(parsetree v) {
 	typenode n;
 
 	if (!still_ok || v == NilTree)
@@ -383,7 +383,7 @@ Visible Procedure type_check(v) parsetree v; {
 #define FF First_fieldnr
 #define Fld(v, f) (*(Branch(v, f)))
 
-Hidden Procedure tc_node(v) parsetree v; {
+Hidden Procedure tc_node(parsetree v) {
 	string t;
 	string t_saved= NULL;
 	int f;
@@ -688,10 +688,7 @@ Hidden Procedure tc_node(v) parsetree v; {
 
 /* def_typeode(): add/replace the typecode mapping of a how-to */
 
-Hidden Procedure def_typecode(pname, tc, wse)
-     value pname;
-     value tc;
-     wsenvptr wse;
+Hidden Procedure def_typecode(value pname, value tc, wsenvptr wse)
 {
 	e_replace(tc, &(wse->abctypes), pname);
 	wse->typeschanges = Yes;
@@ -699,9 +696,7 @@ Hidden Procedure def_typecode(pname, tc, wse)
 
 /* del_typecode(): remove the typecode mapping of a how-to */
 
-Hidden Procedure del_typecode(pname, wse)
-     value pname;
-     wsenvptr wse;
+Hidden Procedure del_typecode(value pname, wsenvptr wse)
 {
 	e_delete(&(wse->abctypes), pname);
 	wse->typeschanges = Yes;
@@ -709,10 +704,7 @@ Hidden Procedure del_typecode(pname, wse)
 
 /* tc_exists(): search the typecode mapping of a how-to */
 
-Hidden bool tc_exists(pname, cc, wse)
-     value pname;
-     value **cc;
-     wsenvptr wse;
+Hidden bool tc_exists(value pname, value **cc, wsenvptr wse)
 {
 	return in_env(wse->abctypes, pname, cc);
 }
@@ -782,7 +774,7 @@ Visible Procedure rectypes()
 
 /************************************************************************/
 
-Visible value stc_code(pname) value pname; {
+Visible value stc_code(value pname) {
 	value *tc;
 	
 	if (tc_exists(pname, &tc, cur_env))
@@ -802,7 +794,7 @@ Visible Procedure del_types() {
 	cur_env->typeschanges= Yes;
 }
 
-Visible Procedure adjust_types(no_change) bool no_change; {
+Visible Procedure adjust_types(bool no_change) {
 	if (no_change) {
 		/* recover old inter-unit typetable */
 		release(cur_env->abctypes);
@@ -821,7 +813,7 @@ Visible Procedure adjust_types(no_change) bool no_change; {
 
 Forward Hidden value type_code();
 
-Hidden Procedure put_code(v, type) parsetree v; char type; {
+Hidden Procedure put_code(parsetree v, char type) {
 	value howcode, fmlcode;
 	value pname, *tc;
 	polytype x;
@@ -858,7 +850,7 @@ Hidden Procedure put_code(v, type) parsetree v; char type; {
 	release(pname); release(howcode);
 }
 
-Hidden value type_code(p) polytype p; {
+Hidden value type_code(polytype p) {
 	typekind p_kind;
 	polytype tp;
 	polytype ext;
@@ -934,10 +926,7 @@ Hidden value type_code(p) polytype p; {
  * from the respective tables
  */
 
-Hidden string get_code(name, type, wse)
-     value name;
-     int type;
-     wsenvptr wse;
+Hidden string get_code(value name, int type, wsenvptr wse)
 {
 	value pname;
 	value *aa;
@@ -951,7 +940,7 @@ Hidden string get_code(name, type, wse)
 	return NULL;
 }
 
-Hidden string pre_fpr_code(fn, func) value fn; char *func[]; {
+Hidden string pre_fpr_code(value fn, char *func[]) {
 	int i;
 	string f= strval(fn);
 	
@@ -964,11 +953,7 @@ Hidden string pre_fpr_code(fn, func) value fn; char *func[]; {
 	/*NOTREACHED*/
 }
 
-Hidden string fpr_code(name, type, functab, defcode)
-     value name;
-     literal type;
-     char *functab[];
-     string defcode;
+Hidden string fpr_code(value name, literal type, char *functab[], string defcode)
 {
 	string t;
 	wsenvptr wse;
@@ -986,7 +971,7 @@ Hidden string fpr_code(name, type, functab, defcode)
 
 /************************************************************************/
 
-Hidden polytype external_type(pt) string *pt; {
+Hidden polytype external_type(string *pt) {
 	int n;
 	string t;
 	polytype x;
@@ -1005,7 +990,7 @@ Hidden polytype external_type(pt) string *pt; {
 
 /************************************************************************/
 
-Hidden Procedure set_ret_name(name) value name; {
+Hidden Procedure set_ret_name(value name) {
 	value n1;
 	
 	n1= curtail(name, one);
@@ -1050,7 +1035,7 @@ Hidden Procedure pts_grow() {
 	pts_end= pts_start + syze;
 }
 
-Hidden Procedure pt_push(pt) polytype pt; {
+Hidden Procedure pt_push(polytype pt) {
 	if (pts_top >= pts_end)
 		pts_grow();
 	*pts_top++= pt;

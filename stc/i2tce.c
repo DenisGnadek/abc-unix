@@ -34,11 +34,11 @@ Visible Procedure start_vars() {
 	var_list = mk_elt();
 }
 
-Visible Procedure add_var(tvar) polytype tvar; {
+Visible Procedure add_var(polytype tvar) {
 	insert(tvar, &var_list);
 }
 
-Hidden bool in_vars(t) polytype t; {
+Hidden bool in_vars(polytype t) {
 	return in(t, var_list);
 }
 
@@ -74,7 +74,7 @@ Visible Procedure starterrvars() {
 	errvarlist= mk_elt();
 }
 
-Visible Procedure adderrvar(t) polytype t; {
+Visible Procedure adderrvar(polytype t) {
 	if (in_vars(t) && !in(t, errvarlist))
 		insert(t, &errvarlist);
 }
@@ -85,14 +85,14 @@ Visible Procedure enderrvars() {
 
 /* miscellaneous procs */
 
-Visible value conc(v, w) value v, w; {
+Visible value conc(value v, value w) {
 	value c;
 	c = concat(v, w);
 	release(v); release(w);
 	return c;
 }
 
-Hidden bool newvar(u) polytype u; {
+Hidden bool newvar(polytype u) {
 	value u1;
 	char ch;
 	u1 = curtail(ident(u), one);
@@ -101,16 +101,14 @@ Hidden bool newvar(u) polytype u; {
 	return (bool) ('0' <= ch && ch <= '9');
 }
 
-#define Known(tu) (!t_is_var(kind(tu)) && !t_is_error(kind(tu)))
-
-Hidden polytype oldbottomtype(u) polytype u; {
+#define Known((!t_is_var(kind( tu)) && !t_is_error(kind(tu))) Hidden polytype oldbottomtype(u) polytype u) {
 	polytype tu= u;
 	while (t_is_var(kind(tu)) && in_keys(ident(tu), reprtable))
 		tu= *adrassoc(reprtable, ident(tu));
 	return tu; /* not a copy, just a pointer! */
 }
 
-Hidden value t_repr(u) polytype u; {
+Hidden value t_repr(polytype u) {
 	typekind u_kind;
 	polytype tau;
 	value c;
@@ -198,7 +196,7 @@ Hidden value typmess(format, s1, s2) string format, s1, s2; {
 
 /* now, the real error messages */
 
-Visible Procedure badtyperr(a, b) polytype a, b; {
+Visible Procedure badtyperr(polytype a, polytype b) {
 	value t;
 	value nerrs;
 	polytype te, bte;
@@ -348,14 +346,14 @@ char *treename[NTYPES] = { /* legible names for debugging */
 
 extern FILE *stc_fp;
 
-Visible Procedure t_typecheck(nt, t) int nt; string t; {
+Visible Procedure t_typecheck(int nt, string t) {
 	if (stc_fp == NULL)
 		return;
 	fprintf(stc_fp, "TC NODE %s, CODE %s\n", treename[nt], t);
 	VOID fflush(stc_fp);
 }
 
-Visible Procedure s_unify(a, b) polytype a, b; {
+Visible Procedure s_unify(polytype a, polytype b) {
 	value t;
 	
 	if (stc_fp == NULL)
@@ -381,7 +379,7 @@ Visible Procedure s_unify(a, b) polytype a, b; {
 	VOID fflush(stc_fp);
 }
 
-Visible Procedure e_unify(c) polytype c; {
+Visible Procedure e_unify(polytype c) {
 	value t;
 	
 	if (stc_fp == NULL)

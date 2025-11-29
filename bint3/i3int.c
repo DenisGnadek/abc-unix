@@ -35,15 +35,7 @@ Visible bool terminated;
 #define Comp(op) w = pop(); v = pop(); report= (compare(v, w) op 0); Comp2()
 #define Comp2() release(v); if (!Flagged()) {release(w);} else {Comp3()}
 #define Comp3() if (report) {push(w);} else {release(w); jumptoend();}
-#define F(n) ((value)*Branch(pc, (n)))
-
-/* Execute a threaded tree until the end or until a terminating-command.
-   The boolean argument 'wantvalue' tells whether it must deliver
-   a value or not.
-*/
-
-Hidden value
-run(start, wantvalue) parsetree start; bool wantvalue; {
+#define F(((value)*Branch(pc, ( n))) /* Execute a threaded tree until the end or until a terminating-command. The boolean argument 'wantvalue' tells whether it must deliver a value or not. */ Hidden value run(start, wantvalue) parsetree start) {
 	value u, v, w; int k, len; bool X, Y; int call_stop= call_level;
 	parsetree old_next= next;
 	/* While run can be used recursively, save some state info */
@@ -389,11 +381,11 @@ default:
 
 /* External interfaces: */
 
-Visible Procedure execthread(start) parsetree start; {
+Visible Procedure execthread(parsetree start) {
 	VOID run(start, No);
 }
 
-Visible value evalthread(start) parsetree start; {
+Visible value evalthread(parsetree start) {
 	return run(start, Yes);
 }
 

@@ -40,9 +40,7 @@ Forward Hidden bool chismash();
  * Save position of the focus for use by outnode/outfocus.
  */
 
-Visible Procedure
-savefocus(ep)
-	register environ *ep;
+Visible Procedure savefocus(register environ *ep)
 {
 	register int sym;
 	register int w;
@@ -105,9 +103,7 @@ savefocus(ep)
  * Incorporate the information saved about the focus.
  */
 
-Visible Procedure
-setfocus(tops)
-	register cell *tops;
+Visible Procedure setfocus(register cell *tops)
 {
 	register cell *p;
 	register int i;
@@ -133,9 +129,7 @@ setfocus(tops)
  * Signal that actual updata is started.
  */
 
-Visible Procedure
-startactupdate(nofocus)
-	bool nofocus;
+Visible Procedure startactupdate(bool nofocus)
 {
 	if (nofocus) {
 		multiline = 0;
@@ -158,10 +152,7 @@ endactupdate()
  * Output a line of text.
  */
 
-Visible Procedure
-outline(p, lineno)
-	register cell *p;
-	register int lineno;
+Visible Procedure outline(register cell *p, register int lineno)
 {
 	register node n = p->c_data;
 	register int w = nodewidth(n);
@@ -234,11 +225,7 @@ outline(p, lineno)
 		strsmash(pbuf, pmod, " ", 0); \
 	strsmash(pbuf, pmod, "?", STANDOUT)
 
-Hidden Procedure
-focsmash(pbuf, pmod, n)
-	string *pbuf;
-	string *pmod;
-	node n;
+Hidden Procedure focsmash(string *pbuf, string *pmod, node n)
 {
 	value v;
 	string str;
@@ -368,12 +355,7 @@ focsmash(pbuf, pmod, n)
 	}
 }
 
-Hidden Procedure
-smash(pbuf, pmod, n, mask)
-	register string *pbuf;
-	register string *pmod;
-	register node n;
-	register int mask;
+Hidden Procedure smash(register string *pbuf, register string *pmod, register node n, register int mask)
 {
 	register string *rp;
 	register int i;
@@ -389,12 +371,7 @@ smash(pbuf, pmod, n, mask)
 	}
 }
 
-Hidden Procedure
-strsmash(pbuf, pmod, str, mask)
-	register string *pbuf;
-	register string *pmod;
-	register string str;
-	register int mask;
+Hidden Procedure strsmash(register string *pbuf, register string *pmod, register string str, register int mask)
 {
 	if (!str)
 		return;
@@ -406,13 +383,7 @@ strsmash(pbuf, pmod, str, mask)
 	}
 }
 
-Hidden Procedure
-subsmash(pbuf, pmod, str, len, mask)
-	register string *pbuf;
-	register string *pmod;
-	register string str;
-	register int len;
-	register int mask;
+Hidden Procedure subsmash(register string *pbuf, register string *pmod, register string str, register int len, register int mask)
 {
 	if (!str)
 		return;

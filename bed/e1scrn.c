@@ -167,11 +167,7 @@ growwin()
  * further on the screen.)
  */
 
-Hidden int
-makeroom(p, curlno, delcnt)
-	register cell *p;
-	register int curlno;
-	register int delcnt;
+Hidden int makeroom(register cell *p, register int curlno, register int delcnt)
 {
 	register int here = 0;
 	register int needed = Space(p);
@@ -231,11 +227,7 @@ makeroom(p, curlno, delcnt)
  * Returns new delcnt, like makeroom does.
  */
 
-Hidden int
-make2room(p, curlno, delcnt)
-	cell *p;
-	int curlno;
-	int delcnt;
+Hidden int make2room(cell *p, int curlno, int delcnt)
 {
 	int nextline = curlno + Space(p);
 	int sline = winheight - delcnt;
@@ -263,11 +255,7 @@ make2room(p, curlno, delcnt)
  * Routine called for every change in the screen.
  */
 
-Visible Procedure
-virtupdate(oldep, newep, highest)
-	environ *oldep;
-	environ *newep;
-	int highest;
+Visible Procedure virtupdate(environ *oldep, environ *newep, int highest)
 {
 	environ old;
 	environ new;
@@ -322,9 +310,7 @@ virtupdate(oldep, newep, highest)
 }
 
 
-Hidden bool
-atlinestart(ep)
-	environ *ep;
+Hidden bool atlinestart(environ *ep)
 {
 	register string repr = noderepr(tree(ep->focus))[0];
 
@@ -338,11 +324,7 @@ atlinestart(ep)
  * (0 if the whole unit has no linefeeds.)
  */
 
-Hidden int
-fixlevels(oldep, newep, highest)
-	register environ *oldep;
-	register environ *newep;
-	register int highest;
+Hidden int fixlevels(register environ *oldep, register environ *newep, register int highest)
 {
 	register int oldpl = pathlength(oldep->focus);
 	register int newpl = pathlength(newep->focus);
@@ -477,10 +459,7 @@ endshow()
  * (I.e. for lines with >= 80 spaces indentation)
  */
 
-Visible bool
-backtranslate(py, px)
-	int *py;
-	int *px;
+Visible bool backtranslate(int *py, int *px)
 {
 	cell *p;
 	int y = *py;
@@ -508,9 +487,7 @@ backtranslate(py, px)
  * Set the indent level and window start line.
  */
 
-Visible Procedure
-setindent(x)
-	int x;
+Visible Procedure setindent(int x)
 {
 	winstart= winheight-1;
 	/* the following is a hack; should change when
@@ -532,8 +509,7 @@ setindent(x)
  * Show the command prompt.
  */
 
-Visible Procedure cmdprompt(prompt)
-	string prompt;
+Visible Procedure cmdprompt(string prompt)
 {
 	setindent(strlen(prompt));
 	trmputdata(winstart, winstart, 0, prompt, (string)0);

@@ -27,7 +27,7 @@ Forward Hidden Procedure f_etag();
 Forward Hidden Procedure f_ttag();
 Forward Hidden Procedure f_ctag();
 
-Visible Procedure fix_nodes(pt, code) parsetree *pt; parsetree *code; {
+Visible Procedure fix_nodes(parsetree *pt, parsetree *code) {
 	context c; value *setup(), *su;
 	sv_context(&c);
 	curline= *pt; curlino= one;
@@ -147,11 +147,11 @@ Hidden parsetree *wanthere; /* Chain of requests to return next tree */
 #ifdef M_I86LM
 
 /* Patch for MSC 3.0 large model bugs... */
-Visible parsetree *_thread(p) parsetree p; {
+Visible parsetree * _thread(parsetree p) {
 	return &_Thread(p);
 }
 
-Visible parsetree *_thread2(p) parsetree p; {
+Visible parsetree * _thread2(parsetree p) {
 	return &_Thread2(p);
 }
 
@@ -169,7 +169,7 @@ Hidden Procedure inithreads() {
 
 /* Finish threading */
 
-Hidden Procedure endthreads(code) parsetree *code; {
+Hidden Procedure endthreads(parsetree *code) {
 	jumpto(Stop);
 	if (!still_ok) start= NilTree;
 	*code= start;
@@ -179,7 +179,7 @@ Hidden Procedure endthreads(code) parsetree *code; {
 /* Fill 't' as secondary thread for all nodes in the backpatch chain,
    leaving the chain empty. */
 
-Hidden Procedure backpatch(t) parsetree t; {
+Hidden Procedure backpatch(parsetree t) {
 	parsetree u;
 	while (bpchain != NilTree) {
 		u= Thread2(bpchain);
@@ -188,7 +188,7 @@ Hidden Procedure backpatch(t) parsetree t; {
 	}
 }
 
-Visible Procedure jumpto(t) parsetree t; {
+Visible Procedure jumpto(parsetree t) {
 	parsetree u;
 	if (!still_ok) return;
 	while (wanthere != 0) {
@@ -204,13 +204,13 @@ Visible Procedure jumpto(t) parsetree t; {
 	backpatch(t);
 }
 
-Hidden parsetree seterr(n) int n; {
+Hidden parsetree seterr(int n) {
 	return (parsetree)MkSmallInt(n);
 }
 
 /* Visit node 't', and set its secondary thread to 't2'. */
 
-Hidden Procedure visit2(t, t2) parsetree t, t2; {
+Hidden Procedure visit2(parsetree t, parsetree t2) {
 	if (!still_ok) return;
 	jumpto(t);
 	Thread2(t)= t2;
@@ -220,18 +220,18 @@ Hidden Procedure visit2(t, t2) parsetree t, t2; {
 
 /* Visit node 't' */
 
-Hidden Procedure visit(t) parsetree t; {
+Hidden Procedure visit(parsetree t) {
 	visit2(t, NilTree);
 }
 
 /* Visit node 't' and flag it as a location (or test-refinement). */
 
-Hidden Procedure lvisit(t) parsetree t; {
+Hidden Procedure lvisit(parsetree t) {
 	visit2(t, Flag);
 }
 
 #ifdef NOT_USED
-Hidden Procedure jumphere(t) parsetree t; {
+Hidden Procedure jumphere(parsetree t) {
 	Thread(t)= last;
 	last= t;
 }
@@ -239,25 +239,25 @@ Hidden Procedure jumphere(t) parsetree t; {
 
 /* Add node 't' to the backpatch chain. */
 
-Hidden Procedure jump2here(t) parsetree t; {
+Hidden Procedure jump2here(parsetree t) {
 	if (!still_ok) return;
 	Thread2(t)= bpchain;
 	bpchain= t;
 }
 
-Hidden Procedure here(pl) parsetree *pl; {
+Hidden Procedure here(parsetree *pl) {
 	if (!still_ok) return;
 	*pl= (parsetree) wanthere;
 	wanthere= pl;
 }
 
-Visible Procedure hold(pl) struct state *pl; {
+Visible Procedure hold(struct state *pl) {
 	if (!still_ok) return;
 	pl->h_last= last; pl->h_bpchain= bpchain; pl->h_wanthere= wanthere;
 	last= bpchain= NilTree; wanthere= 0;
 }
 
-Visible Procedure let_go(pl) struct state *pl; {
+Visible Procedure let_go(struct state *pl) {
 	parsetree p, *w;
 	if (!still_ok) return;
 	if (last != NilTree) {
@@ -292,7 +292,7 @@ Hidden bool reachable() {
 Forward Hidden bool is_variable();
 Forward Hidden bool is_cmd_ref();
 
-Visible Procedure fix(pt, flag) parsetree *pt; char flag; {
+Visible Procedure fix(parsetree *pt, char flag) {
 	struct state st; value v, function;
 	parsetree t, l1= NilTree, w;
 	typenode nt, nt1; string s; char c; int n, k, len;
@@ -459,18 +459,14 @@ Visible Procedure fix(pt, flag) parsetree *pt; char flag; {
 			break;
 		case 'M':
 			v= (value)*Branch(t, MON_NAME);
-			if (is_variable(v) || !is_monfun(v, &function))
-				fixerrV(NO_DEFINITION, v);
-			else {
+			if ( is_variable(|| !is_monfun( &function)) fixerrV(NO_DEFINITION, v)) {
 				release((value)*Branch(t, MON_FCT));
 				*Branch(t, MON_FCT)= copystddef(function);
 			}
 			break;
 		case 'N':
 			v= (value)*Branch(t, MON_NAME);
-			if (is_variable(v) || !is_monprd(v, &function))
-				fixerrV(NO_DEFINITION, v);
-			else {
+			if ( is_variable(|| !is_monprd( &function)) fixerrV(NO_DEFINITION, v)) {
 				release((value)*Branch(t, MON_FCT));
 				*Branch(t, MON_FCT)= copystddef(function);
 			}
@@ -530,7 +526,7 @@ Visible Procedure fix(pt, flag) parsetree *pt; char flag; {
 
 /* skip test-suite comment nodes */
 
-Hidden Procedure sk_tsuite_comment(v, w) parsetree v, *w; {
+Hidden Procedure sk_tsuite_comment(parsetree v, parsetree *w) {
 	while ((*w= *Branch(v, TSUI_NEXT)) != NilTree &&
 	                Nodetype(*w) == TEST_SUITE &&
 			*Branch(*w, TSUI_TEST) == NilTree)
@@ -539,7 +535,7 @@ Hidden Procedure sk_tsuite_comment(v, w) parsetree v, *w; {
 
 /* ******************************************************************** */
 
-Hidden bool is_cmd_ref(t) parsetree t; { /* HACK */
+Hidden bool is_cmd_ref(parsetree t) { /* HACK */
 	value name= *Branch(t, REF_NAME);
 	string s;
 	
@@ -550,7 +546,7 @@ Hidden bool is_cmd_ref(t) parsetree t; { /* HACK */
 	return *s <= 'Z' && *s >= 'A';
 }
 
-Visible bool is_name(v) value v; {
+Visible bool is_name(value v) {
 	if (!Valid(v) || !Is_text(v))
 		return No;
 	else {
@@ -560,19 +556,19 @@ Visible bool is_name(v) value v; {
 	}
 }
 
-Visible value copystddef(f) value f; {
+Visible value copystddef(value f) {
 	if (f == Vnil || Funprd(f)->pre == Use) return Vnil;
 	return copy(f);
 }
 
-Hidden bool is_basic_target(v) value v; {
+Hidden bool is_basic_target(value v) {
 	if (!Valid(v))
 		return No;
 	return	locals != Vnil && envassoc(locals, v) != Pnil ||
 		envassoc(globals, v) != Pnil;
 }
 
-Hidden bool is_variable(v) value v; {
+Hidden bool is_variable(value v) {
 	if (!Valid(v))
 		return No;
 	return is_basic_target(v) ||
@@ -580,7 +576,7 @@ Hidden bool is_variable(v) value v; {
 		is_zerfun(v, Pnil);
 }
 
-Hidden bool is_target(p) parsetree *p; {
+Hidden bool is_target(parsetree *p) {
 	value v;
 	int k, len;
 	parsetree w, *left, *right;
@@ -625,7 +621,7 @@ Hidden bool is_target(p) parsetree *p; {
 	}
 }
 
-Hidden bool trim_opr(name, type) value name; typenode *type; {
+Hidden bool trim_opr(value name, typenode *type) {
 	value v;
 
 	if (!Valid(name))
@@ -721,7 +717,7 @@ Hidden Procedure act_expr_gen(pact, form) parsetree *pact; parsetree form; {
 	}
 }
 
-Hidden Procedure f_ucommand(pt) parsetree *pt; {
+Hidden Procedure f_ucommand(parsetree *pt) {
 	value t= *pt, *aa;
 	parsetree u, f1= *Branch(t, UCMD_NAME), f2= *Branch(t, UCMD_ACTUALS);
 	release(*Branch(t, UCMD_DEF));
@@ -739,7 +735,7 @@ Hidden Procedure f_ucommand(pt) parsetree *pt; {
 	else fixerrV(MESS(2211, "you haven't told me HOW TO %s"), f1);
 }
 
-Hidden Procedure f_fpr_formals(t) parsetree t; {
+Hidden Procedure f_fpr_formals(parsetree t) {
 	typenode nt= nodetype(t);
 
 	switch (nt) {
@@ -757,7 +753,7 @@ Hidden Procedure f_fpr_formals(t) parsetree t; {
 	}
 }
 
-Visible bool modify_tag(name, tag) parsetree *tag; value name; {
+Visible bool modify_tag(value name, parsetree *tag) {
 	value *aa, function;
 	*tag= NilTree;
 	if (!Valid(name))
@@ -776,7 +772,7 @@ Visible bool modify_tag(name, tag) parsetree *tag; value name; {
 	return Yes;
 }
 
-Hidden Procedure f_etag(pt) parsetree *pt; {
+Hidden Procedure f_etag(parsetree *pt) {
 	parsetree t= *pt; value name= copy(*Branch(t, TAG_NAME));
 	if (modify_tag(name, &t)) {
 		release(*pt);
@@ -791,7 +787,7 @@ Hidden Procedure f_etag(pt) parsetree *pt; {
 	}
 }
 
-Hidden Procedure f_ttag(pt) parsetree *pt; {
+Hidden Procedure f_ttag(parsetree *pt) {
 	parsetree t= *pt; value name= copy(*Branch(t, TAG_NAME));
 	if (modify_tag(name, &t)) {
 		release(*pt);
@@ -816,7 +812,7 @@ Hidden Procedure f_ttag(pt) parsetree *pt; {
 
 #define NO_REF_OR_ZER	MESS(2214, "%s is neither a refined test nor a zeroadic predicate")
 
-Hidden Procedure f_ctag(pt) parsetree *pt; {
+Hidden Procedure f_ctag(parsetree *pt) {
 	parsetree t= *pt; value name= copy(*Branch(t, TAG_NAME));
 	if (modify_tag(name, &t)) {
 		release(*pt);

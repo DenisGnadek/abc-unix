@@ -71,8 +71,7 @@ Visible int errcount= 0; /* Number of errors detected */
 
 Visible int ndefs;
 
-Hidden Procedure err1(m)
-	string m;
+Hidden Procedure err1(string m)
 {
 	static char errbuf[MESSBUFSIZE];
 		/* since putmess() below overwrites argument m via getmess() */
@@ -90,8 +89,7 @@ Hidden Procedure err1(m)
 	putserr(errbuf);
 }
 
-Hidden Procedure err(m)
-	int m;
+Hidden Procedure err(int m)
 {
 	err1(getmess(m));
 }
@@ -118,8 +116,7 @@ Hidden Procedure skipspace()
 		adv();
 }
 
-Hidden int lookup(name)
-	string name;
+Hidden int lookup(string name)
 {
 	int i;
 
@@ -136,10 +133,7 @@ Hidden int lookup(name)
  * an initial subsequence of another, or vice versa.
  * String definitions (code < 0) are not undefined.
  */
-Visible Procedure undefine(code, deflen, def)
-	int code;
-	int deflen;
-	string def;
+Visible Procedure undefine(int code, int deflen, string def)
 {
 	struct tabent *d, *last= deftab+ndefs;
 	string p, q;
@@ -170,10 +164,7 @@ Visible Procedure undefine(code, deflen, def)
 
 #define ERR1 MESS(6501, "Cannot verify the bindings for the interrupt character")
 
-Hidden bool isIntrBinding(code, deflen, def)
-	int code;
-	int deflen;
-	string def;
+Hidden bool isIntrBinding(int code, int deflen, string def)
 {
 	return code == CANCEL && intrchar != '\0' &&
 	       deflen == 1 && def[0] == intrchar;
@@ -209,13 +200,8 @@ Hidden Procedure sigundef_intrchar() {
 
 #endif /* !CANLOOKAHEAD */
 
-Hidden bool store(code, deflen, def, rep, name) /* return whether stored */
-	int code;
-	int deflen;
-	string def;
-	string rep;
-	string name;
-{
+Hidden bool store(int code, int deflen, string def, string rep, string name) /* return whether stored */
+	{
 	struct tabent *d, *last= deftab+ndefs;
 #ifndef CANLOOKAHEAD
 	int i;
@@ -291,12 +277,7 @@ Hidden bool store(code, deflen, def, rep, name) /* return whether stored */
 	return Yes;
 }
 
-Visible Procedure addkeydef(code, deflen, def, rep, name)
-	int code;
-	int deflen;
-	string def;
-	string rep;
-	string name;
+Visible Procedure addkeydef(int code, int deflen, string def, string rep, string name)
 {
 	/* called from porting directory */
 	VOID store(code, deflen, def, rep, name);
@@ -338,8 +319,7 @@ Hidden string getname()
 	return (string) savestr(buffer);
 }
 
-Hidden int getstring(pstr) string *pstr;
-{
+Hidden int getstring(string *pstr) {
 	char buf[256]; /* Arbitrary limit */
 	char c;
 	int len= 0;
@@ -535,8 +515,7 @@ Hidden Procedure get_line()
 
 extern FILE *keyfp;
 
-Visible Procedure dumpkeys(where)
-	string where;
+Visible Procedure dumpkeys(string where)
 {
 	int i;
 	int w;
@@ -656,7 +635,7 @@ extern string gotoformat;
 extern string mousesense;
 extern string mouseformat;
 
-Hidden string defstring(name) string name; {
+Hidden string defstring(string name) {
 	int i;
 
 	i= lookup(name);
@@ -685,8 +664,7 @@ Hidden Procedure initmouse() {
 
 extern bool vtrmactive;
 
-Hidden Procedure outstring(name)
-	string name;
+Hidden Procedure outstring(string name)
 {
 	int i= lookup(name);
 
@@ -868,7 +846,7 @@ Visible Procedure pollinterrupt() {
 	}
 }
 
-Hidden bool equalhead(keystr, nkey, def, len) string keystr, def; int nkey, len; {
+Hidden bool equalhead(string keystr, int nkey, string def, int len) {
 	int i;
 
 	if (nkey > len)

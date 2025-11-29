@@ -61,14 +61,7 @@ Hidden int old_mode= -1;
  * BIOS video I/O is called by generating an 8086 software interrupt,
  * using lattice's int86() function.
  * To ease coding, all routines fill in the apropriate parameters in regs,
- * and than call bios10(code), where code is to be placed in ah.
- * (This routine is identical to the one in ptrm.c but I didn't want
- * to change it from Hidden to Visible there.)
- */
-
-Hidden union REGS regs;
-
-Hidden Procedure bios10(code) int code; {
+ * and than call bios10(Hidden Procedure bios10( code) int code){
 	regs.h.ah= code;
 	int86(0x10, &regs, &regs);
 }
@@ -155,7 +148,7 @@ Visible Procedure exit_gfx() {
 
 #define COLOR 1
 
-Visible Procedure draw_line(x1, y1, x2, y2) int x1, y1, x2, y2; {
+Visible Procedure draw_line(int x1, int y1, int x2, int y2) {
   int dx;
   int dy;
   int xinc;
@@ -214,7 +207,7 @@ Visible Procedure draw_line(x1, y1, x2, y2) int x1, y1, x2, y2; {
 
 /* scrolling for BIOS */
 
-Hidden Procedure biosscrollup(yfirst, ylast, by) int yfirst, ylast, by; {
+Hidden Procedure biosscrollup(int yfirst, int ylast, int by) {
 	int cols;
 
 	bios10(15);

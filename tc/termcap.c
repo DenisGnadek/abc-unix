@@ -30,8 +30,7 @@ char	*getenv();
  * from the termcap file.  Parse is very rudimentary;
  * we just notice escaped newlines.
  */
-tgetent(bp, name)
-	char *bp, *name;
+int tgetent(char *bp, char *name)
 {
 	register char *cp;
 	register int c;
@@ -161,8 +160,7 @@ tnchktc()
  * against each such name.  The normal : terminator after the last
  * name (before the first field) stops us.
  */
-tnamatch(np)
-	char *np;
+int tnamatch(char *np)
 {
 	register char *Np, *Bp;
 
@@ -187,9 +185,7 @@ tnamatch(np)
  * knowing about \: escapes or any such.  If necessary, :'s can be put
  * into the termcap file in octal.
  */
-static char *
-tskip(bp)
-	register char *bp;
+static char * tskip(register char *bp)
 {
 
 	while (*bp && *bp != ':')
@@ -207,8 +203,7 @@ tskip(bp)
  * a # character.  If the option is not found we return -1.
  * Note that we handle octal numbers beginning with 0.
  */
-tgetnum(id)
-	char *id;
+int tgetnum(char *id)
 {
 	register int i, base;
 	register char *bp = tbuf;
@@ -240,8 +235,7 @@ tgetnum(id)
  * of the buffer.  Return 1 if we find the option, or 0 if it is
  * not given.
  */
-tgetflag(id)
-	char *id;
+int tgetflag(char *id)
 {
 	register char *bp = tbuf;
 
@@ -266,9 +260,7 @@ tgetflag(id)
  * placed in area, which is a ref parameter which is updated.
  * No checking on area overflow.
  */
-char *
-tgetstr(id, area)
-	char *id, **area;
+char * tgetstr(char *id, char **area)
 {
 	register char *bp = tbuf;
 
@@ -291,10 +283,7 @@ tgetstr(id, area)
  * Tdecode does the grung work to decode the
  * string capability escapes.
  */
-static char *
-tdecode(str, area)
-	register char *str;
-	char **area;
+static char * tdecode(register char *str, char **area)
 {
 	register char *cp;
 	register int c;

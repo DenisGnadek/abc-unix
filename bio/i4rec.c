@@ -129,7 +129,7 @@ Visible Procedure rec_suggestions() {
 	initworkspace();
 }
 
-Hidden Procedure rec_target(fname) value fname; {
+Hidden Procedure rec_target(value fname) {
 	value pname;
 	value name;
 	intlet k, len;
@@ -161,7 +161,7 @@ Hidden Procedure rec_target(fname) value fname; {
 	release(name);
 }
 
-Hidden Procedure rec_unit(fname, all) value fname; bool all; {
+Hidden Procedure rec_unit(value fname, bool all) {
 	FILE *fp;
 	char *line;
 	value pname;
@@ -200,7 +200,7 @@ Hidden Procedure rec_unit(fname, all) value fname; bool all; {
 	release((value) u);
 }
 
-Hidden Procedure mk_permentry(pname, fname) value pname, fname; {
+Hidden Procedure mk_permentry(value pname, value fname) {
 	value fn;
 	
 	if (in_keys(pname, cur_env->perm)) {
@@ -226,7 +226,7 @@ Hidden Procedure mk_permentry(pname, fname) value pname, fname; {
 	release(fn);
 }
 
-Hidden Procedure mk_suggitem(u) parsetree u; {
+Hidden Procedure mk_suggitem(parsetree u) {
 	value formals, k, t, next, v;
 	value sugg, sp_hole, sp;
 	
@@ -266,7 +266,7 @@ Hidden Procedure mk_suggitem(u) parsetree u; {
 	release(sugg);
 }
 
-Hidden Procedure rec_current(curr) value curr; {
+Hidden Procedure rec_current(value curr) {
 	value *pn;
 	
 	if (in_keys(curr, old_perm)
@@ -320,7 +320,7 @@ Hidden Procedure recpos() {
 }
 
 
-Hidden Procedure recerrV(m, v) int m; value v; {
+Hidden Procedure recerrV(int m, value v) {
 	if (rec_ok) {
 		bioerr(R_ERROR);
 		rec_ok= No;
@@ -328,7 +328,7 @@ Hidden Procedure recerrV(m, v) int m; value v; {
 	bioerrV(m, v);
 }
 
-Hidden Procedure cantwrite(file) string file; {
+Hidden Procedure cantwrite(string file) {
 	value fn= mk_text(file);
 	bioerrV(R_FWRITE, fn);
 	release(fn);

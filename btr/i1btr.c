@@ -9,9 +9,7 @@
 /* grab, copy, release of btree(node)s                               */
 /*********************************************************************/
 
-Visible btreeptr
-grabbtreenode(flag, it)
-	literal flag; literal it;
+Visible btreeptr grabbtreenode(literal flag, literal it)
 {
 	btreeptr pnode; unsigned syz;
 	static intlet isize[]= {
@@ -40,12 +38,12 @@ grabbtreenode(flag, it)
 
 /* ----------------------------------------------------------------- */
 
-Visible btreeptr copybtree(pnode) btreeptr pnode; {
+Visible btreeptr copybtree(btreeptr pnode) {
 	if (pnode != Bnil && Refcnt(pnode) < Maxrefcnt) ++Refcnt(pnode);
 	return(pnode);
 }
 
-Visible Procedure uniqlbtreenode(pptr, it) btreeptr *pptr; literal it; {
+Visible Procedure uniqlbtreenode(btreeptr *pptr, literal it) {
 	if (*pptr NE Bnil && Refcnt(*pptr) > 1) {
 		btreeptr qnode = *pptr;
 		*pptr = ccopybtreenode(*pptr, it);
@@ -53,7 +51,7 @@ Visible Procedure uniqlbtreenode(pptr, it) btreeptr *pptr; literal it; {
 	}
 }
 
-Visible btreeptr ccopybtreenode(pnode, it) btreeptr pnode; literal it; {
+Visible btreeptr ccopybtreenode(btreeptr pnode, literal it) {
 	intlet limp;
 	btreeptr qnode;
 	intlet iw;
@@ -83,8 +81,7 @@ Visible btreeptr ccopybtreenode(pnode, it) btreeptr pnode; literal it; {
 
 /* make a new root (after the old ptr0 split) */
 
-Visible btreeptr mknewroot(ptr0, pitm0, ptr1, it)
-	btreeptr ptr0, ptr1; itemptr pitm0; literal it;
+Visible btreeptr mknewroot(btreeptr ptr0, itemptr pitm0, btreeptr ptr1, literal it)
 {
 	int r;
 	intlet iw = Itemwidth(it);
@@ -102,7 +99,7 @@ Visible btreeptr mknewroot(ptr0, pitm0, ptr1, it)
 
 /* release btree */
 
-Visible Procedure relbtree(pnode, it) btreeptr pnode; literal it; {
+Visible Procedure relbtree(btreeptr pnode, literal it) {
 	width iw;
 	
 	iw = Itemwidth(it);

@@ -20,7 +20,7 @@ Visible value locals, globals, mysteries, refinements;
 
 Forward Hidden Procedure unit_context();
 
-Visible value *setup(t) parsetree t; {
+Visible value * setup(parsetree t) {
 	typenode n= Nodetype(t);
 	bool in_prmnv= !Unit(n);
 	nextvarnumber= 0;
@@ -40,7 +40,7 @@ Visible value *setup(t) parsetree t; {
 	}
 }
 
-Hidden Procedure unit_context(t) parsetree t; {
+Hidden Procedure unit_context(parsetree t) {
 	cntxt= In_unit;
 	sethowtoname(get_pname(t));
 }
@@ -69,7 +69,7 @@ Visible Procedure cleanup() {
    from the unit heading.
  */
 
-Hidden Procedure a_tag(name, targs) value name; value *targs; {
+Hidden Procedure a_tag(value name, value *targs) {
 	value *aa; int varnumber;
 	if (locals != Vnil && envassoc(locals, name) != Pnil);
 	else if (envassoc(globals, name) != Pnil);
@@ -98,7 +98,7 @@ Hidden Procedure a_tag(name, targs) value name; value *targs; {
 	}
 }
 
-Hidden Procedure a_fpr_formals(t) parsetree t; {
+Hidden Procedure a_fpr_formals(parsetree t) {
 	typenode n= nodetype(t);
 	switch (n) {
 	case TAG:
@@ -114,7 +114,7 @@ Hidden Procedure a_fpr_formals(t) parsetree t; {
 	}
 }
 
-Visible Procedure analyze(t, targs) parsetree t; value *targs; {
+Visible Procedure analyze(parsetree t, value *targs) {
 	typenode nt; string s; char c; int n, k, len; value v;
 	if (!Is_node(t) || !still_ok) return;
 	nt= Nodetype(t);

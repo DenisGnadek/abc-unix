@@ -27,9 +27,7 @@ string strcpy();
 Visible char *messbuf= NULL; /* used for messages with arguments */
 Hidden  char *buf= NULL;
 
-Visible string 
-getmess(nr)
-	int nr; 
+Visible string getmess(int nr)
 {
 	if (buf == NULL)
 		return "MEMORY?";

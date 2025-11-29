@@ -18,8 +18,7 @@ DIR dirid;
 DMABUFFER *save_dta;
 DMABUFFER buf;
 
-Visible DIR *opendir(filename)
-     char *filename;
+Visible DIR * opendir(char *filename)
 {
 	if (dirid.flags & OPENED) return NULL;
 		/* more than one open directory is impossible. This
@@ -40,9 +39,8 @@ Visible DIR *opendir(filename)
 	return &dirid;
 }
 
-Visible struct direct *readdir(dummy) /* (C)Eddy - dummy not used */
-     DIR *dummy;
-{
+Visible struct direct * readdir(DIR *dummy) /* (C)Eddy - dummy not used */
+     {
 	char *p;
 	if (!(dirid.flags & OPENED)) return NULL;
 		/* can't read from unopened directory */
@@ -61,9 +59,8 @@ Visible struct direct *readdir(dummy) /* (C)Eddy - dummy not used */
 	return ((struct direct *)(buf.d_fname));
 }
 
-Visible Procedure closedir(dummy) /* (C)Eddy - dummy not used */
-     DIR *dummy;
-{
+Visible Procedure closedir(DIR *dummy) /* (C)Eddy - dummy not used */
+     {
 	dirid.flags=0; /* neither opened nor read */
 	dirid.name[0]='\0'; /* no name */
 	/* reset dta */

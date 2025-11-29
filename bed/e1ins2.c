@@ -26,7 +26,7 @@ Forward Hidden bool atrealhole();
 
 extern bool justgoon;
 
-Hidden bool quot_in_tag(c, ep) int c; environ *ep; {
+Hidden bool quot_in_tag(int c, environ *ep) {
 	/* hack to not surround part of name or keyword;
 	 * fixes bug 890417
 	 */
@@ -38,11 +38,7 @@ Hidden bool quot_in_tag(c, ep) int c; environ *ep; {
 		(sym == Name || sym == Keyword));
 }
 
-Visible bool
-ins_char(ep, c, alt_c)
-	register environ *ep;
-	int c;
-	int alt_c;
+Visible bool ins_char(register environ *ep, int c, int alt_c)
 {
 	auto queue q = Qnil;
 	auto queue qf = Qnil;
@@ -119,9 +115,7 @@ ins_char(ep, c, alt_c)
  * Insert a newline.
  */
 
-Visible bool
-ins_newline(ep, reading_file)
-	register environ *ep; bool reading_file;
+Visible bool ins_newline(register environ *ep, bool reading_file)
 {
 	register node n;
 	register int sym;
@@ -217,11 +211,7 @@ ins_newline(ep, reading_file)
  * Refinement for ins_newline() to do the initial processing.
  */
 
-Hidden bool
-fiddle(ep, pmayindent, reading_file)
-	register environ *ep;
-	bool *pmayindent;
-	bool reading_file;
+Hidden bool fiddle(register environ *ep, bool *pmayindent, bool reading_file)
 {
 	register int level;
 	auto string str = "";
@@ -275,9 +265,7 @@ fiddle(ep, pmayindent, reading_file)
  * Return Yes if this happened AND rp[1] contained a \t.
  */
 
-Hidden bool
-hackhack(ep)
-	environ *ep;
+Hidden bool hackhack(environ *ep)
 {
 	node n;
 	int ich = ichild(ep->focus);
@@ -304,9 +292,7 @@ hackhack(ep)
  * decrease-indentation position.
  */
 
-Hidden bool
-atdedent(ep)
-	register environ *ep;
+Hidden bool atdedent(register environ *ep)
 {
 	register path pa;
 	register node npa;
@@ -348,9 +334,7 @@ atdedent(ep)
  * skipping blank space only.
  */
 
-Hidden bool
-nexthole(ep)
-	register environ *ep;
+Hidden bool nexthole(register environ *ep)
 {
 	register node n;
 	register int ich;
@@ -370,7 +354,7 @@ nexthole(ep)
 	return Yes;
 }
 
-Hidden bool atrealhole(ep) environ *ep; {
+Hidden bool atrealhole(environ *ep) {
 	node n;
 	int i;
 	

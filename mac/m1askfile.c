@@ -45,7 +45,7 @@
 
 Forward FILE *fvopen();
 
-Visible FILE *askfile(namebuf)  char *namebuf; {
+Visible FILE * askfile(char *namebuf) {
 	Point corner;
 	short numtypes;
 	SFTypeList typelist;
@@ -71,7 +71,7 @@ Visible FILE *askfile(namebuf)  char *namebuf; {
 	return fp;
 }
 
-Visible FILE *asknewfile(prompt, namebuf) int prompt; char *namebuf; {
+Visible FILE * asknewfile(int prompt, char *namebuf) {
 	static Point corner= {100, 100};
 	SFReply reply;
 	FILE *fp;
@@ -111,7 +111,7 @@ Visible FILE *asknewfile(prompt, namebuf) int prompt; char *namebuf; {
    the Standard File Package.
    This version is for ABC only; it doesn't need to use PBHSetVol(). */
 
-Hidden FILE *fvopen(file, vrefnum, mode) char *file; short vrefnum; char *mode; {
+Hidden FILE * fvopen(char *file, short vrefnum, char *mode) {
 	FILE *fp;
 	
 	SetVol((char*)NULL, vrefnum);

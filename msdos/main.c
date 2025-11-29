@@ -52,9 +52,7 @@ Visible FILE *vtrmfp= NULL;
 
 #define O_eiolpurx (O_e | O_iolprx | O_u)
 
-main(argc, argv)
-     int argc;
-     char **argv;
+int main(int argc, char **argv)
 {
 	int c;
 	int flags = 0;

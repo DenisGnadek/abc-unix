@@ -13,7 +13,7 @@
 
 #define CANT_OPEN MESS(1700, "can't open input file %s\n")
 
-Visible Procedure checkfileargs(argc, argv) int argc; char **argv; {
+Visible Procedure checkfileargs(int argc, char **argv) {
 	bool filearg= No;
 	
 	/* check call: */
@@ -32,7 +32,7 @@ Visible Procedure checkfileargs(argc, argv) int argc; char **argv; {
 
 Visible bool been_interactive= No;
 
-Visible Procedure abc(argc, argv) int argc; char **argv; {
+Visible Procedure abc(int argc, char **argv) {
 	bool filearg= argc > 0;
 	
 	i_lino= 0;

@@ -10,18 +10,15 @@
 
 #include "dir.h"
 
-Visible DIR *opendir(name)
-     char *name;
+Visible DIR * opendir(char *name)
 {
 }
 
-Visible struct direct *readdir(dirp)
-     DIR *dirp;
+Visible struct direct * readdir(DIR *dirp)
 {
 }
 
-Visible Procedure closedir(dirp)
-     DIR *dirp;
+Visible Procedure closedir(DIR *dirp)
 {
 }
 

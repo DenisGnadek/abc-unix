@@ -12,10 +12,7 @@
 
 #include "macdefs.h"
 
-int
-access(path, mode)
-	char *path;
-	int mode;
+int access(char *path, int mode)
 {
 	union {
 		DirInfo d;

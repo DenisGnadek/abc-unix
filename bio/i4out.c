@@ -11,7 +11,7 @@
 
 /* write_table_of_texts */
 
-Visible Procedure abcoutput(name_arg) char *name_arg; {
+Visible Procedure abcoutput(char *name_arg) {
 	value name, pname;
 	value *aa;
 	value v;

@@ -32,7 +32,7 @@ Hidden Procedure dump_tables() {
 	dump_lexdef();
 }
 
-Hidden Procedure dump_title(xfp, title) FILE *xfp; string title; {
+Hidden Procedure dump_title(FILE *xfp, string title) {
 	fprintf(xfp, Copyright);
 	fprintf(xfp, "/* %s. */\n\n", title);
 	fprintf(xfp, Warning);
@@ -70,7 +70,7 @@ Hidden Procedure dump_classdef() {
 	fprintf(tfp, "};\n\n");
 }	
 
-Hidden Procedure dump_array(parray, ch, icl) itemptr parray; char ch; int icl; {
+Hidden Procedure dump_array(itemptr parray, char ch, int icl) {
 	int w;	/* guess line width */
 	int a;
 	
@@ -91,7 +91,7 @@ Hidden Procedure dump_array(parray, ch, icl) itemptr parray; char ch; int icl; {
 	fprintf(tfp, "0};\n");
 }
 
-Hidden Procedure dump_adr(parray, ch, icl) itemptr parray; char ch; int icl; {
+Hidden Procedure dump_adr(itemptr parray, char ch, int icl) {
 	
 	if (parray == NULL)
 		fprintf(tfp, "0");
@@ -110,7 +110,7 @@ Hidden Procedure dump_symdef() {
 	fprintf(tfp, "struct table *table= abc_grammar;\n");
 }
 	
-Hidden Procedure dumpsymbol(isym) int isym; {
+Hidden Procedure dumpsymbol(int isym) {
 	struct syminfo *psym;
 	int ich;
 	
@@ -134,7 +134,7 @@ Hidden Procedure dumpsymbol(isym) int isym; {
 	fprintf(tfp, "}, 0}%s\n",  (isym==nsym-1 ? "" : ","));
 }
 
-Hidden Procedure dumpstring(s) string s; {
+Hidden Procedure dumpstring(string s) {
 	char c;
 	
 	if (s == NULL) {
@@ -157,7 +157,7 @@ Hidden Procedure dumpstring(s) string s; {
 	fprintf(tfp, "\"");
 }
 
-Hidden Procedure dump_cl(ind) item ind; {
+Hidden Procedure dump_cl(item ind) {
 	if (ind >= 0)
 		fprintf(tfp, "&cl[%d]", ind);
 	else
@@ -175,7 +175,7 @@ Hidden Procedure dump_lexdef() {
 	fprintf(tfp, "struct lexinfo *lextab= abc_lexicals;\n");
 }
 
-Hidden Procedure dumplex(plex, sep) struct lexinfo *plex; string sep; {
+Hidden Procedure dumplex(struct lexinfo *plex, string sep) {
 	
 	fprintf(tfp, "   {");
 	dumpstring(plex->l_start);

@@ -7,7 +7,7 @@
 
 /* Product of integer and single "digit" */
 
-Visible integer int1mul(v, n1) integer v; digit n1; {
+Visible integer int1mul(integer v, digit n1) {
 	integer a;
 	digit save, bigcarry, carry = 0;
 	twodigit z, zz, n = n1;
@@ -35,7 +35,7 @@ Visible integer int1mul(v, n1) integer v; digit n1; {
 
 /* Quotient of positive integer and single "digit" > 0 */
 
-Hidden integer int1div(v, n1, prem) integer v; digit n1, *prem; {
+Hidden integer int1div(integer v, digit n1, digit *prem) {
 	integer q;
 	twodigit r_over_n, r = 0, n = n1;
 	register int i;
@@ -57,7 +57,7 @@ Hidden integer int1div(v, n1, prem) integer v; digit n1, *prem; {
 
 /* Long division routine, gives access to division algorithm. */
 
-Visible digit int_ldiv(v1, w1, pquot, prem) integer v1, w1, *pquot, *prem; {
+Visible digit int_ldiv(integer v1, integer w1, integer *pquot, integer *prem) {
 	integer a;
 	int sign = 1, rel_v = 0, rel_w = 0;
 	digit div, rem;
@@ -201,13 +201,13 @@ Visible digit int_ldiv(v1, w1, pquot, prem) integer v1, w1, *pquot, *prem; {
 }
 
 
-Visible integer int_quot(v, w) integer v, w; {
+Visible integer int_quot(integer v, integer w) {
 	integer quo;
 	VOID int_ldiv(v, w, &quo, (integer*)0);
 	return quo;
 }
 
-Visible integer int_mod(v, w) integer v, w; {
+Visible integer int_mod(integer v, integer w) {
 	integer rem;
 	digit div;
 	bool flag;

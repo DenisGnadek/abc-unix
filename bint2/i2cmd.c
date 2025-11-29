@@ -22,8 +22,7 @@ Forward Hidden parsetree alt_seq();
 /*		command_suite						*/
 /* ******************************************************************** */
 
-Visible parsetree cmd_suite(cil, first, suite) intlet cil; bool first;
-		parsetree (*suite)(); {
+Visible parsetree cmd_suite(intlet cil, bool first, parsetree ( *suite)()) {
 	parsetree v= NilTree;
 	
 	if (ateol()) {
@@ -42,7 +41,7 @@ Visible parsetree cmd_suite(cil, first, suite) intlet cil; bool first;
 	}
 }
 
-Visible parsetree cmd_seq(cil, first, emp) intlet cil; bool first, *emp; {
+Visible parsetree cmd_seq(intlet cil, bool first, bool *emp) {
 	value c= Vnil;
 	intlet level, l;
 	
@@ -62,8 +61,7 @@ Visible parsetree cmd_seq(cil, first, emp) intlet cil; bool first, *emp; {
 	return NilTree;
 }
 
-Hidden bool chk_indent(nlevel, olevel, first) intlet nlevel, olevel;
-		bool first; {
+Hidden bool chk_indent(intlet nlevel, intlet olevel, bool first) {
 	if (nlevel > olevel) {
 		if (!first) parerr(WRONG_INDENT);
 		else if (nlevel - olevel == 1) parerr(SMALL_INDENT);
@@ -72,7 +70,7 @@ Hidden bool chk_indent(nlevel, olevel, first) intlet nlevel, olevel;
 	return nlevel == olevel && !first ? Yes : No;
 }
 
-Hidden Procedure suite_command(v, c) parsetree *v; value *c; {
+Hidden Procedure suite_command(parsetree *v, value *c) {
 	char *kw;
 	
 	if (!is_cmdname(ceol, &kw) || !control_command(kw, v) && 
@@ -84,7 +82,7 @@ Hidden Procedure suite_command(v, c) parsetree *v; value *c; {
 /*		is_comment, tail_line					*/
 /* ******************************************************************** */
 
-Visible bool is_comment(v) value *v; {
+Visible bool is_comment(value *v) {
 	txptr tx0= tx;
 	skipsp(&tx);
 	if (comment_sign) {
@@ -109,7 +107,7 @@ Visible value tail_line() {
 /*									*/
 /* ******************************************************************** */
 
-Visible bool simple_command(kw, v, c) char *kw; parsetree *v; value *c; {
+Visible bool simple_command(char *kw, parsetree *v, value *c) {
 	return bas_com(kw, v) || term_com(kw, v) || udr_com(kw, v)
 		? (*c= tail_line(), Yes) : No;
 }
@@ -118,7 +116,7 @@ Visible bool simple_command(kw, v, c) char *kw; parsetree *v; value *c; {
 /*		basic_command						*/
 /* ******************************************************************** */
 
-Hidden bool bas_com(kw, v) char *kw; parsetree *v; {
+Hidden bool bas_com(char *kw, parsetree *v) {
 	parsetree w, t;
 	txptr ftx, ttx; 
 
@@ -199,7 +197,7 @@ Hidden bool bas_com(kw, v) char *kw; parsetree *v; {
 	return Yes;
 }
 
-Hidden value cr_newlines(cnt) intlet cnt; {
+Hidden value cr_newlines(intlet cnt) {
 	value v, t= mk_text(S_NEWLINE), n= mk_integer(cnt);
 	v= repeat(t, n);
 	release(t); release(n);
@@ -210,7 +208,7 @@ Hidden value cr_newlines(cnt) intlet cnt; {
 /*		terminating_command					*/
 /* ******************************************************************** */
 
-Visible bool term_com(kw, v) char *kw; parsetree *v; {
+Visible bool term_com(char *kw, parsetree *v) {
 	if (fail_keyword(kw)) {				/* FAIL */
 		upto(ceol, K_FAIL);
 		*v= node1(FAIL);
@@ -235,7 +233,7 @@ Visible bool term_com(kw, v) char *kw; parsetree *v; {
 /*		user_defined_command; refined_command			*/
 /* ******************************************************************** */
 
-Hidden bool udr_com(kw, v) char *kw; parsetree *v; {
+Hidden bool udr_com(char *kw, parsetree *v) {
 	value w= mk_text(kw);
 	
 	if (!in(w, res_cmdnames)) {
@@ -246,7 +244,7 @@ Hidden bool udr_com(kw, v) char *kw; parsetree *v; {
 	return No;
 }
 
-Hidden value hu_actuals(q, kw) txptr q; value kw; {
+Hidden value hu_actuals(txptr q, value kw) {
 	parsetree t= NilTree;
 	value v= Vnil, nkw;
 	txptr ftx;
@@ -267,7 +265,7 @@ Hidden value hu_actuals(q, kw) txptr q; value kw; {
 /*		control_command						*/
 /* ******************************************************************** */
 
-Visible bool control_command(kw, v) char *kw; parsetree *v; {
+Visible bool control_command(char *kw, parsetree *v) {
 	parsetree s, t; 
 	value c;
 	txptr ftx, ttx, utx, vtx;
@@ -323,8 +321,8 @@ Hidden parsetree alt_suite() {
 	return v;
 }
 
-Hidden parsetree alt_seq(cil, first, else_encountered, emp) 
-		bool first, else_encountered, *emp; intlet cil; {
+Hidden parsetree alt_seq(intlet cil, bool first, bool else_encountered, bool *emp)
+{
 	value c;
 	intlet level, l;
 	char *kw;

@@ -71,7 +71,7 @@ Visible bool vtrmactive= No;
 
 Hidden char fmtbuf[BUFSIZ];	/* to make formatted messages */
 
-Visible Procedure immexit(status) int status; {
+Visible Procedure immexit(int status) {
 	endprocess(status);
 }
 
@@ -88,7 +88,7 @@ Visible Procedure flusherr() {
 	else VOID fflush(errfile);
 }
 
-Visible Procedure putserr(s) string s; {
+Visible Procedure putserr(string s) {
 	if (errfile != CONSOLE) {
 		fputs(s, errfile);
 	}
@@ -205,7 +205,7 @@ Hidden int stringcode[]= {
 
 #define ONULL ((operation *) NULL)
 
-Hidden operation *findoperation(name) string name; {
+Hidden operation * findoperation(string name) {
 	operation *op;
 
 	for (op= oplist; op->name != SNULL; op++) {
@@ -215,7 +215,7 @@ Hidden operation *findoperation(name) string name; {
 	return ONULL;
 }
 
-Visible Procedure confirm_operation(code, name) int code; string name; {
+Visible Procedure confirm_operation(int code, string name) {
 	operation *op;
 
 	for (op= oplist; op->name != SNULL; op++) {
@@ -246,7 +246,7 @@ Visible Procedure confirm_operation(code, name) int code; string name; {
 
 Hidden string newfile= SNULL;	/* name for new keydefinitions file */
 
-main(argc, argv) int argc; char *argv[]; {
+int main(int argc, char *argv[]) {
 	if (argc != 1) /* no arguments allowed */
 		usage();
 
@@ -263,7 +263,7 @@ main(argc, argv) int argc; char *argv[]; {
 
 /* immediate exit */
 
-Hidden Procedure endprocess(status) int status; {
+Hidden Procedure endprocess(int status) {
 	fini_term();
 	exit(status);
 }
@@ -273,7 +273,7 @@ Hidden Procedure usage() {
 	endprocess(-1);
 }
 
-Visible Procedure syserr(m) int m; {
+Visible Procedure syserr(int m) {
 	sprintf(fmtbuf, "*** System error: %s\n", getmess(m));
 	putserr(fmtbuf);
 	endprocess(-1);
@@ -319,7 +319,7 @@ Hidden Procedure fini() {
 
 #define DNULL (tabent *) NULL
 
-Hidden tabent *findstringentry(code) int code;  {
+Hidden tabent * findstringentry(int code) {
 	tabent *d;
 
 	for (d= deftab+ndefs-1; d >= deftab; d--) {
@@ -335,7 +335,7 @@ Hidden Procedure init_strings() {
 
 /* Output a string to the terminal */
 
-Hidden Procedure outstring(str) string str; {
+Hidden Procedure outstring(string str) {
 	putdata(str, Yes);
 	nextline();
 }
@@ -421,7 +421,7 @@ Hidden Procedure Re_outfile() {
 #define MINWIDTH 75
 #define MINHEIGHT 24
 
-Hidden Procedure checkwinsize(width, height) int width, height; {
+Hidden Procedure checkwinsize(int width, int height) {
 	if (width < MINWIDTH || height < MINHEIGHT) {
 		sprintf(fmtbuf,
 "*** Sorry, too small screen size; needed at least %dx%d; giving up\n",
@@ -453,7 +453,7 @@ Hidden Procedure init_bindings() {
 	setup_bindings(win.width, &hlp_nlines);
 }
 
-Hidden Procedure set_windows(yfirst) int yfirst; {
+Hidden Procedure set_windows(int yfirst) {
 	hlp_yfirst= yfirst;
 	win.yfirst= hlp_yfirst + hlp_nlines + 1;
 	win.y= win.yfirst;
@@ -499,9 +499,7 @@ Hidden Procedure setstartposition(xzero)
 	}
 }
 
-Hidden Procedure getstartposition(xzero, y, x)
-     bool xzero;
-     int *y, *x;
+Hidden Procedure getstartposition(bool xzero, int *y, int *x)
 {
 	if (WinCRLF(xzero)) {
 		*y = win.y+1;
@@ -635,7 +633,7 @@ Hidden Procedure C_flush() {
 
 #define MAXBUFFER 81
 
-Hidden string mkstandout(data) string data; {
+Hidden string mkstandout(string data) {
 	static char buffer[MAXBUFFER];
 	string cp= buffer;
 	
@@ -697,12 +695,12 @@ Hidden Procedure fini_buffers() {
 
 #endif
 
-Hidden string getbuf(bp) bufadm *bp; {
+Hidden string getbuf(bufadm *bp) {
 	bufpush(bp, '\0');
 	return (string) bp->buf;
 }
 
-Hidden string savedef(def, len) string def; int len; {
+Hidden string savedef(string def, int len) {
 	ptr p= (ptr) getmem((unsigned) len + 1);
 	ptr q= p;
 	while (len > 0) {
@@ -712,7 +710,7 @@ Hidden string savedef(def, len) string def; int len; {
 	return p;
 }
 
-Hidden bool equdef(len1, def1, len2, def2) int len1, len2; string def1, def2; {
+Hidden bool equdef(int len1, string def1, int len2, string def2) {
 	register int i;
 	
 	if (len1 != len2)
@@ -741,7 +739,7 @@ Hidden int iavailable= 0;		/* next available character */
 #define Single 1
 #define Multiple 2
 
-Hidden int inkey(pc) int *pc; {
+Hidden int inkey(int *pc) {
 	int c;
 
 	if (iavailable != navailable) {		/* char in buffer */
@@ -767,7 +765,7 @@ Hidden int inkey(pc) int *pc; {
 	}
 }
 
-Hidden bool equal(l1, s1, l2, s2) int l1, l2; string s1, s2; {
+Hidden bool equal(int l1, string s1, int l2, string s2) {
 	if (l1 != l2)
 		return No;
 	while (l1 > 0) {
@@ -778,7 +776,7 @@ Hidden bool equal(l1, s1, l2, s2) int l1, l2; string s1, s2; {
 	return Yes;
 }
 
-Hidden string findrepr(len, def) int len; string def; {
+Hidden string findrepr(int len, string def) {
 	tabent *d;
 
 	for (d= deftab+ndefs-1; d >= deftab; d--) {
@@ -794,7 +792,7 @@ Hidden string findrepr(len, def) int len; string def; {
  * try to find a representation for the whole sequence in the buffer
  */
 
-Hidden bool knownkeysequence(pnkey, key, rep) int *pnkey; string *key, *rep; {
+Hidden bool knownkeysequence(int *pnkey, string *key, string *rep) {
 	string pkey;
 	int n;
 
@@ -827,8 +825,7 @@ Hidden bool knownkeysequence(pnkey, key, rep) int *pnkey; string *key, *rep; {
 
 #define Quote(c) ((c) == '\"' || (c) == '\'')
 
-Hidden string ask_definition(op, pdeflen, prepr)
-	operation *op; int *pdeflen; string *prepr;
+Hidden string ask_definition(operation *op, int *pdeflen, string *prepr)
 {
 	int c;
 	string def;
@@ -897,7 +894,7 @@ Hidden string ask_definition(op, pdeflen, prepr)
 
 /* save and put the representation */
 
-Hidden Procedure savputrepr(rp, repr) bufadm *rp; string repr; {
+Hidden Procedure savputrepr(bufadm *rp, string repr) {
 	if (strlen(repr) > 0) {
 		/* save */
 		if (rp->pbuf != rp->buf) /* not the first time */
@@ -910,8 +907,7 @@ Hidden Procedure savputrepr(rp, repr) bufadm *rp; string repr; {
 	}
 }
 
-Hidden string new_definition(op, pdeflen, prepr)
-	operation *op; int *pdeflen; string *prepr;
+Hidden string new_definition(operation *op, int *pdeflen, string *prepr)
 {
 	string def;
 
@@ -926,7 +922,7 @@ Hidden string new_definition(op, pdeflen, prepr)
 	}
 }
 
-Hidden bool illegal(def, deflen) string def; int deflen; {
+Hidden bool illegal(string def, int deflen) {
 	if (deflen == 0)
 		return No;
 	if  (Printable(*def)) {
@@ -956,7 +952,7 @@ Hidden bool headingonscreen= No;
  * getinput() reads characters from input delimited by \r or \n 
  */
  
-Hidden string getinput(bp)  bufadm *bp; {
+Hidden string getinput(bufadm *bp) {
 	int c;
 	char echo[2];
 
@@ -1001,7 +997,7 @@ Hidden string getinput(bp)  bufadm *bp; {
 
 #define DFLT_REP "[default %s] "
 
-Hidden string ask_representation(dfltrep) string dfltrep; {
+Hidden string ask_representation(string dfltrep) {
 	int len= strlen(DFLT_REP) + strlen(dfltrep);
 	char *dflt= (char *) getmem((unsigned) (len+1));
 	/* we don't use fmtbuf, because the 'dfltrep' can be very long */
@@ -1013,8 +1009,7 @@ Hidden string ask_representation(dfltrep) string dfltrep; {
 	return getinput(&repinpbuf);
 }
 
-Hidden string new_representation(dfltrep, deflen, def)
-	string dfltrep, def; int deflen;
+Hidden string new_representation(string dfltrep, int deflen, string def)
 {
 	string repr;
 
@@ -1029,7 +1024,7 @@ Hidden string new_representation(dfltrep, deflen, def)
 	}
 }
 
-Hidden bool unlawful(rep) string rep; {
+Hidden bool unlawful(string rep) {
 	for (; *rep; rep++) {
 		if (!Printable(*rep)) {
 			putdata(E_UNLAWFUL, Yes);
@@ -1040,7 +1035,7 @@ Hidden bool unlawful(rep) string rep; {
 	return No;
 }
 
-Hidden bool rep_in_use(rep, deflen, def) string rep, def; int deflen; {
+Hidden bool rep_in_use(string rep, int deflen, string def) {
 	tabent *d;
 
 	for (d= deftab; d < deftab+ndefs; d++) {
@@ -1060,8 +1055,7 @@ Hidden bool rep_in_use(rep, deflen, def) string rep, def; int deflen; {
 
 /****************************************************************************/
 
-Hidden Procedure keep(code, name, deflen, def, rep)
-	int code, deflen; string name, def, rep;
+Hidden Procedure keep(int code, string name, int deflen, string def, string rep)
 {
 	if (ndefs == MAXDEFS) {
 		putdata(E_TOO_MANY, Yes);
@@ -1076,8 +1070,7 @@ Hidden Procedure keep(code, name, deflen, def, rep)
 	ndefs++;
 }
 
-Hidden Procedure store(code, name, deflen, def, rep)
-	int code, deflen; string name, def, rep;
+Hidden Procedure store(int code, string name, int deflen, string def, string rep)
 {
 	tabent *d;
 
@@ -1103,7 +1096,7 @@ Hidden Procedure store(code, name, deflen, def, rep)
 #define I_OP_PROMPT "Enter operation [? for help]: "
 #define OP_PROMPT   "Enter operation: "
 
-Hidden string ask_name(prompt) string prompt; {
+Hidden string ask_name(string prompt) {
 	putdata(prompt, Yes);
 	return getinput(&definpbuf);
 }
@@ -1202,13 +1195,13 @@ Hidden Procedure Process() {
 	}
 }
 
-Hidden bool is_quit(name) string name; {
+Hidden bool is_quit(string name) {
 	if (Equal(name, "q") || Equal(name, "quit"))
 		return Yes;
 	return No;
 }
 
-Hidden bool is_init(name) string name; {
+Hidden bool is_init(string name) {
 	if (Equal(name, "init"))
 		return Yes;
 	return No;
@@ -1231,7 +1224,7 @@ Hidden Procedure scrolloffheading() {
 
 /****************************************************************************/
 
-Hidden Procedure definebinding(op) operation *op; {
+Hidden Procedure definebinding(operation *op) {
 	string def, rep;
 	int deflen;
 
@@ -1253,7 +1246,7 @@ Hidden Procedure definebinding(op) operation *op; {
 
 #define SHOW_PROMPT "Showing the bindings for %s (%s):"
 
-Hidden Procedure showbindings(op) operation *op; {
+Hidden Procedure showbindings(operation *op) {
 	tabent *d;
 
 	clearwindow();
@@ -1277,7 +1270,7 @@ Hidden Procedure showbindings(op) operation *op; {
 
 Hidden bool outofsync;   /* Yes, if the 'prompt' isn't in the right place anymore */
 
-Hidden Procedure delbindings(op) operation *op; {
+Hidden Procedure delbindings(operation *op) {
 	tabent *d;
 	int flags = 0;
 
@@ -1303,7 +1296,7 @@ Hidden Procedure delbindings(op) operation *op; {
 	clearwindow();
 }
 
-Hidden int asktodelete(d) tabent *d; {
+Hidden int asktodelete(tabent *d) {
 	string rep;
 	int ans;
 	int c;
@@ -1324,7 +1317,7 @@ Hidden int asktodelete(d) tabent *d; {
 	return ans;
 }
 
-Hidden Procedure delentry(d) tabent *d; {
+Hidden Procedure delentry(tabent *d) {
 	if (d->code < 0) {         /* string entry */
 		d->def = d->rep = "";
 		d->deflen = 0;
@@ -1338,7 +1331,7 @@ Hidden Procedure delentry(d) tabent *d; {
 	Upd_bindings();
 }
 
-Hidden string makereprofdef(deflen, def) int deflen; string def; {
+Hidden string makereprofdef(int deflen, string def) {
 	int i;
 	bufadm *rp= &reprbuf;
 
@@ -1355,7 +1348,7 @@ Hidden string makereprofdef(deflen, def) int deflen; string def; {
 #define DEL_HELP "(Type ? for help) "
 Hidden bool helpmessage = Yes;          /* write previous message only once */
 
-Hidden Procedure delprompt(rep, name, y, x) string rep, name; int *y, *x; {
+Hidden Procedure delprompt(string rep, string name, int *y, int *x) {
 	if (outofsync) {
 		clearwindow();
 		outofsync = No;
@@ -1401,16 +1394,16 @@ Hidden string fmt;
 Hidden string pfmt;
 Hidden int headlen= 0;
 
-Hidden Procedure startfmt(syz) int syz; {
+Hidden Procedure startfmt(int syz) {
 	fmt= (string) getmem((unsigned) syz);
 	pfmt= fmt;
 }
 
-Hidden Procedure chr2fmt(ch) char ch; {
+Hidden Procedure chr2fmt(char ch) {
 	*pfmt++= ch;
 }
 
-Hidden Procedure str2fmt(s) string s; {
+Hidden Procedure str2fmt(string s) {
 	while (*s) {
 		*pfmt++= *s;
 		s++;
@@ -1547,7 +1540,7 @@ Hidden char inverse[1]= {STANDOUT};
 
 Hidden char buf[MAXBUFFER];
 
-Hidden string ask_to_click(y, x, prompt, plen) int y, x; string prompt; int *plen; {
+Hidden string ask_to_click(int y, int x, string prompt, int *plen) {
 	char *pbuf= buf;
 	int c;
 
@@ -1616,7 +1609,7 @@ Visible Procedure savefiledefs() {
 	nsavefiledefs= h - (savedeftab + nsaveharddefs);
 }
 
-Hidden bool a_harddef(d) tabent *d; {
+Hidden bool a_harddef(tabent *d) {
 	tabent *h;
 
 	if (!ValDef(d))
@@ -1644,7 +1637,7 @@ Hidden Procedure init_ignore() {
 	}
 }
 
-Hidden string findoldrepr(deflen, def) int deflen; string def; {
+Hidden string findoldrepr(int deflen, string def) {
 	tabent *h;
 
 	h= savedeftab + (nsaveharddefs + nsavefiledefs) - 1;
@@ -1657,7 +1650,7 @@ Hidden string findoldrepr(deflen, def) int deflen; string def; {
 	return SNULL;
 }
 
-Hidden tabent *findsavedhardstringentry(code) int code;  {
+Hidden tabent * findsavedhardstringentry(int code) {
 	tabent *d;
 
 	for (d= savedeftab+nsaveharddefs-1; d >= savedeftab; d--) {
@@ -1766,8 +1759,7 @@ Hidden Procedure put_strings() {
 
 #define NAMESPACE 15 /* TODO: e1getc.c accepts until 20 */
 
-Hidden Procedure put_def(name, deflen, def, rep)
-	string name, def, rep; int deflen;
+Hidden Procedure put_def(string name, int deflen, string def, string rep)
 {
 	int i;
 	string s;

@@ -20,11 +20,7 @@ Forward Hidden bool ifmatch();
  * Try to insert the character c in the focus *pp.
  */
 
-Visible bool
-insguess(pp, c, ep)
-	path *pp;
-	char c;
-	environ *ep;
+Visible bool insguess(path *pp, char c, environ *ep)
 {
 	path pa = parent(*pp);
 	node n;
@@ -93,12 +89,7 @@ insguess(pp, c, ep)
  * child `ich' of node `n'; that child must be a Text.
  */
 
-Visible bool
-mayinsert(n, ich, s2, c)
-	node n;
-	int ich;
-	int s2;
-	register char c;
+Visible bool mayinsert(node n, int ich, int s2, register char c)
 {
 	int sympa = symbol(n);
 	struct classinfo *ci;
@@ -134,11 +125,7 @@ mayinsert(n, ich, s2, c)
  * as possible will have been incorporated in the string node.
  */
 
-Visible bool
-soften(ep, pstr, alt_c)
-	environ *ep;
-	string *pstr;
-	int alt_c;
+Visible bool soften(environ *ep, string *pstr, int alt_c)
 {
 	path pa = parent(ep->focus);
 	node n;
@@ -211,11 +198,7 @@ soften(ep, pstr, alt_c)
  * Return Yes if *pstr has been advanced.
  */
 
-Visible bool
-resuggest(ep, pstr, alt_c)
-	environ *ep;
-	string *pstr;
-	int alt_c;
+Visible bool resuggest(environ *ep, string *pstr, int alt_c)
 {
 	struct table *tp;
 	struct classinfo *ci;
@@ -334,12 +317,7 @@ resuggest(ep, pstr, alt_c)
  * longest match.
  */
 
-Hidden bool
-ifmatch(ep, pstr, str, alt_c)
-	register environ *ep;
-	register string *pstr;
-	register string str;
-	register int alt_c;
+Hidden bool ifmatch(register environ *ep, register string *pstr, register string str, register int alt_c)
 {
 	register int c = str[ep->s2];
 

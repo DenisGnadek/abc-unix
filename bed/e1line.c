@@ -27,10 +27,7 @@
  * (Used by screen update algorithm only.)
  */
 
-Visible bool
-eqlines(n1, n2)
-	node n1;
-	node n2;
+Visible bool eqlines(node n1, node n2)
 {
 	register node nn1;
 	register node nn2;
@@ -72,9 +69,7 @@ eqlines(n1, n2)
  * Compute the length of the line beginning at the current node.
  */
 
-Visible int
-linelen(n)
-	node n;
+Visible int linelen(node n)
 {
 	register node nn;
 	register string *rp = noderepr(n);
@@ -111,9 +106,7 @@ linelen(n)
  * it cannot set ep->mode or call higher() properly!
  */
 
-Visible bool
-nextline(pp)
-	register path *pp;
+Visible bool nextline(register path *pp)
 {
 	register node n;
 	register node nn;
@@ -152,9 +145,7 @@ nextline(pp)
  * on the next line.
  */
 
-Visible int
-lineno(ep)
-	register environ *ep;
+Visible int lineno(register environ *ep)
 {
 	register int y;
 
@@ -172,9 +163,7 @@ lineno(ep)
  * (Hope the abovementioned trick isn't necessary.)
  */
 
-Visible int
-colno(ep)
-	environ *ep;
+Visible int colno(environ *ep)
 {
 	int x= focoffset(ep);
 
@@ -188,9 +177,7 @@ colno(ep)
  * Make the focus exactly one line wide (if at all possible).
  */
 
-Visible Procedure
-oneline(ep)
-	register environ *ep;
+Visible Procedure oneline(register environ *ep)
 {
 	register node n;
 	node nn;

@@ -17,7 +17,7 @@
 
 /* make a B text out of a C char */
 
-Visible value mkchar(c) char c; {
+Visible value mkchar(char c) {
 	char buf[2];
 	buf[0] = c;
 	buf[1] = '\0';
@@ -25,7 +25,7 @@ Visible value mkchar(c) char c; {
 }
 
 /* report: t item j ?=? ' ' */
-Hidden bool is_space(t, i) value t, i; {
+Hidden bool is_space(value t, value i) {
 	value ti;
 	char c;
 	
@@ -35,7 +35,7 @@ Hidden bool is_space(t, i) value t, i; {
 	return c == ' ';
 }
 
-Hidden Procedure incr(pn) value* pn; {
+Hidden Procedure incr(value *pn) {
 	value n1;
 	
 	n1 = sum(*pn, one);
@@ -43,7 +43,7 @@ Hidden Procedure incr(pn) value* pn; {
 	*pn = n1;
 }
 
-Visible value stripped(t) value t; {
+Visible value stripped(value t) {
 	value a, b, i, j, k;
 	
 	i = one;
@@ -70,7 +70,7 @@ Visible value stripped(t) value t; {
 	return b;
 }
 
-Visible value split(t) value t; {
+Visible value split(value t) {
 	value a, b, i, j, ij, r, ri, sizt;
 	
 	r = mk_elt();
@@ -101,10 +101,7 @@ Visible value split(t) value t; {
 	return r;
 }
 
-Hidden value uplower(t, islowupper, touplower)
-	value t;
-	int (*islowupper)();
-	int (*touplower)();
+Hidden value uplower(value t, int ( *islowupper)(), int ( *touplower)())
 {
 	value i, sizt, r, ti, c;
 	char s[2];
@@ -132,36 +129,36 @@ Hidden value uplower(t, islowupper, touplower)
 
 /* terrible BSD patch: turn macroos into Functions */
 #ifdef isupper
-int F_isupper(c) char c; { return isupper(c); }
+int F_isupper(char c) { return isupper(c); }
 #else
 #define F_isupper isupper
 extern int isupper();
 #endif
 #ifdef islower
-int F_islower(c) char c; { return islower(c); }
+int F_islower(char c) { return islower(c); }
 #else
 #define F_islower islower
 extern int islower();
 #endif
 #ifdef toupper
-int F_toupper(c) char c; { return toupper(c); }
+int F_toupper(char c) { return toupper(c); }
 #else
 #define F_toupper toupper
 extern int toupper();
 #endif
 #ifdef tolower
-int F_tolower(c) char c; { return tolower(c); }
+int F_tolower(char c) { return tolower(c); }
 #else
 #define F_tolower tolower
 extern int tolower();
 #endif
 
-Visible value upper(t) value t; { return uplower(t, F_islower, F_toupper);}
-Visible value lower(t) value t; { return uplower(t, F_isupper, F_tolower);}
+Visible value upper(value t) { return uplower(t, F_islower, F_toupper);}
+Visible value lower(value t) { return uplower(t, F_isupper, F_tolower);}
 
 /* for RangeElem's */
 
-Hidden Procedure insCrange(lwb, upb, pl) value lwb, upb; value *pl; {
+Hidden Procedure insCrange(value lwb, value upb, value *pl) {
 	value w; char lwbchar= charval(lwb), upbchar= charval(upb);
 	if (lwbchar > upbchar) return;
 	uniql(pl);
@@ -172,7 +169,7 @@ Hidden Procedure insCrange(lwb, upb, pl) value lwb, upb; value *pl; {
 	} while (++lwbchar <= upbchar);
 }
 
-Hidden Procedure insIrange(lwb, upb, pl) value lwb, upb; value *pl; {
+Hidden Procedure insIrange(value lwb, value upb, value *pl) {
 	value w= copy(lwb);
 	uniql(pl);
 	do {
@@ -185,7 +182,7 @@ Hidden Procedure insIrange(lwb, upb, pl) value lwb, upb; value *pl; {
 	release(lwb);
 }
 
-Visible Procedure ins_range(lwb, upb, pl) value lwb, upb; value *pl; {
+Visible Procedure ins_range(value lwb, value upb, value *pl) {
 	if (Is_text(lwb))
 		insCrange(lwb, upb, pl);
 	else 
@@ -207,7 +204,7 @@ Visible Procedure ins_range(lwb, upb, pl) value lwb, upb; value *pl; {
 extern value rndm_limit;
 	/* below this limit each number has a fair chance */
 
-Hidden value numchoice(m) value m; {
+Hidden value numchoice(value m) {
 	value p;
 	value q;
 	value r;
@@ -242,7 +239,7 @@ Hidden value numchoice(m) value m; {
 	return r;
 }
 
-Visible value choice(train) value train; {
+Visible value choice(value train) {
 	value nn;
 	value n;
 	

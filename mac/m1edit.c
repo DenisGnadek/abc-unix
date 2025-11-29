@@ -5,9 +5,6 @@
 #include "b.h"
 #include "main.h"
 
-Visible Procedure ed_file(fname, line, changed)
-     string fname;
-     intlet line;
-     bool *changed;
+Visible Procedure ed_file(string fname, intlet line, bool *changed)
 {
 }

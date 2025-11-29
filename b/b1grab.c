@@ -18,8 +18,7 @@
 
 /******************************* Grabbing **********************************/
 
-Hidden unsigned getsyze(type, len, pnptrs) literal type; intlet len;
-		int *pnptrs; {
+Hidden unsigned getsyze(literal type, intlet len, int *pnptrs) {
 	register unsigned syze= 0;
 	int nptrs= 0;
 	switch (type) {
@@ -83,7 +82,7 @@ Hidden unsigned getsyze(type, len, pnptrs) literal type; intlet len;
 	return syze;
 }
 
-Visible value grab(type, len) literal type; intlet len; {
+Visible value grab(literal type, intlet len) {
 	unsigned syze= getsyze(type, len, (int*)NULL);
 	value v;
 	Grabber();
@@ -92,7 +91,7 @@ Visible value grab(type, len) literal type; intlet len; {
 	return v;
 }
 
-Visible Procedure regrab(v, len) value *v; intlet len; {
+Visible Procedure regrab(value *v, intlet len) {
 	literal type= (*v)->type;
 	unsigned syze= getsyze(type, len, (int*)NULL);
 	Regrabber();
@@ -102,13 +101,13 @@ Visible Procedure regrab(v, len) value *v; intlet len; {
 
 /******************************* Copying and releasing *********************/
 
-Visible value copy(v) value v; {
+Visible value copy(value v) {
 	if (v != Vnil && !IsSmallInt(v) && Refcnt(v) < Maxrefcnt) 
 		++Refcnt(v);
 	return v;
 }
 
-Visible Procedure release(v) value v; {
+Visible Procedure release(value v) {
 	if (v == Vnil || IsSmallInt(v)) return;
 	if (Refcnt(v) == 0)
 		syserr(MESS(1503, "releasing unreferenced value"));
@@ -116,7 +115,7 @@ Visible Procedure release(v) value v; {
 		rel_subvalues(v);
 }
 
-Hidden value ccopy(v) value v; {
+Hidden value ccopy(value v) {
 	literal type= v->type; intlet len; value w;
 	int nptrs; unsigned syze; register string from, to, end;
 	register value *pp, *pend;
@@ -133,7 +132,7 @@ Hidden value ccopy(v) value v; {
 	return w;
 }
 
-Visible Procedure uniql(ll) value *ll; {
+Visible Procedure uniql(value *ll) {
 	if (*ll != Vnil && !IsSmallInt(*ll) && Refcnt(*ll) > 1) {
 		value c= ccopy(*ll);
 		release(*ll);
@@ -141,7 +140,7 @@ Visible Procedure uniql(ll) value *ll; {
 	}
 }
 
-Visible Procedure rrelease(v) value v; {
+Visible Procedure rrelease(value v) {
 	literal type= v->type; intlet len= Length(v);
 	int nptrs; register value *pp, *pend;
 	VOID getsyze(type, len, &nptrs);

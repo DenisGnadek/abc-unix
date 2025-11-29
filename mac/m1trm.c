@@ -347,11 +347,7 @@ set_select()
    Passes screen dimensions (application coordinates, of course)
    and some flag bits back via parameters. */
 
-int
-trmstart(plines, pcols, pflags)
-	int *plines;
-	int *pcols;
-	int *pflags;
+int trmstart(int *plines, int *pcols, int *pflags)
 {
 	if (!setup) {
 		int err= initialize();
@@ -447,10 +443,7 @@ trmundefined()
    In this implementation, it is actually the mouse position.
    (Shouldn't it report the moust position of the last mouse-up event?) */
 
-int
-trmsense(py, px)
-	int *py;
-	int *px;
+int trmsense(int *py, int *px)
 {
 	Point pt;
 
@@ -464,10 +457,7 @@ trmsense(py, px)
 
 /* Redisplay a certain range. Internal coordinates. */
 
-static
-redisplay(yfirst, ylast, indent)
-	int yfirst, ylast;
-	int indent;
+static redisplay(int yfirst, int ylast, int indent)
 {
 	char *data;
 	int i;
@@ -530,9 +520,7 @@ redisplay(yfirst, ylast, indent)
 
 /* Redisplay the lines that (partly) fall in the given region. */
 
-static
-rgndisplay(rgn)
-	RgnHandle rgn;
+static rgndisplay(RgnHandle rgn)
 {
 	redisplay(pixel2line((*rgn)->rgnBBox.top),
 		pixel2line((*rgn)->rgnBBox.bottom), 0);
@@ -540,11 +528,7 @@ rgndisplay(rgn)
 
 /* Output a string to the screen.  Application coordinates. */
 
-trmputdata(yfirst, ylast, indent, data)
-	int yfirst;
-	int ylast;
-	int indent;
-	char *data;
+int trmputdata(int yfirst, int ylast, int indent, char *data)
 {
 	trmnputdata(yfirst+apptop, ylast+apptop, indent, data, strlen(data));
 }
@@ -553,12 +537,7 @@ trmputdata(yfirst, ylast, indent, data)
    Internal coordinates.
    First scroll the application area in view. */
 
-trmnputdata(yfirst, ylast, indent, data, len)
-	int yfirst;
-	int ylast;
-	int indent;
-	char *data;
-	int len;
+int trmnputdata(int yfirst, int ylast, int indent, char *data, int len)
 {
 	int y;
 	int x;
@@ -595,10 +574,7 @@ trmnputdata(yfirst, ylast, indent, data, len)
    so that lines scrolled out of sight in this way can be
    reviewed by the user. */
 
-trmscrollup(yfirst, ylast, n)
-	int yfirst;
-	int ylast;
-	int n;
+int trmscrollup(int yfirst, int ylast, int n)
 {
 	if (yfirst != 0 || n < 0)
 		yfirst += apptop;
@@ -609,11 +585,7 @@ trmscrollup(yfirst, ylast, n)
 /* Ditto, internal coordinates.
    First scroll the application area in view. */
 
-static
-trmnscrollup(yfirst, ylast, n)
-	int yfirst;
-	int ylast;
-	int n;
+static trmnscrollup(int yfirst, int ylast, int n)
 {
 	RgnHandle rgn;
 	Rect r;
@@ -673,9 +645,7 @@ scrollbuf(y, count, n, direction)
 
 /* Clear lines in the text buffer.  Internal coordinates. */
 
-static
-clearlbuf(yfirst, ylast)
-	int yfirst, ylast;
+static clearlbuf(int yfirst, int ylast)
 {
 	for (; yfirst <= ylast; ++yfirst)
 		lbuf[yfirst][0]= EOS;
@@ -687,9 +657,7 @@ clearlbuf(yfirst, ylast)
    If no change occurs, no calls are made, so it is safe to call this
    routine often. */
 
-static
-set_wintop(new)
-	int new;
+static set_wintop(int new)
 {
 	if (new < 0)
 		new= 0;
@@ -728,9 +696,7 @@ display_cursor()
 /* Flush output and place character cursor at desired position.
    Application coordinates. */
 
-trmsync(y, x)
-	int y;
-	int x;
+int trmsync(int y, int x)
 {
 	/* In the Macintosh version there is nothing to flush. */
 	rmcursor();
@@ -785,9 +751,7 @@ trmavail()
 #define CmdKey 0x80
 #define CharMask 0x7F
 
-static int
-encodechar(ep)
-	EventRecord *ep;
+static int encodechar(EventRecord *ep)
 {
 	char c= ep->message & charCodeMask;
 	
@@ -803,7 +767,7 @@ encodechar(ep)
 		return c; /* Return normal char */
 }
 
-Hidden int hackerskey(c) int c; {
+Hidden int hackerskey(int c) {
 	/* discard disabling of Edit-menu items for ABC hackers */
 	/* also enable Cmd-? and Cmd-/ (same without Shiftkey) for HELP */
 	switch (c) {
@@ -987,7 +951,7 @@ trminput()
 	}
 }
 
-mywin_update(win) WindowPtr win; {
+int mywin_update(WindowPtr win) {
 	if (win != mywin)
 		return;
 	BeginUpdate(mywin);
@@ -1042,10 +1006,7 @@ static long deadline;	/* Time when next step may start */
 
 static pascal void action(ControlHandle ch, short partcode); /* Forward */
 
-static
-trackvbar(pwhere, partcode)
-	Point *pwhere;
-	int partcode;
+static trackvbar(Point *pwhere, int partcode)
 {
 	int step;
 	
@@ -1061,10 +1022,7 @@ trackvbar(pwhere, partcode)
 
 /* The action procedure for continuous scrolling. */
 
-static pascal void
-action(ch, partcode)
-	ControlHandle ch;
-	short partcode;
+static pascal void action(ControlHandle ch, short partcode)
 {
 	int step;
 	long now= TickCount();
@@ -1167,8 +1125,7 @@ trminterrupt()
    (The name is the same as a similar function for the IBM PC.)
    Uses internal coordinate system. */
 
-cputs(s)
-	char *s;
+int cputs(char *s)
 {
 	if (!setup) {
 		if (initialize() != TE_OK)
@@ -1179,10 +1136,7 @@ cputs(s)
 
 /* Write characters to console. */
 
-static
-cwrite(s, length)
-	char *s;
-	int length;
+static cwrite(char *s, int length)
 {
 	char *end;
 	int len;
@@ -1221,9 +1175,7 @@ cwrite(s, length)
 
 /* Routine to substitute for the standard console write routine. */
 
-static int
-my_write(pb)
-	struct controlblock *pb;
+static int my_write(struct controlblock *pb)
 {
 	cwrite(pb->io_data, (int) pb->io_nbytes);
 	pb->io_nbytes= 0;

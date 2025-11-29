@@ -37,9 +37,7 @@ Visible Procedure initfile()
 	setbuffile();
 }
 
-Visible char *makepath(path1, path2)
-     char *path1;
-     char *path2;
+Visible char * makepath(char *path1, char *path2)
 {
 	if (path1 == NULL || *path1 == '\0')
 		return savepath(path2);
@@ -62,12 +60,11 @@ Visible char *makepath(path1, path2)
 	}
 }
 
-Visible int Chdir (path) char *path; {
+Visible int Chdir(char *path) {
 	return chdir(path);
 }
 
-Hidden char *savepath(path)
-     char *path;
+Hidden char * savepath(char *path)
 {
 	char *path1;
 
@@ -77,14 +74,12 @@ Hidden char *savepath(path)
 	return path1;
 }
 
-Visible Porting Procedure freepath(path)
-     char *path;
+Visible Porting Procedure freepath(char *path)
 {
 	if (path != NULL) free(path);
 }
 
-Hidden char *searchfile(base)
-     char *base;
+Hidden char * searchfile(char *base)
 {
 	char *file;
 	char *path;

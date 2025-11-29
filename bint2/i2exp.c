@@ -52,7 +52,7 @@ Hidden struct prio priorities[] = {
 
 #define NPRIORITIES (sizeof priorities / sizeof priorities[0])
 
-Visible struct prio *pprio(f, adic) value f; char adic; {
+Visible struct prio * pprio(value f, char adic) {
 	struct prio *pp;
 	string s= strval(f);
 	
@@ -67,18 +67,15 @@ Visible struct prio *pprio(f, adic) value f; char adic; {
 /************************************************************************/
 
 /*
- * Stack(adm) <= "allocated space" < Top(adm)
- * Sp(adm) points to the first free entry
- */
- 
-Hidden Procedure initstack(adm, n) expadm *adm; int n; {
+ * Stack(adm) <= "allocated space" < Top(* Sp( adm) points to the first free entry */ Hidden Procedure initstack(adm, n) expadm *adm)
+{
 	Stack(adm)= Sp(adm)=
 	    (parsetree *) getmem((unsigned) (n * sizeof(parsetree *)));
 	Top(adm)= Stack(adm) + n;
 	Nextend(adm)= n;
 }
 
-Visible Procedure initexp(adm, n, level) expadm *adm; int n; char level; {
+Visible Procedure initexp(expadm *adm, int n, char level) {
 	initstack(adm, n);
 	push_dya(adm, mk_text(Bottom));
 	Level(adm)= level;
@@ -86,17 +83,17 @@ Visible Procedure initexp(adm, n, level) expadm *adm; int n; char level; {
 	Nfld(adm)= 0;
 }
 
-Visible Procedure endstack(adm) expadm *adm; {
+Visible Procedure endstack(expadm *adm) {
 	while (Sp(adm) > Stack(adm)) release(Pop(adm));
 	freemem((ptr) Stack(adm));
 }
 
-Visible Procedure push_item(adm, v) expadm *adm; parsetree v; {
+Visible Procedure push_item(expadm *adm, parsetree v) {
 	if (Sp(adm) >= Top(adm)) st_extend(adm);
 	*Sp(adm)++= v;
 }
 
-Hidden Procedure st_extend(adm) expadm *adm; {
+Hidden Procedure st_extend(expadm *adm) {
 	int syze= (Top(adm) - Stack(adm)) + Nextend(adm);
 	int n= Sp(adm) - Stack(adm);
 	
@@ -108,7 +105,7 @@ Hidden Procedure st_extend(adm) expadm *adm; {
 
 /* to recognize them on the stack, dyadic operators are pushed as compounds */
 
-Hidden Procedure push_dya(adm, v) expadm *adm; value v; {
+Hidden Procedure push_dya(expadm *adm, value v) {
 	value w= mk_compound(1);
 	*Field(w, 0)= v;
 	push_item(adm, (parsetree) w);
@@ -118,11 +115,11 @@ Hidden Procedure push_dya(adm, v) expadm *adm; value v; {
 /*		expression						*/
 /* ******************************************************************** */
 
-Visible parsetree expr(q) txptr q; {
+Visible parsetree expr(txptr q) {
 	return collateral(q, singexpr);
 }
 
-Visible parsetree singexpr(q) txptr q; {
+Visible parsetree singexpr(txptr q) {
 	expadm adm;
 	parsetree v;
 		
@@ -136,7 +133,7 @@ Visible parsetree singexpr(q) txptr q; {
 
 Hidden bool unparsed= No;
 
-Visible parsetree unp_test(q) txptr q; {
+Visible parsetree unp_test(txptr q) {
 	unparsed= Yes;
 	return singexpr(q);
 }
@@ -164,7 +161,7 @@ Hidden int trans[5][8]= {
 	{S_dya,  S_dya, S_dya,  S_err, S_err,  S_err,  S_unp, S_err}
 };
 
-Hidden parsetree par_expr(q, adm) txptr q; expadm *adm; {
+Hidden parsetree par_expr(txptr q, expadm *adm) {
 	parsetree v= NilTree;
 	value w, c;
 	int state= S_dya;
@@ -231,9 +228,7 @@ Hidden parsetree par_expr(q, adm) txptr q; expadm *adm; {
 #define START	'2'
 
 #define Prio_err(adm) \
-		(Level(adm) == PARSER ? pprerr(PRIO) : fixerr(PRIO))
-
-Visible Procedure do_dya(adm, v) expadm *adm; value v; {
+		(Level(adm) == PARSER ? pprerr(: fixerr( PRIO)) Visible Procedure do_dya(adm, v) expadm *adm) {
 	parsetree *p= Sp(adm) - 2;	/* skip operand */
 	struct prio *pdya, *popr;
 	char action= START;
@@ -263,7 +258,7 @@ Visible Procedure do_dya(adm, v) expadm *adm; value v; {
 	push_dya(adm, v);	/* shift */
 }
 
-Visible Procedure reduce(adm) expadm *adm; {
+Visible Procedure reduce(expadm *adm) {
 	parsetree x, y;
 	value opr, f= Vnil, v;
 	
@@ -300,7 +295,7 @@ Visible Procedure reduce(adm) expadm *adm; {
 /*		element							*/
 /* ******************************************************************** */
 
-Hidden bool element(q, v) txptr q; value *v; {
+Hidden bool element(txptr q, value *v) {
 	parsetree w;
 	
 	if (sel_tag(q, &w) || closed_expr(q, &w) || constant(q, &w) ||
@@ -316,7 +311,7 @@ Hidden bool element(q, v) txptr q; value *v; {
 /*		(sel_tag)						*/
 /* ******************************************************************** */
 
-Hidden bool sel_tag(q, v) txptr q; parsetree *v; {
+Hidden bool sel_tag(txptr q, parsetree *v) {
 	value name; txptr tx0= tx;
 	if (Text(q) && is_tag(&name)) {
 		txptr tx1= tx;
@@ -338,7 +333,7 @@ Hidden bool sel_tag(q, v) txptr q; parsetree *v; {
 /*		(expression)						*/
 /* ******************************************************************** */
 
-Hidden bool closed_expr(q, v) txptr q; parsetree *v; {
+Hidden bool closed_expr(txptr q, parsetree *v) {
 	return open_sign ? (*v= compound(q, expr), Yes) : No;
 }
 
@@ -348,7 +343,7 @@ Hidden bool closed_expr(q, v) txptr q; parsetree *v; {
 /* note: stand_alone e<number> not allowed				*/
 /* ******************************************************************** */
 
-Hidden bool constant(q, v) txptr q; parsetree *v; {
+Hidden bool constant(txptr q, parsetree *v) {
 	if (Dig(Char(tx)) || Char(tx) == C_POINT) {
 		txptr tx0= tx;
 		bool d= digits(q);
@@ -369,7 +364,7 @@ Hidden bool constant(q, v) txptr q; parsetree *v; {
 	return No;
 }
 
-Hidden bool digits(q) txptr q; {
+Hidden bool digits(txptr q) {
 	txptr tx0= tx;
 	while (Text(q) && Dig(Char(tx))) tx++;
 	return tx > tx0;
@@ -381,7 +376,7 @@ Hidden bool digits(q) txptr q; {
 
 Forward Hidden parsetree text_body();
 
-Hidden bool text_dis(q, v) txptr q; parsetree *v; {
+Hidden bool text_dis(txptr q, parsetree *v) {
 	value aq;
 	if (texdis_sign(&aq)) {
 		parsetree w;
@@ -393,7 +388,7 @@ Hidden bool text_dis(q, v) txptr q; parsetree *v; {
 	return No;
 }
 
-Hidden parsetree text_body(q, aq) txptr q; value aq; {
+Hidden parsetree text_body(txptr q, value aq) {
 	value head; parsetree tail;
 	char quote= strval(aq)[0];
 	txptr tx0= tx;
@@ -426,7 +421,7 @@ Hidden parsetree text_body(q, aq) txptr q; value aq; {
 	return NilTree;
 }
 
-Hidden bool is_conversion(q, v) txptr q; parsetree *v; {
+Hidden bool is_conversion(txptr q, parsetree *v) {
 	if (conv_sign) {
 		txptr ftx, ttx;
 		req(S_CONVERT, q, &ftx, &ttx);
@@ -440,7 +435,7 @@ Hidden bool is_conversion(q, v) txptr q; parsetree *v; {
 /*		table_display; list_display; range_display;		*/
 /* ******************************************************************** */
 
-Hidden bool elt_dis(v) parsetree *v; {
+Hidden bool elt_dis(parsetree *v) {
 	if (curlyclose_sign) {
 		*v= node1(ELT_DIS);
 		return Yes;
@@ -448,8 +443,7 @@ Hidden bool elt_dis(v) parsetree *v; {
 	return No;
 }
 
-Hidden parsetree par_lta(q, adm, lta_item) txptr q; expadm *adm;
-		Procedure (*lta_item)(); {
+Hidden parsetree par_lta(txptr q, expadm *adm, Procedure ( *lta_item)()) {
 	txptr ftx, ttx;
 	int n;
 	parsetree v;
@@ -465,7 +459,7 @@ Hidden parsetree par_lta(q, adm, lta_item) txptr q; expadm *adm;
 	return v;
 }
 
-Hidden Procedure tab_item(q, adm) txptr q; expadm *adm; {
+Hidden Procedure tab_item(txptr q, expadm *adm) {
 	txptr ftx, ttx;
 	
 	need(S_SUB);
@@ -476,7 +470,7 @@ Hidden Procedure tab_item(q, adm) txptr q; expadm *adm; {
 	push_item(adm, singexpr(q));
 }
 
-Hidden bool tab_dis(q, v) txptr q; parsetree *v; {
+Hidden bool tab_dis(txptr q, parsetree *v) {
 	if (Char(tx) == C_SUB) {
 		expadm adm;
 		parsetree w;
@@ -490,7 +484,7 @@ Hidden bool tab_dis(q, v) txptr q; parsetree *v; {
 	return No;
 }
 
-Hidden bool range_elem(q, v) txptr q; parsetree *v; {
+Hidden bool range_elem(txptr q, parsetree *v) {
 	txptr ftx, ttx;
 	if (find(S_RANGE, q, &ftx, &ttx)) {
 		parsetree w;
@@ -502,7 +496,7 @@ Hidden bool range_elem(q, v) txptr q; parsetree *v; {
 	return No;
 }
 
-Hidden Procedure list_item(q, adm) txptr q; expadm *adm; {
+Hidden Procedure list_item(txptr q, expadm *adm) {
 	parsetree r;
 	if (range_elem(q, &r))
 		push_item(adm, r);
@@ -510,7 +504,7 @@ Hidden Procedure list_item(q, adm) txptr q; expadm *adm; {
 		push_item(adm, singexpr(q));
 }
 
-Hidden Procedure list_dis(q, v) txptr q; parsetree *v; {
+Hidden Procedure list_dis(txptr q, parsetree *v) {
 	expadm adm;
 	parsetree w;
 	
@@ -520,7 +514,7 @@ Hidden Procedure list_dis(q, v) txptr q; parsetree *v; {
 	*v= node2(LIST_DIS, w);
 }
 
-Hidden bool tlr_dis(q, v) txptr q; parsetree *v; {
+Hidden bool tlr_dis(txptr q, parsetree *v) {
 	if (curlyopen_sign) {
 		skipsp(&tx);
 		if (!elt_dis(v)) {
@@ -539,7 +533,7 @@ Hidden bool tlr_dis(q, v) txptr q; parsetree *v; {
 /*		selection						*/
 /* ******************************************************************** */
 
-Visible Procedure selection(q, v) txptr q; parsetree *v; {
+Visible Procedure selection(txptr q, parsetree *v) {
 	txptr ftx, ttx;
 	skipsp(&tx);
 	while (Text(q) && sub_sign) {
@@ -553,7 +547,7 @@ Visible Procedure selection(q, v) txptr q; parsetree *v; {
 /*		trim_target						*/
 /* ******************************************************************** */
 
-Visible Procedure trim_target(q, v) txptr q; parsetree *v; {
+Visible Procedure trim_target(txptr q, parsetree *v) {
 	parsetree w;
 	value name;
 	bool beh;
@@ -581,7 +575,7 @@ Visible Procedure trim_target(q, v) txptr q; parsetree *v; {
 /*		tag_operator	 					*/
 /* ******************************************************************** */
 
-Visible bool tag_operator(q, v) txptr q; value *v; {
+Visible bool tag_operator(txptr q, value *v) {
 	value w;
 	txptr tx0= tx;
 	if (Text(q) && is_tag(&w)) {

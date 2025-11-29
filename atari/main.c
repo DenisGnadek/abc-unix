@@ -56,9 +56,7 @@ long _stksize = -1L; /*  Stack needs to be huge.... */
 long _stksize = 20000; /*  Stack needs to be huge.... */
 #endif
 
-main(argc, argv)
-     int argc;
-     char **argv;
+int main(int argc, char **argv)
 {
 	int c;
 	int flags = 0;
@@ -224,8 +222,7 @@ main(argc, argv)
 	bye(0);
 }
 
-Hidden char *StrToLower(s)
-     char *s;
+Hidden char * StrToLower(char *s)
 {
 	register char *p;
 
@@ -258,9 +255,7 @@ Hidden char *StrToLower(s)
  *	was.
  */
 
-Hidden Procedure re_direct(ac_ptr, av)
-     int *ac_ptr;		/* Pointer to argument count */
-     char *av[];		/* Argument strings array */
+Hidden Procedure re_direct(int *ac_ptr, /* Pointer to argument count */ char *av[])
 {
 	int  ac    = *ac_ptr;	/* Argument count */
 	char *arg;             /* Argument pointer */

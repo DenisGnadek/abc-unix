@@ -17,8 +17,7 @@
    the Dialog Manager: there are simple buttons, static
    text and edit text items. */
 
-Visible char *asknewlocation(namebuf) char *namebuf;
-{
+Visible char * asknewlocation(char *namebuf) {
 	DialogPtr dlg= GetNewDialog(NEWLOCDLOG, (Ptr)NULL, (WindowPtr)(-1));
 	short item;
 	
@@ -47,8 +46,7 @@ Visible char *asknewlocation(namebuf) char *namebuf;
 	}
 }
 
-Visible char *asklocation(namebuf) char *namebuf;
-{
+Visible char * asklocation(char *namebuf) {
 	DialogPtr dlg= GetNewDialog(LOCATIONDLOG, (Ptr)NULL, (WindowPtr)(-1));
 	short item;
 	
@@ -76,8 +74,7 @@ Visible char *asklocation(namebuf) char *namebuf;
 	}
 }
 
-Visible char *askhowto(namebuf) char *namebuf;
-{
+Visible char * askhowto(char *namebuf) {
 	DialogPtr dlg= GetNewDialog(HOWTODLOG, (Ptr)NULL, (WindowPtr)(-1));
 	short item;
 	
@@ -105,7 +102,7 @@ Visible char *askhowto(namebuf) char *namebuf;
 	}
 }
 
-Hidden Procedure getedittext(dlg, buf) DialogPtr dlg; char *buf; {
+Hidden Procedure getedittext(DialogPtr dlg, char *buf) {
 	Handle ih;
 	short type;
 	Rect box;
@@ -114,7 +111,7 @@ Hidden Procedure getedittext(dlg, buf) DialogPtr dlg; char *buf; {
 	GetIText(ih, buf);
 }
 
-Hidden Procedure setedittext(dlg, buf) DialogPtr dlg; char *buf; {
+Hidden Procedure setedittext(DialogPtr dlg, char *buf) {
 	Handle ih;
 	short type;
 	Rect box;
@@ -124,7 +121,7 @@ Hidden Procedure setedittext(dlg, buf) DialogPtr dlg; char *buf; {
 	SelIText(dlg, EDITITEM, 0, 32000);
 }
 
-Hidden bool oktoreplace(name) char *name; {
+Hidden bool oktoreplace(char *name) {
 	ParamText(name, (char*)NULL, (char*)NULL, (char*)NULL);
 	return CautionAlert(OKREPLACEALERT, (ProcPtr)NULL) == OKITEM;
 }

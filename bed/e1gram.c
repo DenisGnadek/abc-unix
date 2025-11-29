@@ -23,10 +23,7 @@ Forward Hidden Procedure makesugg();
  * Test whether sym is in the given class.
  */
 
-Visible bool
-isinclass(sym, ci)
-	register int sym;
-	struct classinfo *ci;
+Visible bool isinclass(register int sym, struct classinfo *ci)
 {
 	register classptr cp;
 
@@ -51,9 +48,7 @@ isinclass(sym, ci)
  * In practical use this is no problem at all, however.
  */
 
-Visible string *
-noderepr(n)
-	register node n;
+Visible string * noderepr(register node n)
 {
 	register int sym;
 
@@ -80,9 +75,7 @@ Visible Procedure endnoderepr() { /* hack to free noderepr static store */
  * Deliver the prototype node for the given symbol.
  */
 
-Visible node
-gram(sym)
-	register int sym;
+Visible node gram(register int sym)
 {
 	Assert(0 <= sym && sym < TABLEN);
 	return table[sym].r_node;
@@ -94,9 +87,7 @@ gram(sym)
  * Deliver the name of a symbol.
  */
 
-Visible string
-symname(sym)
-	int sym;
+Visible string symname(int sym)
 {
 	static char buf[20];
 
@@ -112,9 +103,7 @@ symname(sym)
  * Return -1 if not found.
  */
 
-Visible int
-nametosym(str)
-	register string str;
+Visible int nametosym(register string str)
 {
 	register int sym;
 	register string name;
@@ -133,10 +122,7 @@ nametosym(str)
  * Test whether `sym' may replace the node in the path `p'.
  */
 
-Visible bool
-allowed(p, sym)
-	register path p;
-	register int sym;
+Visible bool allowed(register path p, register int sym)
 {
 	register path pa = parent(p);
 	register int ich = ichild(p);
@@ -181,9 +167,7 @@ initgram()
  * Set a node's refcnt to infinity, so it will never be released.
  */
 
-Hidden Procedure
-fix_refcnt(n)
-	register node n;
+Hidden Procedure fix_refcnt(register node n)
 {
 	Assert(n->refcnt > 0);
 	n->refcnt = Maxrefcnt;
@@ -214,7 +198,7 @@ initclasses()
  * Extract suggestions from class list.
  */
 
-Hidden Procedure makesugg(cp) classptr cp; {
+Hidden Procedure makesugg(classptr cp) {
 	struct table *tp;
 	string *rp;
 	char buffer[1000];
@@ -254,8 +238,7 @@ Hidden Procedure makesugg(cp) classptr cp; {
  * Set the root of the grammar to the given symbol.  It must exist.
  */
 
-Visible Procedure
-setroot(isym) int isym; {	/* symbols defined in tabl.h */
+Visible Procedure setroot(int isym) {	/* symbols defined in tabl.h */
 	register int ich;
 
 	table[Rootsymbol].r_name = table[isym].r_name;
@@ -294,10 +277,7 @@ Hidden struct classinfo sublists[] = {{Asublists, 0, 0, 0}};
  * of the symbols would have to be made public.
  */
 
-Visible bool
-samelevel(sym, sym1)
-	register int sym;
-	register int sym1;
+Visible bool samelevel(register int sym, register int sym1)
 {
 	register int zzz;
 
@@ -321,9 +301,7 @@ samelevel(sym, sym1)
  * such as KW expr KW ...).
  */
 
-Visible bool
-issublist(sym)
-	register int sym;
+Visible bool issublist(register int sym)
 {
 	register int i;
 	register string repr;
@@ -349,7 +327,7 @@ issublist(sym)
  * following a colon.
  * sym == symbol(tree(parent(ep->focus)))
  */
-Visible bool allows_colon(sym) int sym; {
+Visible bool allows_colon(int sym) {
 	switch (sym) {
 	case Short_comp:
 	case Test_suite:

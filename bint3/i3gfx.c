@@ -43,7 +43,7 @@ do_line();
  * Enter graphics mode.  Clear the screen.  Set spacing to given values.
  */
 
-Visible Procedure space_to(v, w) value v, w; {
+Visible Procedure space_to(value v, value w) {
 	do_gfx(v, w, /*&*/do_space);
 }
 
@@ -55,7 +55,7 @@ Visible Procedure space_to(v, w) value v, w; {
  * if no SPACE command was ever issued.)
  */
 
-Visible Procedure line_to(v, w) value v, w; {
+Visible Procedure line_to(value v, value w) {
 	do_gfx(v, w, /*&*/do_line);
 }
 
@@ -119,7 +119,7 @@ static vector scale;
  * If so, extract the value into the vector whose address is passed.
  */
 
-Hidden bool get_point(v, pv) value v; vector *pv; {
+Hidden bool get_point(value v, vector *pv) {
 	value x, y;
 
 	if (!Is_compound(v) || Nfields(v) != 2)
@@ -139,7 +139,7 @@ Hidden bool get_point(v, pv) value v; vector *pv; {
  * Check that the arguments are indeed vectors and call the processing code.
  */
 
-Hidden Procedure do_gfx(v, w, proc) value v; value w; int (*proc)(); {
+Hidden Procedure do_gfx(value v, value w, int ( *proc)()) {
 	vector v1, v2;
 
 	if (!get_point(v, &v1) || !get_point(w, &v2)) {
@@ -154,7 +154,7 @@ Hidden Procedure do_gfx(v, w, proc) value v; value w; int (*proc)(); {
  * Routine to enter graphics mode and set the spacing as desired.
  */
 
-Hidden Procedure do_space(pv1, pv2) vector *pv1, *pv2; {
+Hidden Procedure do_space(vector *pv1, vector *pv2) {
 	double tmp;
 
 	if (gfx_mode != GFX_MODE) {
@@ -197,7 +197,7 @@ Hidden Procedure do_space(pv1, pv2) vector *pv1, *pv2; {
  * Routine to draw a line.
  */
 
-Hidden Procedure do_line(pv1, pv2) vector *pv1, *pv2; {
+Hidden Procedure do_line(vector *pv1, vector *pv2) {
 	int x1, y1, x2, y2;
 
 	if (gfx_mode != GFX_MODE) {
@@ -279,13 +279,13 @@ clipinit(x0,y0,x1,y1) {
 }
 
 /*------------------------------- inview2d ----------------------------------*/
-bool inview2d(x0,y0, x1,y1) register x0,y0, x1,y1; {
+bool inview2d(register x0, register y0, register x1, register y1) {
 	return	x0 >= Xleft && x0 <= Xright && x1 >= Xleft && x1 <= Xright &&
 		y0 >= Ybot  && y0 <= Ytop   && y1 >= Ybot  && y1 <= Ytop;
 }
 
 /*-------------------------------- clip2d -----------------------------------*/
-bool clip2d(x0p, y0p, x1p, y1p) int *x0p, *y0p, *x1p, *y1p; {
+bool clip2d(int *x0p, int *y0p, int *x1p, int *y1p) {
 	register int	x0 = *x0p,
 			y0 = *y0p,
 			x1 = *x1p,
@@ -316,8 +316,7 @@ bool clip2d(x0p, y0p, x1p, y1p) int *x0p, *y0p, *x1p, *y1p; {
 }
 
 /*-------------------------------- clipt ------------------------------------*/
-static bool clipt(p, q, t0p, t1p) register int p, q;
-		register double *t0p, *t1p; {
+static bool clipt(register int p, register int q, register double *t0p, register double *t1p) {
 	register double r;
 
 	if ( p < 0 ) {

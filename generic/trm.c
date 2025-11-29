@@ -90,10 +90,7 @@ Hidden FILE *scrfp = NULL; /* file pointer to write to the screen */
  * Return TE_OK if succeeded, error code (see trm.h) if trouble
  */
 
-Visible int trmstart(plines, pcols, pflags)
-     int *plines;
-     int *pcols;
-     int *pflags;
+Visible int trmstart(int *plines, int *pcols, int *pflags)
 {
 	int err;
 
@@ -343,11 +340,7 @@ Hidden bool get_pos(format, py, px)
  * Characters for which the corresponding chars in "mode" have the value
  * STANDOUT must be put in inverse video.
  */
-Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
-	int yfirst, ylast;
-	register int indent;
-	register string data;
-	register string mode;
+Visible Procedure trmputdata(int yfirst, int ylast, register int indent, register string data, register string mode)
 {
 	register int y;
 	int x, len, lendata, space;
@@ -408,11 +401,7 @@ Visible Procedure trmputdata(yfirst, ylast, indent, data, mode)
  *	nd = length of Differing end in data to be put.
  */
 
-Hidden int put_line(y, xskip, data, mode, len)
-	int y, xskip;
-	string data;
-	string mode;
-	int len;
+Hidden int put_line(int y, int xskip, string data, string mode, int len)
 {
 	register char *op, *oq, *mp;
 	register char *np, *nq, *mo;
@@ -465,10 +454,7 @@ Hidden int put_line(y, xskip, data, mode, len)
  * Scrolling (part of) the screen up (or down, dy<0).
  */
 
-Visible Procedure trmscrollup(yfirst, ylast, by)
-     register int yfirst;
-     register int ylast;
-     register int by;
+Visible Procedure trmscrollup(register int yfirst, register int ylast, register int by)
 {
 	if (by == 0)
 		return;
@@ -514,9 +500,7 @@ Visible Procedure trmscrollup(yfirst, ylast, by)
  * Synchronization, move cursor to given position (or previous if < 0).
  */
 
-Visible Procedure trmsync(y, x)
-     int y;
-     int x;
+Visible Procedure trmsync(int y, int x)
 {
 	if (0 <= y && y < lines && 0 <= x && x < cols) {
 		move(y, x);
@@ -537,9 +521,7 @@ Visible Procedure trmbell()
  * The following routine is the time bottleneck, I believe!
  */
 
-Hidden Procedure put_str(data, mode, n)
-	char *data, *mode;
-	int n;
+Hidden Procedure put_str(char *data, char *mode, int n)
 {
 	register char c, mo, so;
 
@@ -561,9 +543,7 @@ Hidden Procedure put_str(data, mode, n)
 	showmouse();
 }
 
-Hidden Procedure clear_lines(yfirst, ylast)
-     int yfirst;
-     int ylast;
+Hidden Procedure clear_lines(int yfirst, int ylast)
 {
 	register int y;
 
@@ -596,11 +576,7 @@ Hidden Procedure clr_to_eol()
 
 /* Reset internal administration accordingly */
 
-Hidden Procedure scr_lines(yfrom, yto, n, dy)
-     int yfrom;
-     int yto;
-     int n;
-     int dy;
+Hidden Procedure scr_lines(int yfrom, int yto, int n, int dy)
 {
 	register int y, x;
 	char *savedata;
@@ -624,9 +600,7 @@ Hidden Procedure scr_lines(yfrom, yto, n, dy)
 	}
 }
 
-Hidden Procedure lf_scroll(yto, by)
-     int yto;
-     int by;
+Hidden Procedure lf_scroll(int yto, int by)
 {
 	register int n = by;
 
@@ -641,11 +615,7 @@ Hidden Procedure lf_scroll(yto, by)
 
 /* for dumb scrolling, uses and updates internal administration */
 
-Hidden Procedure move_lines(yfrom, yto, n, dy)
-     int yfrom;
-     int yto;
-     int n;
-     int dy;
+Hidden Procedure move_lines(int yfrom, int yto, int n, int dy)
 {
 	while (n-- > 0) {
 		put_line(yto, 0, linedata[yfrom], linemode[yfrom], lenline[yfrom]);
@@ -658,9 +628,7 @@ Hidden Procedure move_lines(yfrom, yto, n, dy)
  * Move to position y,x on the screen
  */
 
-Hidden Procedure move(y, x)
-     int y;
-     int x;
+Hidden Procedure move(int y, int x)
 {
 	if (cur_y == y && cur_x == x) return;
 	low_move(y, x);
@@ -691,8 +659,7 @@ Hidden bool readintrcontext = No;
 Hidden jmp_buf readinterrupt;
 #endif
 
-Hidden SIGTYPE trmintrhandler(sig)
-     int sig;
+Hidden SIGTYPE trmintrhandler(int sig)
 {
 	VOID signal(SIGINT, trmintrhandler);
 	trmintrptd= Yes;
@@ -705,8 +672,7 @@ Hidden SIGTYPE trmintrhandler(sig)
 
 Hidden int pushback= -1;
 
-Hidden Procedure trmpushback(c)
-     int c;
+Hidden Procedure trmpushback(int c)
 {
 	pushback= c;
 }
@@ -794,10 +760,7 @@ Visible int trmsuspend()
 #define A_ED	"\033[2J"       /* erase display (and cursor home) */
 #define A_EL	"\033[K"        /* erase (to end of) line */
 
-Hidden Procedure low_printf(fmt, y, x)
-     char *fmt;
-     int y;
-     int x;
+Hidden Procedure low_printf(char *fmt, int y, int x)
 {
 	char buf[100];
 	sprintf(buf, fmt, y, x);
@@ -860,9 +823,7 @@ Hidden int low_trmstart()
 	return low_get_screen_env(&lines, &cols);
 }
 
-Hidden int low_get_screen_env(pheight, pwidth)
-     int *pheight;
-     int *pwidth;
+Hidden int low_get_screen_env(int *pheight, int *pwidth)
 {
 	int maxx, maxy, upx, upy;
 
@@ -885,9 +846,7 @@ Hidden int low_get_screen_env(pheight, pwidth)
 	return TE_OK;
 }
 
-Hidden bool cursor_sense(py, px)
-     int *py;
-     int *px;
+Hidden bool cursor_sense(int *py, int *px)
 {
 	/* Enquire where the cursor is.
 	   Points to consider are for instance
@@ -899,9 +858,7 @@ Hidden bool cursor_sense(py, px)
 	return get_yx(py, px);
 }
 
-Hidden bool get_yx(py, px)
-     int *py;
-     int *px;
+Hidden bool get_yx(int *py, int *px)
 {
 	/* Get the string ESC [ y ; x R */
 	int n, y, x;
@@ -946,10 +903,7 @@ Hidden Procedure low_trmend()
 	low_endraw();
 }
 
-Hidden Procedure low_trmscrollup(yfirst, ylast, by)
-     int yfirst;
-     int ylast;
-     int by;
+Hidden Procedure low_trmscrollup(int yfirst, int ylast, int by)
 {
 	/* Here you can implement hardware scrolling.
 	   This is only called if the CAN_SCROLL bit is set in the flags,
@@ -975,9 +929,7 @@ Hidden Procedure low_clr_to_eol()
 	low_putstr(A_EL);
 }
 
-Hidden Procedure low_move(y, x)
-     int y;
-     int x;
+Hidden Procedure low_move(int y, int x)
 {
 	hidemouse();
 	low_printf(A_CUP, y+1, x+1);

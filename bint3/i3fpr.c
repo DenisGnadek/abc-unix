@@ -128,10 +128,7 @@ Visible Procedure initfpr()
 	defprd(P_notin, Dpd, Not_in);
 }
 
-Hidden Procedure defprd(repr, adic, pre)
-     string repr;
-     literal adic;
-     intlet pre;
+Hidden Procedure defprd(string repr, literal adic, intlet pre)
 {
 	value r= mk_text(repr), p= mk_prd(adic, pre, NilTree, Yes), pname;
 	pname= permkey(r, adic);
@@ -144,11 +141,7 @@ Visible Procedure endfpr()
 	endstdenv();
 }
 
-Hidden bool is_funprd(t, f, adicity, func)
-     value t;
-     value *f;
-     literal adicity;
-     bool func;
+Hidden bool is_funprd(value t, value *f, literal adicity, bool func)
 {
 	value *aa;
 	bool rethow = (f != Pnil); /* get internal repr. howto */
@@ -176,34 +169,34 @@ Hidden bool is_funprd(t, f, adicity, func)
 	else return No;
 }
 
-Visible bool is_zerfun(t, f) value t, *f; {
+Visible bool is_zerfun(value t, value *f) {
 	return is_funprd(t, f, Zfd, Yes);
 }
 
-Visible bool is_monfun(t, f) value t, *f; {
+Visible bool is_monfun(value t, value *f) {
 	return is_funprd(t, f, Mfd, Yes);
 }
 
-Visible bool is_dyafun(t, f) value t, *f; {
+Visible bool is_dyafun(value t, value *f) {
 	return is_funprd(t, f, Dfd, Yes);
 }
 
-Visible bool is_zerprd(t, p) value t, *p; {
+Visible bool is_zerprd(value t, value *p) {
 	return is_funprd(t, p, Zpd, No);
 }
 
-Visible bool is_monprd(t, p) value t, *p; {
+Visible bool is_monprd(value t, value *p) {
 	return is_funprd(t, p, Mpd, No);
 }
 
-Visible bool is_dyaprd(t, p) value t, *p; {
+Visible bool is_dyaprd(value t, value *p) {
 	return is_funprd(t, p, Dpd, No);
 }
 
 #define Is_numpair(v) (Is_compound(v) && Nfields(v) == 2 && \
 			Is_number(*Field(v, 0)) && Is_number(*Field(v, 1)))
 
-Visible value pre_fun(nd1, pre, nd2) value nd1, nd2; intlet pre; {
+Visible value pre_fun(value nd1, intlet pre, value nd2) {
 	struct funtab *fp= &funtab[pre];
 	literal adic= fp->f_adic, kind= fp->f_kind;
 	value name= mk_text(fp->f_name);
@@ -275,7 +268,7 @@ Visible value pre_fun(nd1, pre, nd2) value nd1, nd2; intlet pre; {
 	}
 }
 
-Visible bool pre_prop(nd1, pre, nd2) value nd1, nd2; intlet pre; {
+Visible bool pre_prop(value nd1, intlet pre, value nd2) {
 	switch (pre) {
 	case Xact:
 		if (!Is_number(nd2)) {

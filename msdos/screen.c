@@ -38,9 +38,7 @@ int cols;
 int bcols;			/* what BIOS thinks */
 int type;
 
-main(argc, argv)
-int argc;
-char *argv[];
+int main(int argc, char *argv[])
 {
 	type = getarg(argc, argv);
 
@@ -54,9 +52,7 @@ char *argv[];
 	tell_screen();
 }
 
-Hidden int getarg(argc, argv)
-int argc;
-char *argv[];
+Hidden int getarg(int argc, char *argv[])
 {
 	if (argc == 1)
 		return BIOS;
@@ -249,14 +245,7 @@ and try \"SCREEN ANSI\" again.\n\r");
  * BIOS video io is called by generating an 8086 software interrupt,
  * using lattice's int86() function.
  * To ease coding, all routines fill in the apropriate parameters in regs,
- * and than call bios10(code), where code is to be placed in ah.
- */
-
-Hidden union REGS regs;
-
-Hidden bios10(code)
-int code;
-{
+ * and than call bios10(Hidden bios10( code) int code){
 	regs.h.ah = code;
 	int86(0x10, &regs, &regs);
 }

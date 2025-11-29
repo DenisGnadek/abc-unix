@@ -66,7 +66,7 @@ Visible value prod2n(v, n, simplify) value v, n; bool simplify; {
 
 /* v is shifted n "digits" to the left */
 
-Hidden integer int10shift(v, n) integer v; intlet n; {
+Hidden integer int10shift(integer v, intlet n) {
 	struct integer vv;
 	integer w;
 	int i;
@@ -82,7 +82,7 @@ Hidden integer int10shift(v, n) integer v; intlet n; {
 
 /* returns u * 10**|n| */
 
-Hidden integer int10mul(u, n) integer u; int n; {
+Hidden integer int10mul(integer u, int n) {
 	integer v, w;
 
 	if (n<0) n = -n;
@@ -133,7 +133,7 @@ Visible value prod10n(v, n, simplify) value v; int n; bool simplify; {
 
 /* returns u+0.5 not simplified */
 
-Visible rational ratsumhalf(u) rational u; {
+Visible rational ratsumhalf(rational u) {
 	integer p, q;
 	rational s;
 

@@ -5,7 +5,7 @@
 #include "b.h"
 #include "bmem.h"
 
-Visible ptr getmem(syze) unsigned syze; {
+Visible ptr getmem(unsigned syze) {
 	ptr p= (ptr) malloc(MALLOC_ARG syze);
 	if (p == Nil) memexh();
 #ifdef MEMTRACE
@@ -14,7 +14,7 @@ Visible ptr getmem(syze) unsigned syze; {
 	return p;
 }
 
-Visible Procedure regetmem(v, syze) ptr *v; unsigned syze; {
+Visible Procedure regetmem(ptr *v, unsigned syze) {
 	ptr p= (ptr) realloc(*v, syze);
 	if (p == Nil) memexh();
 #ifdef MEMTRACE
@@ -24,14 +24,14 @@ Visible Procedure regetmem(v, syze) ptr *v; unsigned syze; {
 	*v= p;
 }
 
-Visible Procedure freemem(p) ptr p; {
+Visible Procedure freemem(ptr p) {
 #ifdef MEMTRACE
 	writetrace(F_FREE, p, 0);
 #endif
 	free((char *)p);
 }
 
-Visible ptr savestr(s) char *s; {
+Visible ptr savestr(char *s) {
 	ptr p= (ptr) getmem((unsigned) strlen(s) + 1);
 	strcpy(p, s);
 	return p;
@@ -42,13 +42,13 @@ Visible ptr savestr(s) char *s; {
 /*
  * to fix memory that surely won't be free'd
  */
-Visible Procedure fixmem(p) ptr p; {
+Visible Procedure fixmem(ptr p) {
 	writetrace(F_FREE, p, 0);
 }
 
 extern FILE *memfp;	/* set in ??main.c */
 
-writetrace(flag, p, size) int flag; ptr *p; unsigned size; {
+int writetrace(int flag, ptr *p, unsigned size) {
 	address *frameptr;
 	
 	if (memfp == NULL)
@@ -74,23 +74,23 @@ writetrace(flag, p, size) int flag; ptr *p; unsigned size; {
 
 #define BUFINCR 100
 
-Visible Procedure bufinit(bp) bufadm *bp; {
+Visible Procedure bufinit(bufadm *bp) {
 	bp->buf= (char *) getmem((unsigned) BUFINCR);
 	bp->pbuf= bp->buf;
 	bp->end= bp->buf + BUFINCR;
 	*(bp->pbuf)= '\0';
 }
 
-Visible Procedure buffree(bp) bufadm *bp; {
+Visible Procedure buffree(bufadm *bp) {
 	freemem((ptr) bp->buf);
 }
 
-Visible Procedure bufreinit(bp) bufadm *bp; {
+Visible Procedure bufreinit(bufadm *bp) {
 	buffree(bp);
 	bufinit(bp);
 }
 
-Visible Procedure bufgrow(bp) bufadm *bp; {
+Visible Procedure bufgrow(bufadm *bp) {
 	int n_ptr= bp->pbuf - bp->buf;
 	int syze= (bp->end - bp->buf) + BUFINCR;
 	
@@ -99,13 +99,13 @@ Visible Procedure bufgrow(bp) bufadm *bp; {
 	bp->end= bp->buf + syze;
 }
 
-Visible Procedure bufpush(bp, c) bufadm *bp; char c; {
+Visible Procedure bufpush(bufadm *bp, char c) {
 	if (bp->pbuf >= bp->end)
 		bufgrow(bp);
 	*(bp->pbuf)++= c;
 }
 
-Visible Procedure bufcpy(bp, s) bufadm *bp; char *s; {
+Visible Procedure bufcpy(bufadm *bp, char *s) {
 	int len= strlen(s);
 
 	while (bp->pbuf + len >= bp->end)
@@ -114,7 +114,7 @@ Visible Procedure bufcpy(bp, s) bufadm *bp; char *s; {
 	bp->pbuf+= len;
 }
 
-Visible Procedure bufncpy(bp, s, len) bufadm *bp; char *s; int len; {
+Visible Procedure bufncpy(bufadm *bp, char *s, int len) {
 	while (bp->pbuf + len >= bp->end)
 		bufgrow(bp);
 	strncpy(bp->pbuf, s, len);

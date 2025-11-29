@@ -54,7 +54,7 @@ Hidden Procedure nline() {
 	at_nwl= Yes;
 }
 
-Hidden Procedure pr_line(at) bool at; {
+Hidden Procedure pr_line(bool at) {
 	/*prints the line that tx is in, with an arrow pointing to the column
 	  that tx is at.
 	*/
@@ -90,8 +90,8 @@ Hidden Procedure pr_line(at) bool at; {
 #define IN_FILE		MESS(3112, "*** (detected after reading 1 line of your input file %s)\n")
 #define IN_FILE_LINE	MESS(3113, "*** (detected after reading %d lines of your input file %s)\n")
 
-Hidden Procedure show_where(in_node, at, node)
-	bool in_node, at; parsetree node; {
+Hidden Procedure show_where(bool in_node, bool at, parsetree node)
+{
 
 	int line_no= in_node ? intval(curlino) : lino;
 	show_line(in_node, at, node, line_no);
@@ -100,8 +100,8 @@ Hidden Procedure show_where(in_node, at, node)
 		show_f_line();
 }
 
-Hidden Procedure show_line(in_node, at, node, line_no)
-	bool in_node, at; parsetree node; int line_no; {
+Hidden Procedure show_line(bool in_node, bool at, parsetree node, int line_no)
+{
 	
 	switch (cntxt) {
 		case In_command: putmess(IN_COMMAND); break;
@@ -122,8 +122,7 @@ Hidden Procedure show_line(in_node, at, node, line_no)
 	else pr_line(at);
 }
 
-Hidden value unitname(line_no)
-     int line_no;
+Hidden value unitname(int line_no)
 {
 	if (Valid(howtoname) && Is_text(howtoname)) {
 		def_perm(last_unit, howtoname);
@@ -137,7 +136,7 @@ Hidden value unitname(line_no)
 	}
 }
 
-Hidden Procedure show_howto(line_no) int line_no; {
+Hidden Procedure show_howto(int line_no) {
 	value name= unitname(line_no);
 	int m;
 
@@ -177,7 +176,7 @@ Hidden Procedure show_f_line() {
 
 #define PROBLEM		MESS(3114, "*** The problem is:")
 
-Visible Procedure syserr(m) int m; {
+Visible Procedure syserr(int m) {
 	static bool beenhere= No;
 	if (beenhere) immexit(-1);
 	beenhere= Yes;
@@ -211,10 +210,7 @@ Visible Procedure memexh() {
 
 #endif /* MEMEXH_ALERT */
 
-Hidden Procedure message(m1, m2, in_node, at, arg)
-	int m1, m2;
-	bool in_node, at; 
-	value arg;
+Hidden Procedure message(int m1, int m2, bool in_node, bool at, value arg)
 {
 	still_ok= No;
 	if (!mess_ok)
@@ -238,47 +234,47 @@ Hidden Procedure message(m1, m2, in_node, at, arg)
 
 #define RECONCILE	MESS(3120, "*** Cannot reconcile the types")
 
-Visible Procedure pprerrV(m, v) int m; value v; {
+Visible Procedure pprerrV(int m, value v) {
 	if (still_ok)
 		message(UNDERSTAND, m, No, No, v);
 }
 
-Visible Procedure pprerr(m) int m; {
+Visible Procedure pprerr(int m) {
 	if (still_ok)
 		message(UNDERSTAND, m, No, No, Vnil);
 }
 
-Visible Procedure parerrV(m, v) int m; value v; {
+Visible Procedure parerrV(int m, value v) {
 	if (still_ok)
 		message(UNDERSTAND, m, No, Yes, v);
 }
 
-Visible Procedure parerr(m) int m; {
+Visible Procedure parerr(int m) {
 	if (still_ok)
 		message(UNDERSTAND, m, No, Yes, Vnil);
 }
 
-Visible Procedure fixerrV(m, v) int m; value v; {
+Visible Procedure fixerrV(int m, value v) {
 	if (still_ok)
 		message(RESOLVE, m, Yes, Yes, v);
 }
 
-Visible Procedure fixerr(m) int m; {
+Visible Procedure fixerr(int m) {
 	if (still_ok)
 		message(RESOLVE, m, Yes, Yes, Vnil);
 }
 
-Visible Procedure typerrV(m, v) int m; value v; {
+Visible Procedure typerrV(int m, value v) {
 	if (still_ok)
 		message(RECONCILE, m, Yes, Yes, v);
 }
 
-Visible Procedure interrV(m, v) int m; value v; {
+Visible Procedure interrV(int m, value v) {
 	if (still_ok)
 		message(COPE, m, Yes, No, v);
 }
 
-Visible Procedure interr(m) int m; {
+Visible Procedure interr(int m) {
 	if (still_ok)
 		message(COPE, m, Yes, No, Vnil);
 }
@@ -320,7 +316,7 @@ Visible Procedure fpe_signal() {
 
 Visible bool testing= No;
 
-Visible Procedure bye(ex) int ex; {
+Visible Procedure bye(int ex) {
 #ifdef GFX
 	if (gfx_mode != TEXT_MODE)
 		exit_gfx();
@@ -333,7 +329,7 @@ Visible Procedure bye(ex) int ex; {
 
 extern bool vtrmactive;
 
-Visible Procedure immexit(status) int status; {
+Visible Procedure immexit(int status) {
 	if (vtrmactive)
 		endterm();
 	exit(status);
@@ -367,9 +363,7 @@ Visible Procedure initfmt()
 
 #define FMTINTLEN 100 /* space allocated for int's in formats */
 
-Visible char *getfmtbuf(fmt, n)
-     string fmt;
-     int n;
+Visible char * getfmtbuf(string fmt, int n)
 {
 	static char *fmtstr= NULL;
 
@@ -383,14 +377,12 @@ Visible char *getfmtbuf(fmt, n)
 
 /**************************************************************************/
 
-Visible Procedure putserr(s)
-     string s;
+Visible Procedure putserr(string s)
 {
 	putstr(errfile, s);
 }
 
-Hidden Procedure putcerr(c)
-     char c;
+Hidden Procedure putcerr(char c)
 {
 	putchr(errfile, c);
 }
@@ -402,38 +394,28 @@ Visible Procedure flusherr()
 
 /***************************************************************************/
 
-Visible Procedure putsSerr(fmt, s)
-     string fmt;
-     string s;
+Visible Procedure putsSerr(string fmt, string s)
 {
 	char *str= getfmtbuf(fmt, strlen(s));
 	sprintf(str, fmt, s);
 	putstr(errfile, str);
 }
 
-Visible Procedure putsDSerr(fmt, d, s)
-     string fmt;
-     int d;
-     string s;
+Visible Procedure putsDSerr(string fmt, int d, string s)
 {
 	char *str= getfmtbuf(fmt, FMTINTLEN+strlen(s));
 	sprintf(str, fmt, d, s);	
 	putstr(errfile, str);
 }
 
-Visible Procedure puts2Cerr(fmt, c1, c2)
-     string fmt;
-     char c1;
-     char c2;
+Visible Procedure puts2Cerr(string fmt, char c1, char c2)
 {
 	char *str= getfmtbuf(fmt, 1+1);
 	sprintf(str, fmt, c1, c2);
 	putstr(errfile, str);
 }
 
-Visible Procedure putsCerr(fmt, c)
-     string fmt;
-     char c;
+Visible Procedure putsCerr(string fmt, char c)
 {
 	puts2Cerr(fmt, c, '\0');
 }

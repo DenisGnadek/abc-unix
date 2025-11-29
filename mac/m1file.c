@@ -31,7 +31,7 @@ Visible char *curdir() {
 
 #define MFS_SIGNATURE 0xd2d7
 
-Hidden bool ismfsvolume(volname, vrefnum) char *volname; short vrefnum; {
+Hidden bool ismfsvolume(char *volname, short vrefnum) {
 	HVolumeParam pb;
 	char namebuf[NAMESIZE];
 	int err;

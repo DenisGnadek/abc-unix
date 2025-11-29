@@ -15,7 +15,7 @@ Visible string wsgroupfile= WSGROUPFILE;
 Visible string tempfile= TEMPFILE;	/* temporary file */
 Visible string temp1file= TEMP1FILE;	/* another temporary file */
 
-Visible Procedure free_path(path) char *path; {
+Visible Procedure free_path(char *path) {
 	if (path != NULL)
 		freestr(path);
 }

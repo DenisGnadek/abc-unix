@@ -20,8 +20,7 @@ Forward Hidden Procedure conv_fname();
  * be careful when calling f_rename()
  */
 
-Visible Procedure f_rename(fname, nfname)
-     value fname, nfname;
+Visible Procedure f_rename(value fname, value nfname)
 {
 	char *f1, f2[100];
 	
@@ -32,13 +31,12 @@ Visible Procedure f_rename(fname, nfname)
 	/* what if it fails??? */
 }
 
-Visible Procedure f_delete(file)
-     char *file;
+Visible Procedure f_delete(char *file)
 {
 	unlink(file);
 }
 
-Visible unsigned f_size(file) FILE *file; {
+Visible unsigned f_size(FILE *file) {
 	long s, ftell();
 	fseek(file, 0l, 2);
 	s= ftell(file);
@@ -46,13 +44,13 @@ Visible unsigned f_size(file) FILE *file; {
 	return s;
 }
 
-Visible Procedure f_close(usrfile) FILE *usrfile; {
+Visible Procedure f_close(FILE *usrfile) {
 	bool ok= fflush(usrfile) != EOF;
 	if (fclose(usrfile) == EOF || !ok)
 		interr(MESS(3700, "write error (disk full?)"));
 }
 
-Visible bool f_interactive(file) FILE *file; {
+Visible bool f_interactive(FILE *file) {
 	return isatty(fileno(file));
 }
 
@@ -60,7 +58,7 @@ Visible bool f_interactive(file) FILE *file; {
 
 #define LINESIZE 200
 
-Visible char *f_getline(file) FILE *file; {
+Visible char * f_getline(FILE *file) {
 	char line[LINESIZE];
 	char *pline= NULL;
 	
@@ -96,7 +94,7 @@ Hidden struct class classes[]= {
 
 #define NCLASSES (sizeof classes / sizeof classes[0])
 
-Hidden char *filesuffix(type) literal type; {
+Hidden char * filesuffix(literal type) {
 	register struct class *cp;
 
 	for (cp= classes; cp < &classes[NCLASSES]; ++cp) {
@@ -114,7 +112,7 @@ Hidden char *filesuffix(type) literal type; {
 #define FNMLEN 8
 #define SUFFIXLEN 4
 
-Visible value new_fname(name, type) value name; literal type; {
+Visible value new_fname(value name, literal type) {
 	char fname[FNMLEN + SUFFIXLEN + 1];
 	char *suffix= filesuffix(type);
 	string sname= strval(name);
@@ -136,7 +134,7 @@ Visible value new_fname(name, type) value name; literal type; {
 	return mk_text(fname);
 }
 
-Hidden bool fnm_extend(fname, n, suffix) char *fname, *suffix; int n; {
+Hidden bool fnm_extend(char *fname, int n, char *suffix) {
 	/* e.g. "ABC.cmd" => "ABC1.cmd" */
 	int m;
 	int k= n;
@@ -164,7 +162,7 @@ Hidden bool fnm_extend(fname, n, suffix) char *fname, *suffix; int n; {
 	return Yes;
 }
 
-Hidden bool fnm_narrow(fname, n) char *fname; int n; {
+Hidden bool fnm_narrow(char *fname, int n) {
 	/* e.g. "ABC.cmd" => "AB1.cmd" */
 	int m;
 	
@@ -195,7 +193,7 @@ Hidden bool fnm_narrow(fname, n) char *fname; int n; {
  *  the latter is as portably unspecial as possible.
  */
 
-Hidden Procedure conv_fname(fname, suffix) char *fname, *suffix; {
+Hidden Procedure conv_fname(char *fname, char *suffix) {
 	char *ext_point= fname + strlen(fname) - strlen(suffix);
 	
 	while (fname < ext_point) {
@@ -211,7 +209,7 @@ Hidden Procedure conv_fname(fname, suffix) char *fname, *suffix; {
 
 /* recover location or workspace name from filename */
 
-Visible value mkabcname(name) char *name; {
+Visible value mkabcname(char *name) {
 	char *p;
 	
 	for (p= name; *p != '\0'; ++p) {

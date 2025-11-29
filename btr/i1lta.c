@@ -30,9 +30,7 @@ extern FILE *btrfp;
 #define IsInner(p) (Flag(p) == Inner)
 #define IsBottom(p) (Flag(p) == Bottom)
 
-#define _Pxitm(p, l, iw) (IsInner(p) ? Piitm(p, l, iw) : Pbitm(p, l, iw))
-
-Hidden itemptr Pxitm(p, l, iw) btreeptr p; intlet l, iw; {
+#define _Pxitm((IsInner( p) ? Piitm(p, l, iw) : Pbitm(p, l, iw)) Hidden itemptr Pxitm(p, l, iw) btreeptr p, intlet l, intlet iw) {
 	return _Pxitm(p, l, iw);
 }
 
@@ -55,11 +53,7 @@ typedef struct {
 #define Top(s, p, l) ((p)= ((s)-1)->s_ptr, (l)= ((s)-1)->s_lim)
 #define Drop(s) (--(s))
 #define Pop(s, p, l) (--(s), (p)= (s)->s_ptr, (l)= (s)->s_lim)
-	/* Pop(s, p, l) is equivalent to Top(s, p, l); Drop(s) */
-
-/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
-Visible fingertip unzip(p, at, s) btreeptr p; int at; fingertip s; {
+	/* Pop(fingertip s, Drop( s) */ /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/ Visible fingertip unzip(p, at, s) btreeptr p, is equivalent to Top( l)) {
 	int syz; intlet l;
 	if (p == Bnil) return s;
 	for (;;) {
@@ -81,7 +75,7 @@ Visible fingertip unzip(p, at, s) btreeptr p; int at; fingertip s; {
 	return s;
 }
 
-Visible Procedure cpynptrs(to, from, n) btreeptr *to, *from; int n; {
+Visible Procedure cpynptrs(btreeptr *to, btreeptr *from, int n) {
 	while (--n >= 0) {
 		*to= copybtree(*from);
 		Incr(to, 1);
@@ -89,7 +83,7 @@ Visible Procedure cpynptrs(to, from, n) btreeptr *to, *from; int n; {
 	}
 }
 
-Visible int movnptrs(to, from, n) btreeptr *to, *from; int n; {
+Visible int movnptrs(btreeptr *to, btreeptr *from, int n) {
 	int syz= 0; /* Collects sum of sizes */
 	while (--n >= 0) {
 		*to= *from;
@@ -104,13 +98,13 @@ Visible int movnptrs(to, from, n) btreeptr *to, *from; int n; {
    N pointers is not equivalent to moving N*sizeof(pointer) characters.
    Also, the latter may be slower. */
 
-Visible Procedure movnitms(to, from, n, iw) itemptr to, from; intlet n, iw; {
+Visible Procedure movnitms(itemptr to, itemptr from, intlet n, intlet iw) {
 	register char *t= (char *)to, *f= (char *)from;
 	n *= iw;
 	while (--n >= 0) *t++ = *f++;
 }
 
-Hidden Procedure shift(p, l, iw) btreeptr p; intlet l, iw; {
+Hidden Procedure shift(btreeptr p, intlet l, intlet iw) {
 	/* Move items and pointers from l upwards one to the right */
 	btreeptr *to, *from;
 	intlet n= (Lim(p)-l) * iw; bool inner= IsInner(p);
@@ -130,7 +124,7 @@ Hidden Procedure shift(p, l, iw) btreeptr p; intlet l, iw; {
 	}
 }
 
-Visible Procedure cpynitms(to, from, n, it) itemptr to, from; intlet n, it; {
+Visible Procedure cpynitms(itemptr to, itemptr from, intlet n, intlet it) {
 	intlet i, iw= Itemwidth(it);
 	movnitms(to, from, n, iw);
 	switch (it) {
@@ -150,8 +144,8 @@ Visible Procedure cpynitms(to, from, n, it) itemptr to, from; intlet n, it; {
 
 /* Uflow uses a character array to hold the items.  This may be wrong. */
 
-Visible intlet uflow(n, l, cbuf, pbuf, it)
- intlet n, l; char cbuf[]; btreeptr pbuf[]; intlet it; {
+Visible intlet uflow(intlet n, intlet l, char cbuf[], btreeptr pbuf[], intlet it)
+{
 	char ncbuf[3*Maxbottom*sizeof(btritem)], *cp= ncbuf;
 	btreeptr npbuf[3*Maxinner], *pp= npbuf, q;
 	intlet iw= Itemwidth(it); bool inner= IsInner(pbuf[0]);
@@ -210,8 +204,8 @@ Visible intlet uflow(n, l, cbuf, pbuf, it)
 #define DYAMAX 2 /* special for dyadic max (= previous element) */
 #define DYAMIN 4 /* special for dyadic min (= next element) */
 
-Hidden bool searchkey(v, pw, flags, ft)
- value v, *pw; int flags; fingertip *ft; {
+Hidden bool searchkey(value v, value *pw, int flags, fingertip *ft)
+{
 	btreeptr p, *pp;
 	intlet l, mid, h, it= Itemtype(*pw), iw= Itemwidth(it);
 	bool inner; relation r;
@@ -259,7 +253,7 @@ Hidden bool searchkey(v, pw, flags, ft)
 	}
 }
 
-Hidden Procedure killranges(pv) value *pv; {
+Hidden Procedure killranges(value *pv) {
 	btreeptr p= Root(*pv);
 	if (p == Bnil) return;
 	switch (Flag(p)) {
@@ -268,7 +262,7 @@ Hidden Procedure killranges(pv) value *pv; {
 	}
 }
 
-Hidden Procedure killCrange(p, pv) btreeptr p; value *pv; {
+Hidden Procedure killCrange(btreeptr p, value *pv) {
 	value w; intlet lwbchar= Lwbchar(p), upbchar= Upbchar(p);
 	release(*pv);
 	*pv= mk_elt();
@@ -279,7 +273,7 @@ Hidden Procedure killCrange(p, pv) btreeptr p; value *pv; {
 	} while (++lwbchar <= upbchar);
 }
 
-Hidden Procedure killIrange(p, pv) btreeptr p; value *pv; {
+Hidden Procedure killIrange(btreeptr p, value *pv) {
 	value w, lwb, upb;
 	
 	lwb= copy(Lwbval(p)), upb= copy(Upbval(p));
@@ -298,7 +292,7 @@ Hidden Procedure killIrange(p, pv) btreeptr p; value *pv; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Hidden btreeptr rem(f, ft, it) fingertip f, ft; intlet it; {
+Hidden btreeptr rem(fingertip f, fingertip ft, intlet it) {
 	btreeptr p, q, *pp; itemptr ip; intlet l, iw= Itemwidth(it);
 	bool inner, underflow;
 	Pop(ft, p, l);
@@ -336,7 +330,7 @@ Hidden btreeptr rem(f, ft, it) fingertip f, ft; intlet it; {
 	return p;
 }
 
-Hidden btreeptr ins(ip, f, ft, it) itemptr ip; fingertip f, ft; intlet it; {
+Hidden btreeptr ins(itemptr ip, fingertip f, fingertip ft, intlet it) {
 	btritem new, old; btreeptr p, q= Bnil, pq, oldq, *pp;
 	intlet l, iw= Itemwidth(it), nn, np, nq; bool inner, overflow;
 	if (ft == f) {
@@ -398,7 +392,7 @@ Hidden btreeptr ins(ip, f, ft, it) itemptr ip; fingertip f, ft; intlet it; {
 
 /* Tables */
 
-Visible Procedure replace(a, pt, k) value a, *pt, k; {
+Visible Procedure replace(value a, value *pt, value k) {
 	btritem new; finger f; fingertip ft= f; btreeptr p; value *pp;
 	intlet it, iw, l;
 #ifdef BTRTRACE
@@ -423,7 +417,7 @@ Visible Procedure replace(a, pt, k) value a, *pt, k; {
 #endif
 }
 
-Visible /*bool*/ delete(pt, k) value *pt, k; {
+Visible /*bool*/ delete(value *pt, value k) {
 	finger f; fingertip ft= f; intlet it= Itemtype(*pt);
 #ifdef BTRTRACE
 	if (btrfp) check(*pt, " (delete in)");
@@ -440,7 +434,7 @@ Visible /*bool*/ delete(pt, k) value *pt, k; {
 
 /* Lists */
 
-Hidden bool is_large_range(v) value v; {
+Hidden bool is_large_range(value v) {
 	value s; bool l;
 	s= size(v);
 	l= large(s);
@@ -448,7 +442,7 @@ Hidden bool is_large_range(v) value v; {
 	return l;
 }
 
-Visible Procedure insert(v, pl) value v, *pl; {
+Visible Procedure insert(value v, value *pl) {
 	btritem new; finger f; fingertip ft= f; intlet it= Itemtype(*pl);
 #ifdef BTRTRACE
 	if (btrfp) check(*pl, " (insert in)");
@@ -467,7 +461,7 @@ Visible Procedure insert(v, pl) value v, *pl; {
 #endif
 }
 
-Visible Procedure remove(v, pl) value v, *pl; {
+Visible Procedure remove(value v, value *pl) {
 	if (is_large_range(*pl)) {
 		interr(REMOVE_RAN);
 		return;
@@ -480,7 +474,7 @@ Visible Procedure remove(v, pl) value v, *pl; {
 
 /* Miscellaneous accesses */
 
-Hidden itemptr findkey(k, pv, flags) value k, *pv; int flags; {
+Hidden itemptr findkey(value k, value *pv, int flags) {
 	finger f; fingertip ft= f; btreeptr p;
 	intlet it= Itemtype(*pv), iw= Itemwidth(it), l;
 	if (!searchkey(k, pv, flags, &ft)) return Inil;
@@ -488,7 +482,7 @@ Hidden itemptr findkey(k, pv, flags) value k, *pv; int flags; {
 	return Pxitm(p, l, iw);
 }
 
-Visible value associate(t, k) value t, k; { /* t[k] */
+Visible value associate(value t, value k) { /* t[k] */
 	itemptr ip;
 	if (!Is_table(t)) {
 		interr(SEL_TAB);
@@ -503,24 +497,24 @@ Visible value associate(t, k) value t, k; { /* t[k] */
 	return copy(Ascval(ip));
 }
 
-Visible value* adrassoc(t, k) value t, k; { /* &t[k] */
+Visible value* adrassoc(value t, value k) { /* &t[k] */
 	itemptr ip= findkey(k, &t, NORMAL);
 	if (!ip) return Pnil;
 	return &Ascval(ip);
 }
 
-Visible bool uniq_assoc(t, k) value t, k; { /* uniql(&t[k]) */
+Visible bool uniq_assoc(value t, value k) { /* uniql(&t[k]) */
 	itemptr ip= findkey(k, &t, UNIQUE);
 	if (ip == Inil) return No;
 	uniql(&Ascval(ip));
 	return Yes;
 }
 
-Visible bool in_keys(k, t) value k, t; { /* k in keys t */
+Visible bool in_keys(value k, value t) { /* k in keys t */
 	return findkey(k, &t, NORMAL) != Inil;
 }
 
-Visible value keys(t) value t; { /* keys t */
+Visible value keys(value t) { /* keys t */
 	value v;
 	if (!Is_table(t)) {
 		interr(KEYS_TAB);
@@ -534,7 +528,7 @@ Visible value keys(t) value t; { /* keys t */
 /* WARNING!  The following routine is not reentrant, since (for range lists)
    it may return a pointer to static storage. */
 
-Hidden itemptr getkth(k, v) int k; value v; {
+Hidden itemptr getkth(int k, value v) {
 	finger f; fingertip ft; btreeptr p;
 	intlet it= Itemtype(v), iw= Itemwidth(it), l;
 	static btritem baked; value vk;
@@ -561,17 +555,17 @@ Hidden itemptr getkth(k, v) int k; value v; {
 	}
 }
 
-Visible value* key(v, k) value v; intlet k; { /* &(++k th'of keys v) */
+Visible value* key(value v, intlet k) { /* &(++k th'of keys v) */
 	itemptr ip= getkth(k, v);
 	return ip ? &Keyval(ip) : Pnil;
 }
 
-Visible value* assoc(v, k) value v; intlet k; { /* &v[++k th'of keys v] */
+Visible value* assoc(value v, intlet k) { /* &v[++k th'of keys v] */
 	itemptr ip= getkth(k, v);
 	return ip ? &Ascval(ip) : Pnil;
 }
 
-Visible value thof(k, v) int k; value v; { /* k th'of v */
+Visible value thof(int k, value v) { /* k th'of v */
 	itemptr ip= getkth(k-1, v);
 	if (!ip) return Vnil;
 	switch (Type(v)) {
@@ -593,7 +587,7 @@ Visible value thof(k, v) int k; value v; { /* k th'of v */
    the return value of the first may be invalid, but only for lists.
    So we extract the 'Key' values immediately after the call to getkth. */
 
-Visible relation comp_tlt(u, v) value u, v; {
+Visible relation comp_tlt(value u, value v) {
 	itemptr up, vp; int k, ulen, vlen, len; relation r= 0;
 	bool tex= Is_text(u), tab= Is_table(u);
 	value key_u;
@@ -620,7 +614,7 @@ Visible relation comp_tlt(u, v) value u, v; {
    strncmp(), to speed up the most common use (look-up by the
    system of tags in a symbol table).  Otherwise, call comp_tlt(). */
 
-Visible relation comp_text(u, v) value u, v; {
+Visible relation comp_text(value u, value v) {
 	btreeptr p, q; int len; relation r;
 	if (!Is_text(u) || !Is_text(v)) 
 		syserr(MESS(106, "comp_text"));
@@ -641,14 +635,14 @@ Visible relation comp_text(u, v) value u, v; {
 
 /* Range type nodes */
 
-Visible bool is_rangelist(v) value v; {
+Visible bool is_rangelist(value v) {
 	return (bool) (Root(v) != Bnil
 		       && 
 		       (Flag(Root(v)) == Irange || Flag(Root(v)) == Crange)
 		      );
 }
 
-Hidden value mk_numrange(lwb, upb) value lwb, upb; {
+Hidden value mk_numrange(value lwb, value upb) {
 	value lis;
 	btreeptr proot;
 
@@ -664,7 +658,7 @@ Hidden value mk_numrange(lwb, upb) value lwb, upb; {
 	return(lis);
 }
 
-Hidden value i_range(lo, hi) value lo, hi; {
+Hidden value i_range(value lo, value hi) {
 	value x, res= Vnil;
 
 	x= diff(lo, hi);
@@ -677,7 +671,7 @@ Hidden value i_range(lo, hi) value lo, hi; {
 	return res;
 }
 
-Hidden value mk_charrange(lwb, upb) value lwb, upb; {
+Hidden value mk_charrange(value lwb, value upb) {
 	value lis;
 	btreeptr proot;
 	intlet rsyz;
@@ -697,7 +691,7 @@ Hidden value mk_charrange(lwb, upb) value lwb, upb; {
 }
 
 
-Hidden value c_range(lo, hi) value lo, hi; {
+Hidden value c_range(value lo, value hi) {
 	char a, z;
 
 	a= charval(lo); z= charval(hi);
@@ -705,7 +699,7 @@ Hidden value c_range(lo, hi) value lo, hi; {
 	else return mk_charrange(lo, hi);
 }
 
-Visible value mk_range(v1, v2) value v1, v2; {
+Visible value mk_range(value v1, value v2) {
 	if (Is_text(v1)) return c_range(v1, v2);
 	else		 return i_range(v1, v2);
 }
@@ -713,7 +707,7 @@ Visible value mk_range(v1, v2) value v1, v2; {
 
 /* set size and lim for integer range node */
  
-Hidden Procedure set_size_and_lim(pnode) btreeptr pnode; {
+Hidden Procedure set_size_and_lim(btreeptr pnode) {
 	value smin, s;
 	smin= diff(Upbval(pnode), Lwbval(pnode));
 	s= sum(smin, one);
@@ -732,7 +726,7 @@ Hidden Procedure set_size_and_lim(pnode) btreeptr pnode; {
 
 /* Dyadic min, max, size of lists */
 
-Visible value l2min(e, v) value e, v; { /* e min v */
+Visible value l2min(value e, value v) { /* e min v */
 	finger f; fingertip ft= f; btreeptr p;
 	intlet it= Itemtype(v), iw= Itemwidth(it), l;
 	VOID searchkey(e, &v, DYAMIN, &ft);
@@ -758,7 +752,7 @@ Visible value l2min(e, v) value e, v; { /* e min v */
 	}
 }
 
-Visible value l2max(e, v) value e, v; { /* e max v */
+Visible value l2max(value e, value v) { /* e max v */
 	finger f; fingertip ft= f; btreeptr p;
 	intlet it= Itemtype(v), iw= Itemwidth(it), l;
 	VOID searchkey(e, &v, DYAMAX, &ft);
@@ -785,7 +779,7 @@ Visible value l2max(e, v) value e, v; { /* e max v */
 	}
 }
 
-Visible int l2size(e, v) value e, v; { /* e#v */
+Visible int l2size(value e, value v) { /* e#v */
 	finger f; fingertip ft= f; btreeptr p;
 	int count= 0; intlet it= Itemtype(v), iw= Itemwidth(it), l, r;
 	VOID searchkey(e, &v, DYAMIN, &ft);
@@ -838,7 +832,7 @@ Visible int l2size(e, v) value e, v; { /* e#v */
 #ifdef BTRTRACE
 /* Debug code */
 
-Hidden Procedure check(v, whence) value v; string whence; {
+Hidden Procedure check(value v, string whence) {
 	if (!still_ok) return;
 	switch (Type(v)) {
 	case ELT:
@@ -859,12 +853,7 @@ Hidden Procedure check(v, whence) value v; string whence; {
 	}
 }
 
-Hidden int cktree(left, p, right, it, whence)
-     itemptr left;
-     btreeptr p;
-     itemptr right;
-     intlet it;
-     string whence;
+Hidden int cktree(itemptr left, btreeptr p, itemptr right, intlet it, string whence)
 {
 	/* returns size of checked subtree */
 	intlet i, iw= Itemwidth(it); int sz= 0;
@@ -911,7 +900,7 @@ Hidden int cktree(left, p, right, it, whence)
 	return sz;
 }
 
-Hidden Procedure dumptree(p, indent, it) btreeptr p; intlet indent, it; {
+Hidden Procedure dumptree(btreeptr p, intlet indent, intlet it) {
 	intlet i, iw= Itemwidth(it);
 	int n;
 	if (Interrupted()) return;
@@ -959,7 +948,7 @@ Hidden Procedure dumptree(p, indent, it) btreeptr p; intlet indent, it; {
 	}
 }
 
-Hidden Procedure dumpval(v) value v; {
+Hidden Procedure dumpval(value v) {
 	if (Interrupted()) return;
 	if (v == Vnil) fputs("(nil)", btrfp);
 	else switch(Type(v)) {
@@ -971,7 +960,7 @@ Hidden Procedure dumpval(v) value v; {
 	}
 }
 
-Hidden Procedure debugbtr(s1, s2) string s1, s2; {
+Hidden Procedure debugbtr(string s1, string s2) {
 	value v1= mk_text(s1);
 	value v2= mk_text(s2);
 	value v= concat(v1, v2);

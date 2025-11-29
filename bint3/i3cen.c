@@ -50,8 +50,7 @@ Visible Procedure initcurenv()
  * Set 'cur_env' and returns the old value
  */
 
-Visible wsenvptr setcurenv(wse)
-     wsenvptr wse;
+Visible wsenvptr setcurenv(wsenvptr wse)
 {
 	wsenvptr old = cur_env;
 	cur_env = wse;
@@ -62,8 +61,7 @@ Visible wsenvptr setcurenv(wse)
  * Reset 'cur_env'
  */
 
-Visible Procedure resetcurenv(wse)
-     wsenvptr wse;
+Visible Procedure resetcurenv(wsenvptr wse)
 {
 	cur_env = wse;
 }
@@ -74,8 +72,7 @@ Visible Procedure resetcurenv(wse)
  * Initialize central workspace adm at startup or after a workspace change.
  */
 
-Visible Procedure initcentralworkspace(startup)
-     bool startup;
+Visible Procedure initcentralworkspace(bool startup)
 {
 	iscentralws = (cen_dir != (char *)0 && D_exists(cen_dir));
 	incentralws = (iscentralws && strcmp(cen_dir, cur_dir) == 0);
@@ -104,8 +101,7 @@ Visible Procedure initcentralworkspace(startup)
  * Finish central workspace adm before a workspace change or at QUITing.
  */
 
-Visible Procedure endcentralworkspace(last)
-     bool last;
+Visible Procedure endcentralworkspace(bool last)
 {
 	if (!incentralws && iscentralws) {
 		/* write central perm/types info to disk */
@@ -144,8 +140,7 @@ Visible Procedure endcentralworkspace(last)
  * Read the filename/typecode mapping of the central workspace.
  */
 
-Hidden value getcentralinfo(file)
-     string file;
+Hidden value getcentralinfo(string file)
 {
 	char *cenfile;
 	value v = Vnil;
@@ -250,9 +245,7 @@ Hidden bool unitinenv(pname, howto, wse)
 
 /*****************************************************************************/
 
-Hidden char *mkfilepath(fname, wse)
-     value fname;
-     wsenvptr wse;
+Hidden char * mkfilepath(value fname, wsenvptr wse)
 {
 	if (IsCentralEnv(wse)) return makepath(cen_dir, strval(fname));
 	else return (char *) savestr(strval(fname));

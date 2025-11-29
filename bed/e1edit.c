@@ -33,12 +33,7 @@ Forward Hidden bool editindentation();
  * otherwise the focus is left at the end of the inserted text.
  */
 
-Visible bool
-readfile(ep, filename, line, creating)
-	register environ *ep;
-	string filename;
-	int line;
-	bool creating;
+Visible bool readfile(register environ *ep, string filename, int line, bool creating)
 {
 
 	int lines = 0;
@@ -110,10 +105,7 @@ readfile(ep, filename, line, creating)
  * Do all the footwork required to get the indentation proper.
  */
 
-Hidden bool
-editindentation(ep, fp)
-	register environ *ep;
-	register FILE *fp;
+Hidden bool editindentation(register environ *ep, register FILE *fp)
 {
 	register int ind= 0;
 	register int c;
@@ -176,9 +168,7 @@ editindentation(ep, fp)
  * Read the next non-space character.
  */
 
-Hidden int
-skipspace(fp)
-	register FILE *fp;
+Hidden int skipspace(register FILE *fp)
 {
 	register int c;
 
@@ -194,10 +184,7 @@ skipspace(fp)
  * been read.
  */
 
-Hidden value
-readtext(fp, quote)
-	register FILE *fp;
-	register char quote;
+Hidden value readtext(register FILE *fp, register char quote)
 {
 	auto value v = Vnil;
 	char buf[BUFSIZ];
@@ -276,9 +263,7 @@ readtext(fp, quote)
 }
 
 
-Hidden int
-readsym(fp)
-	register FILE *fp;
+Hidden int readsym(register FILE *fp)
 {
 	register int c;
 	char buf[100];
@@ -309,9 +294,7 @@ readsym(fp)
  * Return nil pointer if EOF or error.
  */
 
-Hidden node
-readnode(fp)
-	FILE *fp;
+Hidden node readnode(FILE *fp)
 {
 	int c;
 	int nch;
@@ -381,9 +364,7 @@ readnode(fp)
  * Read a node written in a more or less internal format.
  */
 
-Visible value
-editqueue(filename)
-	string filename;
+Visible value editqueue(string filename)
 {
 	register FILE *fp = fopen(filename, "r");
 	auto queue q = Qnil;

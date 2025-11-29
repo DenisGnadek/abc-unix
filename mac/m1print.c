@@ -192,8 +192,7 @@ Forward char *getpartline();
 /* draw a page, reading lines from files prfile[pfile++];
  * returns whether this was the last page (EOF AND no more files left)
  */
-Hidden bool drawpage(prport)
-	GrafPtr prport;
+Hidden bool drawpage(GrafPtr prport)
 {
 	FontInfo info;
 	int h, v;
@@ -278,7 +277,7 @@ Hidden Procedure init_linebuf() {
 		linebuf= (char*) getmem(LINESIZE);
 }
 
-Hidden char *getpartline(fp, maxlen) FILE *fp; int maxlen; {
+Hidden char * getpartline(FILE *fp, int maxlen) {
 	char *eol;
 	char *strchr();
 	

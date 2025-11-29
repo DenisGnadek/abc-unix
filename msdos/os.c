@@ -23,11 +23,7 @@ Visible int getseed() {
 
 /**************************************************************************/
 
-Visible Procedure getdatetime(year, month, day, hour, minute,
-			      sec, fraction, units)
-     int *year, *month, *day;
-     int *hour, *minute, *sec;
-     long *fraction, *units;
+Visible Procedure getdatetime(int *year, int *month, int *day, int *hour, int *minute, int *sec, long *fraction, long *units)
 {
 	struct tm *lt;
 	struct timeb tt;
@@ -62,8 +58,7 @@ Visible Porting char *curdir()
 #define Issep(c) ((c) == SEPARATOR || (c) == ALT_SEP)
 #define Isanysep(c) (Issep(c) || (c) == DRIVE_SEP)
 
-Visible bool is_path(path)
-     char *path;
+Visible bool is_path(char *path)
 {
 	if (path == NULL) return No;
 	if (strcmp(path, SYN_CURDIR) == 0 || strcmp(path, SYN_PARENTDIR) == 0)
@@ -76,8 +71,7 @@ Visible bool is_path(path)
 
 /**************************************************************************/
 
-Visible bool is_abspath(path)
-     char *path;
+Visible bool is_abspath(char *path)
 {
 	if (path == NULL) return No;
 	if (Issep(*path)) return Yes;
@@ -89,9 +83,7 @@ Visible bool is_abspath(path)
 
 /**************************************************************************/
 
-Visible bool is_directory(dir, name)
-     char *dir;
-     char *name;
+Visible bool is_directory(char *dir, char *name)
 {
 	struct stat statbuf;
 	char *path;
@@ -112,8 +104,7 @@ Visible bool is_directory(dir, name)
 /**************************************************************************/
 /**************************************************************************/
 
-Visible Porting long filemodtime(filename)
-     char *filename;
+Visible Porting long filemodtime(char *filename)
 {
 	struct stat statbuf;
 	

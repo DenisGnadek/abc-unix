@@ -32,7 +32,7 @@ Forward Hidden Procedure dowri();
 Forward Hidden bool fileline();
 Forward Hidden Procedure q_mess();
 
-Hidden int intsize(v) value v; {
+Hidden int intsize(value v) {
 	value s= size(v); int len=0;
 	if (large(s)) interr(MESS(3800, "value too big to output"));
 	else len= intval(s);
@@ -58,7 +58,7 @@ Visible Procedure oline() {
 
 /************ interpreter execution output *******************************/
 
-Visible Procedure writ(v) value v; {
+Visible Procedure writ(value v) {
 	wri(outfile, v, No, Yes, No);
 }
 
@@ -90,7 +90,7 @@ Hidden Procedure writoutbuf() {
 	p_outbuf= outbuf;
 }
 
-Hidden Procedure push_ch(c) char c; {
+Hidden Procedure push_ch(char c) {
 	*p_outbuf++= c;
 	if (p_outbuf == q_outbuf) {
 		writoutbuf();
@@ -101,7 +101,7 @@ Hidden Procedure push_ch(c) char c; {
 
 Hidden FILE *ofile; 
 
-Hidden Procedure put_ch(c) char c; {
+Hidden Procedure put_ch(char c) {
 	putc(c, ofile);
 }
 
@@ -118,10 +118,7 @@ Hidden Procedure (*outproc)();
 
 #define Push_sp(perm) {if (!perm) (*outproc)(' ');}
 
-Visible Procedure wri(fp, v, coll, outer, perm)
-     FILE *fp;
-     value v;
-     bool coll, outer, perm;
+Visible Procedure wri(FILE *fp, value v, bool coll, bool outer, bool perm)
 {
 	int flags = 0;
 
@@ -153,9 +150,7 @@ Visible Procedure wri(fp, v, coll, outer, perm)
 
 Hidden bool lwt;
 
-Hidden Procedure dowri(v, flags)
-     value v; 
-     int flags;
+Hidden Procedure dowri(value v, int flags)
 {
 	int perm;
 
@@ -306,8 +301,7 @@ Hidden Procedure dowri(v, flags)
 }
 
 #ifdef RANGEPRINT
-Hidden Procedure dowri_vals(l, u)
-     value l, u;
+Hidden Procedure dowri_vals(value l, value u)
 {
 	if (!still_ok) return;
 	if (compare(l, u) == 0)
@@ -336,9 +330,7 @@ Hidden Procedure dowri_vals(l, u)
 Hidden bufadm i_buf, o_buf;
 extern bool i_looked_ahead;
 
-Hidden char *read_line(kind, should_prompt, eof)
-	literal kind;
-	bool should_prompt, *eof;
+Hidden char * read_line(literal kind, bool should_prompt, bool *eof)
 {
 	bufadm *bp= (kind == R_cmd && ifile == sv_ifile) ? &i_buf : &o_buf;
 	FILE *fp= (kind == R_cmd || kind == R_ioraw) ? ifile : stdin;
@@ -367,7 +359,7 @@ Hidden char *read_line(kind, should_prompt, eof)
 
 #define LINESIZE 200
 
-Hidden bool fileline(fp, bp) FILE *fp; bufadm *bp; {
+Hidden bool fileline(FILE *fp, bufadm *bp) {
 	char line[LINESIZE];
 	char *pline;
 
@@ -410,7 +402,7 @@ Hidden Procedure end_read() {
 /* Rather over-fancy routine to ask the user a question */
 /* Will anybody discover that you're only given 4 chances? */
 
-Visible char q_answer(m, c1, c2, c3) int m; char c1, c2, c3; {
+Visible char q_answer(int m, char c1, char c2, char c3) {
 	char answer; intlet try; txptr tp; bool eof;
 	
 	if (!interactive)
@@ -452,12 +444,12 @@ Visible char q_answer(m, c1, c2, c3) int m; char c1, c2, c3; {
 	return c2;
 }
 
-Hidden Procedure q_mess(m, c1, c2) int m; char c1, c2; {
+Hidden Procedure q_mess(int m, char c1, char c2) {
 	put2Cmess(m, c1, c2);
 	flusherr();
 }
 
-Visible bool is_intended(m) int m; {
+Visible bool is_intended(int m) {
 	char c1, c2;
 
 #ifdef FRENCH
@@ -476,7 +468,7 @@ Visible bool is_intended(m) int m; {
 /* Read_eg uses evaluation but it shouldn't.
    Wait for a more general mechanism. */
 
-Visible Procedure read_eg(l, t) loc l; btype t; {
+Visible Procedure read_eg(loc l, btype t) {
 	context c; parsetree code;
 	parsetree r= NilTree; value rv= Vnil; btype rt= Vnil;
 	envtab svprmnvtab= Vnil;
@@ -524,7 +516,7 @@ Visible Procedure read_eg(l, t) loc l; btype t; {
 	release(rv);
 }
 
-Visible Procedure read_raw(l) loc l; {
+Visible Procedure read_raw(loc l) {
 	value r; bool eof;
 	txptr text= (txptr) read_line(R_raw, rd_interactive, &eof);
 	if (still_ok && eof)
@@ -547,7 +539,7 @@ Visible Procedure read_raw(l) loc l; {
 
 Visible bool io_exit;
 
-Visible bool read_ioraw(v) value *v; { /* returns Yes if end of input */
+Visible bool read_ioraw(value *v) { /* returns Yes if end of input */
 	txptr text, rp;
 	bool eof;
 	
@@ -573,7 +565,7 @@ Visible char *get_line() {
 
 /******************************* Files ******************************/
 
-Visible Procedure redirect(of) FILE *of; {
+Visible Procedure redirect(FILE *of) {
 	static bool woa= No, wnwl= No;	/*was outeractive, was at_nwl */
 	ofile= of;
 	if (of == stdout) {

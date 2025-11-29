@@ -11,10 +11,7 @@
 Hidden char com_line[COML];
 #define At_eos(s) ((s)+= strlen(s))
 
-Visible bool ed_file(editor, fname, line)
-     char *editor;
-     char *fname;
-     int line;
+Visible bool ed_file(char *editor, char *fname, int line)
 {
 	/* return Yes if file has been modified */
 	char *cl = com_line;

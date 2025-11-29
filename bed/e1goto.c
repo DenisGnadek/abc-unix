@@ -42,7 +42,7 @@ Forward Hidden bool gotoscrollbar();
 Forward Hidden int poscomp();
 Forward Hidden Procedure fixsublist();
 
-Visible bool gotocursor(ep) environ *ep; {
+Visible bool gotocursor(environ *ep) {
 	int y;
 	int x;
 	
@@ -62,7 +62,7 @@ Visible bool gotocursor(ep) environ *ep; {
 	return dosense(ep, gotosense, gotoformat);
 }
 
-Visible bool gotomouse(ep) environ *ep; {
+Visible bool gotomouse(environ *ep) {
 	return dosense(ep, mousesense, mouseformat);
 }
 
@@ -96,10 +96,7 @@ Hidden bool dosense(ep, sense, format) environ *ep; string sense, format; {
  * col 0 to winheight-1 inclusive.)
  */
 
-Hidden bool
-gotoscrollbar(ep, x)
-	environ *ep;
-	int x;
+Hidden bool gotoscrollbar(environ *ep, int x)
 {
 	int w;
 
@@ -127,15 +124,7 @@ gotoscrollbar(ep, x)
 
 /*
  * Set the focus to the smallest node or subset surrounding
- * the position (y, x).
- */
-
-Visible bool
-gotoyx(ep, y, x)
-	register environ *ep;
-	register int y;
-	register int x;
-{
+ * the position(register int y, register int x){
 	register node n;
 	register string *rp;
 	register int i;
@@ -212,11 +201,7 @@ gotoyx(ep, y, x)
 
  */
 
-Hidden int
-poscomp(p, y, x)
-	register path p;
-	register int y;
-	register int x;
+Hidden int poscomp(register path p, register int y, register int x)
 {
 	register int ly;
 	register int lx;
@@ -255,11 +240,7 @@ poscomp(p, y, x)
  * object starting here.
  */
 
-Visible Procedure
-gotofix(ep, y, x)
-	environ *ep;
-	int y;
-	int x;
+Visible Procedure gotofix(environ *ep, int y, int x)
 {
 	int fx;
 	int fy;
@@ -343,9 +324,7 @@ gotofix(ep, y, x)
  * Refinement for gotofix -- don't show right sublist of something.
  */
 
-Hidden Procedure
-fixsublist(ep)
-	environ *ep;
+Hidden Procedure fixsublist(environ *ep)
 {
 	path pa = parent(ep->focus);
 	node n;

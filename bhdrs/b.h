@@ -28,8 +28,6 @@ typedef short intlet;
 #define Procedure void
 #endif
 
-#include "bvis.h" /* Public declarations for Visible Procedures */
-
 /************************************************************************/
 /*                                                                      */
 /* Values                                                               */
@@ -58,6 +56,10 @@ typedef short intlet;
 		is not defined.) */
 
 typedef struct value {HEADER; string *cts;} *value;
+
+typedef value polytype; /* Also in i2stc.h*/
+
+#include "bvis.h" /* Public declarations for Visible Procedures */
 
 #define Hdrsize (sizeof(struct value)-sizeof(string))
 

@@ -48,7 +48,7 @@ Visible int call_level; /* While run() can be called recursively */
 
 #define INCREMENT 100
 
-Hidden Procedure st_grow(incr) int incr; {
+Hidden Procedure st_grow(int incr) {
 	if (st_base == Pnil) { /* First time ever */
 		st_bottom= sp= st_base=
 			(value*) getmem((unsigned) incr * sizeof(value *));
@@ -73,7 +73,7 @@ Visible value pop() {
 	return *--sp;
 }
 
-Visible Procedure push(v) value v; {
+Visible Procedure push(value v) {
 	if (sp >= st_top) st_grow(INCREMENT);
 	*sp++ = (v);
 }
@@ -134,21 +134,21 @@ Hidden dorecord doo[] = {
 #define H_using   0  /* using workspace */
 #define H_central 1  /* central workspace */
 
-Hidden env newenv(tab, inv_env) envtab tab; env inv_env; {
+Hidden env newenv(envtab tab, env inv_env) {
 	env ev= (env) getmem(sizeof(envchain));
 	ev->tab= tab; /* Eats a reference to tab! */
 	ev->inv_env= inv_env;
 	return ev;
 }
 
-Hidden Procedure pushenv(pe) env *pe; {
+Hidden Procedure pushenv(env *pe) {
 	env ev= (env) getmem(sizeof(envchain));
 	ev->tab= copy((*pe)->tab);
 	ev->inv_env= *pe;
 	*pe= ev;
 }	
 
-Hidden Procedure popenv(pe) env *pe; {
+Hidden Procedure popenv(env *pe) {
 	env ev= *pe;
 	*pe= ev->inv_env;
 	release(ev->tab);
@@ -156,9 +156,7 @@ Hidden Procedure popenv(pe) env *pe; {
 }
 
 
-Hidden Procedure call(type, new_pc)
-     intlet type;
-     parsetree new_pc;
+Hidden Procedure call(intlet type, parsetree new_pc)
 {
 	if (type < 0 || type >= MAXTYPE) syserr(MESS(4101, "bad call type"));
 
@@ -286,8 +284,8 @@ Visible Procedure ret() {
 /* - - - */
 
 /*ARGSUSED*/
-Visible Procedure call_refinement(name, def, test)
-		value name; parsetree def; bool test; {
+Visible Procedure call_refinement(value name, parsetree def, bool test)
+{
 	call(test ? C_reftest : C_refexp,
 		*Branch(Refinement(def)->rp, REF_START));
 }
@@ -295,8 +293,8 @@ Visible Procedure call_refinement(name, def, test)
 #define YOU_TEST MESS(4103, "You haven't told me HOW TO REPORT %s")
 #define YOU_YIELD MESS(4104, "You haven't told me HOW TO RETURN %s")
 
-Hidden Procedure udfpr(nd1, name, nd2, isfunc)
-		value nd1, name, nd2; bool isfunc; {
+Hidden Procedure udfpr(value nd1, value name, value nd2, bool isfunc)
+{
 	value *aa;
 	bool bad = No;
 	parsetree u; int k, nlocals; funprd *fpr;
@@ -344,7 +342,7 @@ Hidden Procedure udfpr(nd1, name, nd2, isfunc)
 	if (Valid(nd2)) push(copy(nd2));
 }
 
-Visible Procedure formula(nd1, name, nd2, tor) value nd1, name, nd2, tor; {
+Visible Procedure formula(value nd1, value name, value nd2, value tor) {
 	if (!Valid(tor)) udfpr(nd1, name, nd2, Yes);
 	else {
 		if (!Is_function(tor))
@@ -353,7 +351,7 @@ Visible Procedure formula(nd1, name, nd2, tor) value nd1, name, nd2, tor; {
 	}
 }
 
-Visible Procedure proposition(nd1, name, nd2, pred) value nd1, name, nd2, pred; {
+Visible Procedure proposition(value nd1, value name, value nd2, value pred) {
 	if (!Valid(pred)) udfpr(nd1, name, nd2, No);
 	else {
 		if (!Is_predicate(pred))
@@ -366,13 +364,13 @@ Visible Procedure proposition(nd1, name, nd2, pred) value nd1, name, nd2, pred; 
    Note -- this needs extension to the case where an actuals can be
    a compound mixture of expressions and locations. */
 
-Hidden bool is_location(v) value v; {
+Hidden bool is_location(value v) {
 	while (Valid(v) && Is_compound(v))
 		v= *Field(v, 0);
 	return Valid(v) && (Is_simploc(v) || Is_tbseloc(v) || Is_trimloc(v));
 }
 
-Hidden value n_trim(v, B, C) value v; value B, C; {
+Hidden value n_trim(value v, value B, value C) {
 	/* Return v|(#v-C)@(B+1) */
 	value B_plus_1= sum(B, one);
 	value res1= behead(v, B_plus_1);
@@ -389,7 +387,7 @@ Hidden value n_trim(v, B, C) value v; value B, C; {
    	return Yes and put a copy of its content in *pv;
    if it's an empty location, return Yes and put Vnil in *pv. */
 
-Hidden bool extract(l, pv) loc l; value *pv; {
+Hidden bool extract(loc l, value *pv) {
 	value *ll, lv;
 	*pv= Vnil;
 	if (l == Lnil)
@@ -454,7 +452,7 @@ Hidden bool extract(l, pv) loc l; value *pv; {
    value.  If it's a location, return a copy of its content
    (or Vnil if it's empty); if it's a value, return a copy of it. */
 
-Hidden value n_content(l) loc l; {
+Hidden value n_content(loc l) {
 	value v;
 	if (extract(l, &v))
 		return v;
@@ -526,11 +524,7 @@ Hidden value epibreer(formals, argcnt, nlocals)
    the numbers were assigned to local variables much earlier;
    this is a simple left-to right tree traversal. */
 
-Hidden Procedure sub_epibreer(argtree, vl, plocals, pnextlocal)
-	parsetree argtree;
-	value vl;		/* Value or location */
-	value *plocals;
-	int *pnextlocal;
+Hidden Procedure sub_epibreer(parsetree argtree, value vl, /* Value or location */ value *plocals, int *pnextlocal)
 {
 	value v;
 	int k;
@@ -585,7 +579,7 @@ Hidden Procedure sub_epibreer(argtree, vl, plocals, pnextlocal)
 
 /* Put a value in a location, but empty it if the value is Vnil. */
 
-Hidden Procedure n_put(v, l) value v; loc l; {
+Hidden Procedure n_put(value v, loc l) {
 	if (!Valid(v))
 		l_del(l);
 	else
@@ -595,7 +589,7 @@ Hidden Procedure n_put(v, l) value v; loc l; {
 /* Put changed formal parameters back in the corresponding locations.
    It is an error to put a changed value back in an expression. */
 
-Hidden Procedure putbackargs(locenv) value locenv; {
+Hidden Procedure putbackargs(value locenv) {
 	value oldlocenv= pop();	/* Original contents of locenv */
 	value locs= pop();	/* Corresponding locations */
 	parsetree formals= (parsetree) pop();	/* Parse tree of formals */
@@ -627,11 +621,7 @@ Hidden Procedure putbackargs(locenv) value locenv; {
 	release(oldlocenv);
 }
 
-Hidden Procedure sub_putback(argtree, lv, locenv, pnextlocal)
-	parsetree argtree;
-	/*loc-or*/value lv;
-	value locenv;
-	int *pnextlocal;
+Hidden Procedure sub_putback(parsetree argtree, /*loc-or*/value lv, value locenv, int *pnextlocal)
 {
 	value v;
 	int k;
@@ -686,11 +676,7 @@ Hidden Procedure sub_putback(argtree, lv, locenv, pnextlocal)
    components must be Vnil.  A mixture of values and Vnil causes an
    error. */
 
-Hidden bool collect_value(pv, seq, locenv, pnextlocal)
-	value *pv;
-	value seq;
-	value locenv;
-	int *pnextlocal;
+Hidden bool collect_value(value *pv, value seq, value locenv, int *pnextlocal)
 {
 	bool changed= No;
 	int k;
@@ -754,15 +740,14 @@ Hidden bool collect_value(pv, seq, locenv, pnextlocal)
 /* Put a value in something that may be a location or a value.
    If it's a value, an error message is issued. */
 
-Hidden Procedure put_it_back(v, l) value v; loc l; {
+Hidden Procedure put_it_back(value v, loc l) {
 	if (!is_location(l))
 		interr(MESS(4120, "value of expression parameter changed"));
 	if (still_ok)
 		n_put(v, l);
 }
 
-Visible Procedure x_user_command(name, actuals, def)
- value name; parsetree actuals; value def;
+Visible Procedure x_user_command(value name, parsetree actuals, value def)
 {
 	how *h; parsetree u, formals; value *aa;
 	value v; int len, argcnt;

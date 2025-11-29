@@ -35,8 +35,7 @@ Hidden bool busy= No;
  * Then it only saves the file name and returns a pointer to it.
  */
 
-Visible DIR *opendir(path)
-     char *path;
+Visible DIR * opendir(char *path)
 {
 	struct stat buffer;
 
@@ -64,8 +63,7 @@ Visible DIR *opendir(path)
  * Read the next directory entry.
  */
 
-Visible struct direct *readdir(dp)
-     char *dp;
+Visible struct direct * readdir(char *dp)
 {
 	static struct direct buffer;
 	char *p;
@@ -89,8 +87,7 @@ Visible struct direct *readdir(dp)
  * no directory is open.
  */
 
-Visible Procedure closedir(dirp)
-     DIR *dirp;
+Visible Procedure closedir(DIR *dirp)
 {
 	dirp[0]= EOS;
 }
@@ -103,8 +100,7 @@ Hidden char dta[64]; /* Device Transfer Area */
 
 #define DIRATTR 0x10
 
-Hidden char *firstf(pat)
-     char *pat;
+Hidden char * firstf(char *pat)
 {
 	static int flags;
 	union REGS regs;
@@ -159,8 +155,7 @@ Hidden Procedure fixfile()
  * Tell MS-DOS where the Device Transfer Area is.
  */
 
-Hidden Procedure setdta(dta)
-     char *dta;
+Hidden Procedure setdta(char *dta)
 {
 	union REGS regs;
 	struct SREGS segregs;

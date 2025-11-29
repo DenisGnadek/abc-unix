@@ -25,9 +25,7 @@ Forward Hidden Procedure lastnnitem();
  * Compute the length of the ep->s1'th item of node tree(ep->focus).
  */
 
-Visible int
-lenitem(ep)
-	register environ *ep;
+Visible int lenitem(register environ *ep)
 {
 	register node n = tree(ep->focus);
 	register node nn;
@@ -51,19 +49,12 @@ lenitem(ep)
  * This process is repeated until no more improvements can be made.
  */
 
-Visible Procedure
-grow(ep, deleting)
-	environ *ep;
-	bool deleting;
+Visible Procedure grow(environ *ep, bool deleting)
 {
 	subgrow(ep, Yes, deleting);
 }
 
-Visible Procedure
-subgrow(ep, ignorespaces, deleting)
-	register environ *ep;
-	bool ignorespaces;
-	bool deleting;
+Visible Procedure subgrow(register environ *ep, bool ignorespaces, bool deleting)
 {
 	register node n;
 	register int sym;
@@ -201,9 +192,7 @@ subgrow(ep, ignorespaces, deleting)
  * Ditto to find smallest possible representation.
  */
 
-Visible Procedure
-shrink(ep)
-	register environ *ep;
+Visible Procedure shrink(register environ *ep)
 {
 	register node n;
 	register int sym;
@@ -300,18 +289,13 @@ shrink(ep)
  */
 
 #ifdef NOT_USED
-Visible Procedure
-growsubset(ep)
-	environ *ep;
+Visible Procedure growsubset(environ *ep)
 {
 	subgrsubset(ep, Yes);
 }
 #endif
 
-Visible Procedure
-subgrsubset(ep, ignorespaces)
-	register environ *ep;
-	bool ignorespaces;
+Visible Procedure subgrsubset(register environ *ep, bool ignorespaces)
 {
 	register node n = tree(ep->focus);
 	register string *rp = noderepr(n);
@@ -332,9 +316,7 @@ subgrsubset(ep, ignorespaces)
  * Ditto for the smallest way.
  */
 
-Visible Procedure /* Ought to be Hidden */
-shrsubset(ep)
-	register environ *ep;
+Visible Procedure /* Ought to be Hidden */ shrsubset(register environ *ep)
 {
 	register node n = tree(ep->focus);
 	register string *rp = noderepr(n);
@@ -354,12 +336,7 @@ shrsubset(ep)
  * Subroutine for grow/shrink to see whether item i is (almost) invisible.
  */
 
-Hidden bool
-subisnull(n, rp, i, ignorespaces)
-	register node n;
-	register string *rp;
-	register int i;
-	bool ignorespaces;
+Hidden bool subisnull(register node n, register string *rp, register int i, bool ignorespaces)
 {
 	register string repr;
 	register node nn;
@@ -373,11 +350,7 @@ subisnull(n, rp, i, ignorespaces)
 }
 
 
-Hidden bool
-isnull(n, rp, i)
-	node n;
-	string *rp;
-	int i;
+Hidden bool isnull(node n, string *rp, int i)
 {
 	return subisnull(n, rp, i, Yes);
 }
@@ -386,9 +359,7 @@ isnull(n, rp, i)
  * Find the rightmost VHOLE which would look the same as the current one.
  */
 
-Visible Procedure
-ritevhole(ep)
-	register environ *ep;
+Visible Procedure ritevhole(register environ *ep)
 {
 	register node n;
 	register int ich;
@@ -472,9 +443,7 @@ ritevhole(ep)
  * Ditto to the left.
  */
 
-Visible Procedure
-leftvhole(ep)
-	register environ *ep;
+Visible Procedure leftvhole(register environ *ep)
 {
 	register int ich;
 
@@ -553,44 +522,33 @@ leftvhole(ep)
  * 2) Update ep->highest properly.
  */
 
-Visible Procedure
-s_up(ep)
-	register environ *ep;
+Visible Procedure s_up(register environ *ep)
 {
 	if (!up(&ep->focus))
 		syserr(MESS(7100, "s_up failed"));
 	higher(ep);
 }
 
-Visible Procedure
-s_downi(ep, i)
-	register environ *ep;
-	register int i;
+Visible Procedure s_downi(register environ *ep, register int i)
 {
 	if (!downi(&ep->focus, i))
 		syserr(MESS(7101, "s_downi failed"));
 }
 
-Visible Procedure
-s_down(ep)
-	register environ *ep;
+Visible Procedure s_down(register environ *ep)
 {
 	if (!down(&ep->focus))
 		syserr(MESS(7102, "s_down failed"));
 }
 
-Visible Procedure
-s_downrite(ep)
-	register environ *ep;
+Visible Procedure s_downrite(register environ *ep)
 {
 	if (!downrite(&ep->focus))
 		syserr(MESS(7103, "s_downrite failed"));
 }
 
 #ifdef NOT_USED
-Visible Procedure
-s_left(ep)
-	register environ *ep;
+Visible Procedure s_left(register environ *ep)
 {
 	register int ich = ichild(ep->focus);
 
@@ -600,9 +558,7 @@ s_left(ep)
 #endif
 
 #ifdef NOT_USED
-Visible Procedure
-s_rite(ep)
-	register environ *ep;
+Visible Procedure s_rite(register environ *ep)
 {
 	register int ich = ichild(ep->focus);
 
@@ -617,9 +573,7 @@ s_rite(ep)
  * coded in-line or as a macro.)
  */
 
-Hidden bool
-nextitem(ep)
-	register environ *ep;
+Hidden bool nextitem(register environ *ep)
 {
 	if (ep->s1 >= 2*nchildren(tree(ep->focus)) + 1)
 		return No; /* Already at last item */
@@ -632,9 +586,7 @@ nextitem(ep)
  * Ditto for previous.
  */
 
-Hidden bool
-previtem(ep)
-	register environ *ep;
+Hidden bool previtem(register environ *ep)
 {
 	if (ep->s1 <= 1
 		|| ep->s1 == 2 && fwidth(noderepr(tree(ep->focus))[0]) < 0)
@@ -649,9 +601,7 @@ previtem(ep)
  * but not a whole subtree.
  */
 
-Hidden bool
-isunititem(ep)
-	register environ *ep;
+Hidden bool isunititem(register environ *ep)
 {
 	if (ep->s1&1)
 		return Yes;
@@ -663,9 +613,7 @@ isunititem(ep)
  * Check for consistent mode information.
  */
 
-Visible bool
-checkep(ep)
-	register environ *ep;
+Visible bool checkep(register environ *ep)
 {
 	switch (ep->mode) {
 
@@ -706,9 +654,7 @@ checkep(ep)
  * (i.e., those with length <= 0).
  */
 
-Visible bool
-nextnnitem(ep)
-	register environ *ep;
+Visible bool nextnnitem(register environ *ep)
 {
 	register int s1save = ep->s1;
 
@@ -720,9 +666,7 @@ nextnnitem(ep)
 	return No;
 }
 
-Visible bool
-prevnnitem(ep)
-	register environ *ep;
+Visible bool prevnnitem(register environ *ep)
 {
 	register int s1save = ep->s1;
 	register int len;
@@ -737,9 +681,7 @@ prevnnitem(ep)
 }
 
 #ifdef NOT_USED
-Visible Procedure
-firstnnitem(ep)
-	register environ *ep;
+Visible Procedure firstnnitem(register environ *ep)
 {
 	ep->s1 = fwidth(noderepr(tree(ep->focus))[0]) < 0 ? 2 : 1;
 	while (lenitem(ep) == 0) {
@@ -750,9 +692,7 @@ firstnnitem(ep)
 }
 #endif
 
-Hidden Procedure
-lastnnitem(ep)
-	register environ *ep;
+Hidden Procedure lastnnitem(register environ *ep)
 {
 	ep->s1 = 2*nchildren(tree(ep->focus)) + 1;
 	while (lenitem(ep) == 0) {
@@ -771,9 +711,7 @@ lastnnitem(ep)
  * to insert a character.
  */
 
-Visible Procedure
-fixit(ep)
-	register environ *ep;
+Visible Procedure fixit(register environ *ep)
 {
 	/* First, make a hole if it's not already a hole. */
 
@@ -838,9 +776,7 @@ fixit(ep)
  * The string pointer must not be null!
  */
 
-Visible bool
-allspaces(str)
-	register string str;
+Visible bool allspaces(register string str)
 {
 	Assert(str);
 	for (; *str; ++str) {
@@ -855,9 +791,7 @@ allspaces(str)
  * Function to compute the actual width of the focus.
  */
 
-Visible int
-focwidth(ep)
-	register environ *ep;
+Visible int focwidth(register environ *ep)
 {
 	node nn;
 	register node n = tree(ep->focus);
@@ -920,9 +854,7 @@ focwidth(ep)
  * This may be input again to fixfocus to allow restoration of this position.
  */
 
-Visible int
-focoffset(ep)
-	register environ *ep;
+Visible int focoffset(register environ *ep)
 {
 	node nn;
 	register node n;
@@ -983,9 +915,7 @@ focoffset(ep)
  * Return the first character of the focus (maybe '\n'; 0 if zero-width).
  */
 
-Visible int
-focchar(ep)
-	environ *ep;
+Visible int focchar(environ *ep)
 {
 	node n = tree(ep->focus);
 	string *rp;
@@ -1041,9 +971,7 @@ focchar(ep)
  * Subroutine to return first character of node.
  */
 
-Visible int
-nodechar(n)
-	node n;
+Visible int nodechar(node n)
 {
 	string *rp;
 	int nch;
@@ -1072,9 +1000,7 @@ nodechar(n)
  * Function to compute the actual indentation level at the focus.
  */
 
-Visible int
-focindent(ep)
-	environ *ep;
+Visible int focindent(environ *ep)
 {
 	int y = Ycoord(ep->focus);
 	int x = Xcoord(ep->focus);
@@ -1109,9 +1035,7 @@ focindent(ep)
  * Routines to move 'environ' structures.
  */
 
-emove(s, d)
-	environ *s;
-	environ *d;
+int emove(environ *s, environ *d)
 {
 #ifdef STRUCTASS
 	*d = *s;
@@ -1139,9 +1063,7 @@ emove(s, d)
 #endif /* !STRUCTASS */
 }
 
-ecopy(s, d)
-	environ *s;
-	environ *d;
+int ecopy(environ *s, environ *d)
 {
 	emove(s, d);
 	VOID pathcopy(d->focus);
@@ -1152,8 +1074,7 @@ ecopy(s, d)
 #endif /* RECORDING */
 }
 
-erelease(ep)
-	environ *ep;
+int erelease(environ *ep)
 {
 	pathrelease(ep->focus);
 	release(ep->copybuffer);
@@ -1167,9 +1088,7 @@ erelease(ep)
  * Routines to move 'environ' structures.
  */
 
-Visible bool ev_eq(l, r)
-	environ *l;
-	environ *r;
+Visible bool ev_eq(environ *l, environ *r)
 {
 	if (l->focus == r->focus
 	    && l->mode == r->mode

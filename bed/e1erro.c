@@ -40,13 +40,7 @@ Forward Hidden int addscrollbar();
  * If there is no message, show status and copy buffer and recording mode.
  */
 
-Visible Procedure
-stsline(totlines, topline, scrlines, copybuffer, recording)
-	int totlines;
-	int topline;
-	int scrlines;
-	value copybuffer;
-	bool recording;
+Visible Procedure stsline(int totlines, int topline, int scrlines, value copybuffer, bool recording)
 {
 	register string bp;
 	char *msg_mode= NULL;
@@ -99,11 +93,7 @@ stsline(totlines, topline, scrlines, copybuffer, recording)
  * unit is visible on the screen (considering logical lines).
  */
 
-Hidden int
-addscrollbar(totlines, topline, scrlines)
-	int totlines;
-	int topline;
-	int scrlines;
+Hidden int addscrollbar(int totlines, int topline, int scrlines)
 {
 	int endline;
 	register int i;
@@ -137,9 +127,7 @@ addscrollbar(totlines, topline, scrlines)
  * until it has been displayed.
  */
 
-Hidden Procedure
-ederr1(s)
-	string s;
+Hidden Procedure ederr1(string s)
 {
 	ringbell = Yes;
 	if (s && priority < 3) {
@@ -148,27 +136,19 @@ ederr1(s)
 	}
 }
 
-Visible Procedure
-ederr(m)
-	int m;
+Visible Procedure ederr(int m)
 {
 	if (m == 0) ringbell= Yes;
 	else ederr1(getmess(m));
 }
 
-Visible Procedure
-ederrS(m, s)
-	int m;
-	string s;
+Visible Procedure ederrS(int m, string s)
 {
 	sprintf(messbuf, getmess(m), s);
 	ederr1(messbuf);	
 }
 
-Visible Procedure
-ederrC(m, c)
-	int m;
-	char c;
+Visible Procedure ederrC(int m, char c)
 {
 	sprintf(messbuf, getmess(m), c);
 	ederr1(messbuf);
@@ -179,9 +159,7 @@ ederrC(m, c)
  * Unlike error messages, the last such message is displayed.
  */
 
-Visible Procedure
-edmessage(s)
-	string s;
+Visible Procedure edmessage(string s)
 {
 	if (s && priority <= 2) {
 		priority = 2;
@@ -193,9 +171,7 @@ edmessage(s)
 
 /* Assertion error */
 
-Visible Procedure asserr(file, line)
-     string file;
-     int line;
+Visible Procedure asserr(string file, int line)
 {
 	char mess[255];
 	sprintf(mess, "Assertion botched in file %s, line %d.", file, line);

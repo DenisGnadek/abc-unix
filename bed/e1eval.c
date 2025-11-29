@@ -53,13 +53,7 @@
  * at the initial values of (y, x) and level.
  */
 
-Visible Procedure
-evalcoord(n, jch, py, px, plevel)
-	register node n;
-	register int jch;
-	int *py;
-	int *px;
-	int *plevel;
+Visible Procedure evalcoord(register node n, register int jch, int *py, int *px, int *plevel)
 {
 	node nn;
 	register int i;
@@ -118,9 +112,7 @@ evalcoord(n, jch, py, px, plevel)
  * character, and \b or \t only as last.
  */
 
-Visible int
-fwidth(str)
-	register string str;
+Visible int fwidth(register string str)
 {
 	register int c;
 	register int n = 0;
@@ -146,9 +138,7 @@ fwidth(str)
  * have correctly been calculated.
  */
 
-Visible int
-evalwidth(n)
-	register node n;
+Visible int evalwidth(register node n)
 {
 	register int w;
 	register int i;

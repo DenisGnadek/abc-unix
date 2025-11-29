@@ -33,11 +33,7 @@ Forward Hidden bool canfitchar();
  * are then inserted individually.
  */
 
-Visible bool
-ins_queue(ep, pq, pq2)
-	register environ *ep;
-	register queue *pq;
-	register queue *pq2;
+Visible bool ins_queue(register environ *ep, register queue *pq, register queue *pq2)
 {
 	register bool ok = Yes;
 	register node n;
@@ -108,10 +104,7 @@ ins_queue(ep, pq, pq2)
  * without affecting the focus position.
  */
 
-Visible bool
-app_queue(ep, pq)
-	environ *ep;
-	queue *pq;
+Visible bool app_queue(environ *ep, queue *pq)
 {
 	int where;
 	static int markbit = 1; /* To properly handle recursive calls */
@@ -138,9 +131,7 @@ app_queue(ep, pq)
  * Advance to next thing after current position.
  */
 
-Visible bool
-move_on(ep)
-	register environ *ep;
+Visible bool move_on(register environ *ep)
 {
 	register node n;
 	register string *rp;
@@ -189,9 +180,7 @@ move_on(ep)
  * <<<<< This code is a dinosaur and should be revised. >>>>>
  */
 
-Visible bool
-fix_move(ep)
-	register environ *ep;
+Visible bool fix_move(register environ *ep)
 {
 	register int ich;
 	register int i;
@@ -241,11 +230,7 @@ fix_move(ep)
  * Insert a node in the parse tree.
  */
 
-Hidden bool
-ins_node(ep, n, pq)
-	register environ *ep;
-	register node n;
-	register queue *pq;
+Hidden bool ins_node(register environ *ep, register node n, register queue *pq)
 {
 	register int sym;
 	register node nn;
@@ -377,14 +362,14 @@ ins_node(ep, n, pq)
  * with suggestions and suggestion-rests for commands; timo
  */
 
-Hidden bool softening_builtin(inch, sym) char inch; int sym; {
+Hidden bool softening_builtin(char inch, int sym) {
 	/* refinement for ins_string to enable softening of
 	 * builtin commands, e.g REMOVE ? FROM ? -> REMOVE M?
 	 */
 	return (bool) (isupper(inch) && Put <= sym && sym < Check);
 }
 
-Hidden bool fits_kwchar(n, i, ch) node n; int i; int ch; {
+Hidden bool fits_kwchar(node n, int i, int ch) {
 	/* REPORT i'th char of Keyword(n) == ch */
 	string s;
 	int si;
@@ -398,7 +383,7 @@ Hidden bool fits_kwchar(n, i, ch) node n; int i; int ch; {
 	return (bool) si == ch;
 }
 
-Hidden bool fits_nextkwstart(n, ch) node n; int ch; {
+Hidden bool fits_nextkwstart(node n, int ch) {
 	register int sym= symbol(n);
 	
 	if (sym == Keyword)
@@ -417,7 +402,7 @@ Hidden bool fits_nextkwstart(n, ch) node n; int ch; {
  * if they don't, we should not kill them now!
  */
 
-Hidden bool is_varsuggrest(n, exphole_seen) node n; bool exphole_seen; {
+Hidden bool is_varsuggrest(node n, bool exphole_seen) {
 	register int sym= symbol(n);
 	register node n2;
 	register int sym2;
@@ -454,7 +439,7 @@ Hidden bool is_varsuggrest(n, exphole_seen) node n; bool exphole_seen; {
  * following focus;
  * else, if rest resembles suggestion-rest, kill that.
  */
-Hidden bool ack_or_kill_varsuggrest(ep, pstr) environ *ep; string *pstr; {
+Hidden bool ack_or_kill_varsuggrest(environ *ep, string *pstr) {
 	node nn= tree(ep->focus);
 	
 	if (fits_nextkwstart(child(nn, 2), (int)**pstr)) {
@@ -489,7 +474,7 @@ Hidden bool ack_or_kill_varsuggrest(ep, pstr) environ *ep; string *pstr; {
  * userinput ')
  */
 
-Hidden bool range_hack(ep) register environ *ep; {
+Hidden bool range_hack(register environ *ep) {
 	path pa;
 	int sympa;
 	string str;
@@ -538,12 +523,7 @@ Visible bool justgoon = No;
 
 #define NEXT_CH (++str, alt_c = 0)
 
-Visible bool
-ins_string(ep, str, pq, alt_c)
-	register environ *ep;
-	/*auto*/ string str;
-	register queue *pq;
-	int alt_c;
+Visible bool ins_string(register environ *ep, /*auto*/ string str, register queue *pq, int alt_c)
 {
 	register node nn;
 	auto value v;
@@ -866,12 +846,7 @@ ins_string(ep, str, pq, alt_c)
  * Either of n1, n2 may actually be the current contents of the hole.
  */
 
-Hidden bool
-joinnodes(pp, n1, n2, spflag)
-	path *pp;
-	node n1;
-	node n2;
-	bool spflag;
+Hidden bool joinnodes(path *pp, node n1, node n2, bool spflag)
 {
 	path pa = parent(*pp);
 	int sympa = pa ? symbol(tree(pa)) : Rootsymbol;
@@ -922,13 +897,7 @@ joinnodes(pp, n1, n2, spflag)
  * Returns the number of characters consumed from str.
  */
 
-Visible int
-joinstring(pp, str, spflag, alt_c, mayindent)
-	path *pp;
-	register string str;
-	register bool spflag;
-	int alt_c;
-	bool mayindent;
+Visible int joinstring(path *pp, register string str, register bool spflag, int alt_c, bool mayindent)
 {
 	register struct table *tp;
 	path pa = parent(*pp);
@@ -1000,10 +969,7 @@ joinstring(pp, str, spflag, alt_c, mayindent)
  * (Interface has changed to resemble resuggest/soften.)
  */
 
-Hidden bool
-add_string(ep, pstr)
-	environ *ep;
-	string *pstr;
+Hidden bool add_string(environ *ep, string *pstr)
 {
 	register struct table *tp;
 	path pa = parent(ep->focus);
@@ -1055,10 +1021,7 @@ add_string(ep, pstr)
  * See whether a character may start a new node in a hole with given class.
  */
 
-Hidden bool
-canfitchar(c, ci)
-	int c;
-	struct classinfo *ci;
+Hidden bool canfitchar(int c, struct classinfo *ci)
 {
 	register classptr cp;
 	register int code = Code(c);
@@ -1079,10 +1042,7 @@ canfitchar(c, ci)
  * Debug routine to print a queue.
  */
 
-Visible Procedure
-qshow(q, where)
-	queue q;
-	string where;
+Visible Procedure qshow(queue q, string where)
 {
 	node n;
 	char buf[256];

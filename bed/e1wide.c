@@ -17,10 +17,7 @@
  * Widen -- make the focus larger.
  */
 
-Visible bool
-widen(ep, deleting)
-	register environ *ep;
-	bool deleting;
+Visible bool widen(register environ *ep, bool deleting)
 {
 	register node n;
 	register node nn;
@@ -146,9 +143,7 @@ widen(ep, deleting)
  * Narrow -- make the focus smaller.
  */
 
-Visible bool
-narrow(ep)
-	register environ *ep;
+Visible bool narrow(register environ *ep)
 {
 	register node n;
 	register int sym;
@@ -210,9 +205,7 @@ narrow(ep)
 }
 
 
-Visible bool
-extend(ep)
-	register environ *ep;
+Visible bool extend(register environ *ep)
 {
 	register node n;
 	register int i;
@@ -291,9 +284,7 @@ extend(ep)
  * Right-Narrow -- make the focus smaller, going to the last item of a list.
  */
 
-Visible bool
-rnarrow(ep)
-	register environ *ep;
+Visible bool rnarrow(register environ *ep)
 {
 	register node n;
 	register node nn;

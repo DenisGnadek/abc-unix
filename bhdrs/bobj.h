@@ -19,7 +19,7 @@ relation compare();
 
 /*************************************************************************/
 
-value grab();
+Visible value grab(literal type, intlet len);
 unsigned tltsyze();
 unsigned numsyze();
 unsigned ptnsyze();

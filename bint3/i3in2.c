@@ -13,7 +13,7 @@
 
 /* Newlines for WRITE /// */
 
-Visible Procedure nl(n) value n; {
+Visible Procedure nl(value n) {
 	value l= size(n); int c= intval(l); release(l);
 	while (c--) writnewline();
 }
@@ -21,7 +21,7 @@ Visible Procedure nl(n) value n; {
 
 /* Evaluating basic targets */
 
-Visible value v_local(name, number) value name, number; {
+Visible value v_local(value name, value number) {
 	value *aa= envassoc(curnv->tab, number);
 	if (aa != Pnil && *aa != Vnil) {
 		if (Is_indirect(*aa)) {
@@ -35,7 +35,7 @@ Visible value v_local(name, number) value name, number; {
 	return Vnil;
 }
 
-Visible value v_global(name) value name; {
+Visible value v_global(value name) {
 	value *aa= envassoc(prmnv->tab, name);
 	if (aa != Pnil && *aa != Vnil) {
 		if (Is_indirect(*aa)) {
@@ -48,10 +48,7 @@ Visible value v_global(name) value name; {
 	return Vnil;
 }
 
-Visible Procedure load_global(v, name, err)
-     value v;
-     value name;
-     bool err;
+Visible Procedure load_global(value v, value name, bool err)
 {
 	indirect *w= Indirect(v);
 
@@ -84,7 +81,7 @@ Visible Procedure load_global(v, name, err)
    Return value is Yes if a new element was available and assigned, No if not.
 */
 
-Visible bool in_ranger(l, pv) loc l; value *pv; {
+Visible bool in_ranger(loc l, value *pv) {
 	value v= *pv, ind, tlt, len, i1, val; bool res;
 	if (!Is_compound(v) || Nfields(v) != 3) { /* First time */
 		tlt= v;

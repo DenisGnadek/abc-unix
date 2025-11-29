@@ -49,7 +49,7 @@
  * Make a SmallInt if at all possible.
  */
 
-Visible integer int_canon(v) integer v; {
+Visible integer int_canon(integer v) {
 	register int i;
 
 	if (IsSmallInt(v)) return v;
@@ -100,7 +100,7 @@ Visible integer int_canon(v) integer v; {
 
 /* General add/subtract subroutine */
 
-Hidden twodigit fmodulo(x) twodigit x; {
+Hidden twodigit fmodulo(twodigit x) {
 	/* RETURN x - (ABCBASE * floor(x/ABCBASE)) */
 	twodigit d= x/ABCBASE;
 	/* next one remedies if negative x/ABCBASE rounds towards 0 */
@@ -108,8 +108,8 @@ Hidden twodigit fmodulo(x) twodigit x; {
 	return x - ABCBASE*d;
 }
 
-Hidden Procedure dig_gadd(to, nto, from, nfrom, ffactor)
-	digit *to, *from; intlet nto, nfrom; digit ffactor; {
+Hidden Procedure dig_gadd(digit *to, intlet nto, digit *from, intlet nfrom, digit ffactor)
+{
 	twodigit carry= 0;
 	twodigit factor= ffactor;
 	digit save;
@@ -140,7 +140,7 @@ Hidden Procedure dig_gadd(to, nto, from, nfrom, ffactor)
 /* Sum or difference of two integers */
 /* Should have its own version of dig-gadd without double precision */
 
-Visible integer int_gadd(v, w, factor) integer v, w; intlet factor; {
+Visible integer int_gadd(integer v, integer w, intlet factor) {
 	struct integer vv, ww;
 	integer s;
 	int len, lenv, i;
@@ -162,7 +162,7 @@ Visible integer int_gadd(v, w, factor) integer v, w; intlet factor; {
 
 /* Sum of two integers */
 
-Visible integer int_sum(v, w) integer v, w; {
+Visible integer int_sum(integer v, integer w) {
 	if (IsSmallInt(v) && IsSmallInt(w))
 		return mk_int((double)SmallIntVal(v) + (double)SmallIntVal(w));
 	return int_gadd(v, w, 1);
@@ -170,7 +170,7 @@ Visible integer int_sum(v, w) integer v, w; {
 
 /* Difference of two integers */
 
-Visible integer int_diff(v, w) integer v, w; {
+Visible integer int_diff(integer v, integer w) {
 	if (IsSmallInt(v) && IsSmallInt(w))
 		return mk_int((double)SmallIntVal(v) - (double)SmallIntVal(w));
 	return int_gadd(v, w, -1);
@@ -178,7 +178,7 @@ Visible integer int_diff(v, w) integer v, w; {
 
 /* Product of two integers */
 
-Visible integer int_prod(v, w) integer v, w; {
+Visible integer int_prod(integer v, integer w) {
 	int i;
 	integer a;
 	struct integer vv, ww;
@@ -202,7 +202,7 @@ Visible integer int_prod(v, w) integer v, w; {
 	return int_canon(a);
 }
 
-Visible integer int_neg(u) integer u; {
+Visible integer int_neg(integer u) {
 	if (IsSmallInt(u))
 		return mk_int((double) (-SmallIntVal(u)));
 	return int_gadd(int_0, u, -1);
@@ -210,7 +210,7 @@ Visible integer int_neg(u) integer u; {
 
 /* Compare two integers */
 
-Visible relation int_comp(v, w) integer v, w; {
+Visible relation int_comp(integer v, integer w) {
 	int sv, sw;
 	register int i;
 	struct integer vv, ww;
@@ -253,7 +253,7 @@ Visible relation int_comp(v, w) integer v, w; {
 
 #define GRAN 8	/* Granularity used when requesting more storage */
 		/* MOVE TO MEM! */
-Visible integer mk_int(x) double x; {
+Visible integer mk_int(double x) {
 	register integer a;
 	integer b;
 	register int i, j;
@@ -290,7 +290,7 @@ Visible integer mk_int(x) double x; {
 
 /* Construct an integer out of a C int.  Like mk_int, but optimized. */
 
-Visible value mk_integer(x) int x; {
+Visible value mk_integer(int x) {
 	if (MinSmallInt <= x && x <= MaxSmallInt) return MkSmallInt(x);
 	return (value) mk_int((double)x);
 }
@@ -298,7 +298,7 @@ Visible value mk_integer(x) int x; {
 
 /* Efficiently compute 10**n as a B integer, where n is a C int >= 0 */
 
-Visible integer int_tento(n) int n; {
+Visible integer int_tento(int n) {
 	integer i;
 	digit msd = 1;
 	if (n < 0) syserr(MESS(1001, "int_tento(-n)"));

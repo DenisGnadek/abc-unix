@@ -225,7 +225,7 @@ Hidden string extcode[]= {
 
 /* assumption: extended keys are handled via two consecutive calls */
 
-Visible string reprchar(c) int c; {
+Visible string reprchar(int c) {
 	static char str[20];
 	static bool extended= No;
 	

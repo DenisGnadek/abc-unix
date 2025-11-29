@@ -41,7 +41,7 @@ Hidden char *blessdir= NULL;
  * Print help blurb.
  */
 
-Visible Procedure sethelptopic(item) int item; {
+Visible Procedure sethelptopic(int item) {
 	topic= item;
 }
 
@@ -139,7 +139,7 @@ Hidden char *blessedfolder() {	/* TechNotes #67 and #77 */
 	return bldir;
 }
 
-Hidden Procedure closeblesswd(wdrefnum) short wdrefnum; {
+Hidden Procedure closeblesswd(short wdrefnum) {
 	WDPBRec pb;
 	
 	if (hfsrunning()) {

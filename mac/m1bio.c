@@ -160,10 +160,10 @@ Visible Procedure mac_pack() {
 
 /* macerr uses alerts! */
 
-Visible Procedure bioerr(m) int m; {
+Visible Procedure bioerr(int m) {
 	macerrS(m, (char*)NULL);
 }
 
-Visible Procedure bioerrV(m, v) int m; value v; {
+Visible Procedure bioerrV(int m, value v) {
 	macerrS(m, strval(v));
 }

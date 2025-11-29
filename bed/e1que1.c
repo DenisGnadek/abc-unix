@@ -17,14 +17,12 @@
 Forward Hidden bool rest_is_hollow();
 
 #ifdef lint
-Visible queue qcopy(q)
-     queue q;
+Visible queue qcopy(queue q)
 {
 	return (queue) copy((value) q);
 }
 
-Visible Procedure qrelease(q)
-     queue q;
+Visible Procedure qrelease(queue q)
 {
 	release((value) q);
 }
@@ -34,10 +32,7 @@ Visible Procedure qrelease(q)
  * Append queue 2 to the end of queue 1.
  */
 
-Visible Procedure
-joinqueues(pq, q)
-	register queue *pq;
-	register queue q;
+Visible Procedure joinqueues(register queue *pq, register queue q)
 {
 	if (emptyqueue(q))
 		return;
@@ -55,10 +50,7 @@ joinqueues(pq, q)
  * Empty strings and Optional holes are silently discarded.
  */
 
-Visible Procedure
-preptoqueue(n, pq)
-	node n;
-	register queue *pq;
+Visible Procedure preptoqueue(node n, register queue *pq)
 {
 	register queue q;
 
@@ -83,10 +75,7 @@ preptoqueue(n, pq)
  * Append a node to the end of a queue (same extras as preptoqueue).
  */
 
-Visible Procedure
-addtoqueue(pq, n)
-	register queue *pq;
-	register node n;
+Visible Procedure addtoqueue(register queue *pq, register node n)
 {
 	auto queue q = Qnil;
 
@@ -99,10 +88,7 @@ addtoqueue(pq, n)
  * Push a string onto a queue.
  */
 
-Visible Procedure
-stringtoqueue(str, pq)
-	register string str;
-	register queue *pq;
+Visible Procedure stringtoqueue(register string str, register queue *pq)
 {
 	register value  v;
 
@@ -119,10 +105,7 @@ stringtoqueue(str, pq)
 
 #ifdef NOT_USED
 
-Visible Procedure
-addstringtoqueue(pq, str)
-	register queue *pq;
-	register string str;
+Visible Procedure addstringtoqueue(register queue *pq, register string str)
 {
 	register value v = mk_etext(str);
 
@@ -136,9 +119,7 @@ addstringtoqueue(pq, str)
  * Get the first node of a queue and delink it ("pop").
  */
 
-Visible node
-queuebehead(pq)
-	register queue *pq;
+Visible node queuebehead(register queue *pq)
 {
 	register node n;
 	register queue q = *pq;
@@ -158,10 +139,7 @@ queuebehead(pq)
  * 'Atomic' nodes (texts and holes) are pushed unadorned.
  */
 
-Visible Procedure
-splitnode(n, pq)
-	register node n;
-	register queue *pq;
+Visible Procedure splitnode(register node n, register queue *pq)
 {
 	register node nn;
 	register string *rp;
@@ -205,10 +183,7 @@ splitnode(n, pq)
  * (timo)
  */
 
-Visible bool
-resttoqueue(pp, pq)
-	register path *pp;
-	register queue *pq;
+Visible bool resttoqueue(register path *pp, register queue *pq)
 {
 	auto queue q = Qnil;
 	register path pa = parent(*pp);
@@ -235,7 +210,7 @@ resttoqueue(pp, pq)
 	return Yes;
 }
 
-Hidden bool rest_is_hollow(n) node n; {
+Hidden bool rest_is_hollow(node n) {
 	register node nn;
 	register string *rp;
 	register int i;
@@ -267,10 +242,7 @@ Hidden bool rest_is_hollow(n) node n; {
  * Also, it cannot fail.
  */
 
-Visible Procedure
-nosuggtoqueue(ep, pq)
-	register environ *ep;
-	queue *pq;
+Visible Procedure nosuggtoqueue(register environ *ep, queue *pq)
 {
 	auto queue q = Qnil;
 	register int i;
@@ -311,9 +283,7 @@ nosuggtoqueue(ep, pq)
  * Check whether the remainder of the current node is all suggestion.
  */
 
-Visible bool
-issuggestion(ep)
-	register environ *ep;
+Visible bool issuggestion(register environ *ep)
 {
 	register node n;
 	register int nch;
@@ -338,10 +308,7 @@ issuggestion(ep)
  * See if a node fits in a hole.
  */
 
-Visible bool
-fitnode(pp, n)
-	register path *pp;
-	register node n;
+Visible bool fitnode(register path *pp, register node n)
 {
 	if (!allowed(*pp, symbol(n)))
 		return No;
@@ -358,11 +325,7 @@ fitnode(pp, n)
  * another call.)
  */
 
-Visible int
-fitstring(pp, str, alt_c)
-	register path *pp;
-	register string str;
-	int alt_c;
+Visible int fitstring(register path *pp, register string str, int alt_c)
 {
 	environ dummyenv;
 	register node n;
@@ -438,10 +401,7 @@ fitstring(pp, str, alt_c)
  * this is implemented incomplete.
  */
 
-Visible Procedure
-fixfocus(ep, len)
-	register environ *ep;
-	register int len;
+Visible Procedure fixfocus(register environ *ep, register int len)
 {
 	node nn;
 	register node n = tree(ep->focus);
@@ -515,9 +475,7 @@ fixfocus(ep, len)
  * deserves re-interpretation.
  */
 
-Visible bool
-spacefix(ep)
-	environ *ep;
+Visible bool spacefix(environ *ep)
 {
 	path pa;
 	node n;
@@ -545,12 +503,7 @@ spacefix(ep)
  * Prepend a subset of a node to a queue.
  */
 
-Visible Procedure
-subsettoqueue(n, s1, s2, pq)
-	register node n;
-	register int s1;
-	register int s2;
-	register queue *pq;
+Visible Procedure subsettoqueue(register node n, register int s1, register int s2, register queue *pq)
 {
 	register string *rp = noderepr(n);
 
@@ -568,9 +521,7 @@ subsettoqueue(n, s1, s2, pq)
  * Produce flat text out of a queue's first line, to show it on screen.
  */
 
-Visible string
-querepr(qv)
-	value qv;
+Visible string querepr(value qv)
 {
 	queue q = (queue)qv;
 	node n;
@@ -644,7 +595,7 @@ querepr(qv)
 #endif /* SHOWBUF */
 
 #ifdef UNUSED
-Visible Procedure dumpqueue(pq, m) queue *pq; string m; {
+Visible Procedure dumpqueue(queue *pq, string m) {
 	char stuff[80];
 	register string str = stuff;
 	FILE *fp;

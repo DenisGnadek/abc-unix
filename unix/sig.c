@@ -34,7 +34,7 @@
 
 #ifdef SIGTSTP
 
-Hidden bool must_handle(sig) int sig; {
+Hidden bool must_handle(int sig) {
 	/* Shouldn't we enumerate the list of signals we *do* want to catch? */
 	/* It seems that new signals are all of the type that should be
 	   ignored by most processes... */
@@ -71,7 +71,7 @@ Hidden bool must_handle(sig) int sig; {
 
 extern bool vtrmactive;
 
-Hidden Procedure oops(sig, m) int sig, m; {
+Hidden Procedure oops(int sig, int m) {
 	signal(sig, SIG_DFL); /* Don't call handler recursive -- just die... */
 #ifdef sigmask /* 4.2 BSD */
 	sigsetmask(0); /* Don't block signals in handler -- just die... */
@@ -88,29 +88,29 @@ Hidden Procedure oops(sig, m) int sig, m; {
 #endif
 }
 
-Hidden SIGTYPE burp(sig) int sig; {
+Hidden SIGTYPE burp(int sig) {
 	oops(sig, MESS(3901, "*** Oops, I feel suddenly (BURP!) indisposed. I'll call it a day. Sorry.\n"));
 }
 
-Hidden SIGTYPE aog(sig) int sig; {
+Hidden SIGTYPE aog(int sig) {
 	oops(sig, MESS(3902, "*** Oops, an act of God has occurred compelling me to discontinue service.\n"));
 }
 
 Visible bool intrptd= No;
 
-Hidden SIGTYPE intsig(sig) int sig; {   /* sig == SIGINT */
+Hidden SIGTYPE intsig(int sig) {   /* sig == SIGINT */
 	intrptd= Yes;
 	signal(SIGINT, intsig);
 }
 
-Hidden SIGTYPE fpesig(sig) int sig; { /* sig == SIGFPE */
+Hidden SIGTYPE fpesig(int sig) { /* sig == SIGFPE */
 	signal(SIGFPE, SIG_IGN);
 	fpe_signal();
 	signal(SIGFPE, fpesig);
 }
 
 
-Hidden SIGTYPE (*setsig(sig, func))() int sig; SIGTYPE (*func)(); {
+Hidden SIGTYPE (* setsig()() int sig, SIGTYPE ( *func)()){
 	/*Set a signal, unless it's being ignored*/
 	SIGTYPE (*f)()= signal(sig, SIG_IGN);
 	if (f != SIG_IGN) signal(sig, func);

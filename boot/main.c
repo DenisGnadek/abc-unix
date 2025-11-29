@@ -53,7 +53,7 @@ int nlexical;	/* to distinguish lexical items from Symbols;
 		 * the lexical items in lexdef[] to get their representation.
 		 */
 
-main(argc, argv) int argc; char **argv; {
+int main(int argc, char **argv) {
 	int errflg;
 	int c;
 	extern char *optarg;
@@ -118,7 +118,7 @@ main(argc, argv) int argc; char **argv; {
 	exit(0);
 }
 
-Hidden FILE *openfile(file, mode) string file; string mode; {
+Hidden FILE * openfile(string file, string mode) {
 	FILE *fp;
 	string s;
 	
@@ -173,7 +173,7 @@ fatal(format, arg1, arg2, arg3, arg4, arg5)
 	exit(1);
 }
 
-char *getmem(len) unsigned len; {
+char * getmem(unsigned len) {
 	char *p;
 	
 	p= malloc(MALLOC_ARG len);
@@ -182,7 +182,7 @@ char *getmem(len) unsigned len; {
 	return p;
 }
 
-Visible string savestr(s) string s; {
+Visible string savestr(string s) {
 	string p= (string) getmem((unsigned) (strlen((char*)s) + 1));
 	strcpy((char*)p, (char*)s);
 	return p;
@@ -192,7 +192,7 @@ Visible string savestr(s) string s; {
  * the last of which must be a Nilitem.
  */
 
-Visible itemptr savearray(pi, ilen) itemptr pi; int ilen; {
+Visible itemptr savearray(itemptr pi, int ilen) {
 	itemptr pp= (itemptr) getmem((unsigned) (ilen*sizeof(item)));
 	itemptr p= pp;
 	
@@ -204,6 +204,6 @@ Visible itemptr savearray(pi, ilen) itemptr pi; int ilen; {
 	return pp;
 }
 
-Visible Procedure asserr(file, line) string file; int line; {
+Visible Procedure asserr(string file, int line) {
 	fatal("assertion error: file %s, line %d", file, line);
 }

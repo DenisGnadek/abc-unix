@@ -16,11 +16,7 @@
    Returns a bool: Yes if the file has been modified.
 */
 
-Visible bool f_edit(fname, errline, kind, creating)
-     value fname;
-     intlet errline;
-     literal kind;
-     bool creating;
+Visible bool f_edit(value fname, intlet errline, literal kind, bool creating)
 {
 	string filename = sstrval(fname);
 	bool changed;
@@ -42,7 +38,7 @@ Visible bool f_edit(fname, errline, kind, creating)
 
 /****************************************************************************/
 
-Visible bool cmdline(kind, bp, indent) literal kind; bufadm *bp; int indent; {
+Visible bool cmdline(literal kind, bufadm *bp, int indent) {
 	static char *edfirst= NULL;
 	static char *edbuf;
 	char *ed_line();
@@ -84,7 +80,7 @@ Visible bool cmdline(kind, bp, indent) literal kind; bufadm *bp; int indent; {
 
 /* delete file from positions file */
 
-Visible Procedure idelpos(fname) value fname; {
+Visible Procedure idelpos(value fname) {
 	string file= sstrval(fname);
 	delpos(file);
 	fstrval(file);
@@ -92,7 +88,7 @@ Visible Procedure idelpos(fname) value fname; {
 
 /* move position in positions file */
 
-Visible Procedure imovpos(ofname, nfname) value ofname, nfname; {
+Visible Procedure imovpos(value ofname, value nfname) {
 	string o_file= sstrval(ofname);
 	string n_file= sstrval(nfname);
 	movpos(o_file, n_file);

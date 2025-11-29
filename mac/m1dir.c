@@ -5,7 +5,7 @@
 
 /* find working directory reference number for some volume or directory */
 
-static short wdrefnum(path) char *path; {
+static short wdrefnum(char *path) {
 	union {
 		WDPBRec d;
 		VolumeParam v;
@@ -56,7 +56,7 @@ void endabcwd() {
 	}
 }
 
-static int mchdir(path) char *path; {
+static int mchdir(char *path) {
 	WDPBRec pb;
 	char name[MAXPATH];
 	
@@ -79,7 +79,7 @@ static int mchdir(path) char *path; {
 
 char *abcdir= NULL;		/* must be Visible for m1print.c */
 
-int chdir(path) char *path; {
+int chdir(char *path) {
 	if (abcdir) {
 		freestr(abcdir);
 		abcdir= NULL;
@@ -98,9 +98,7 @@ void recabcdir() {
 
 /* Create a directory. */
 
-int
-mkdir(path)
-	char *path;
+int mkdir(char *path)
 {
 	HFileParam pb;
 	char name[MAXPATH];
@@ -120,9 +118,7 @@ mkdir(path)
 	return 0;
 }
 
-int
-rmdir(path)
-	char *path;
+int rmdir(char *path)
 {
 	HFileParam pb;
 	char name[MAXPATH];
@@ -170,9 +166,7 @@ DIR opened;
  * be implemented by allocating memory dynamically.)
  */
 
-DIR *
-opendir(path)
-	char *path;
+DIR * opendir(char *path)
 {
 	union {
 		WDPBRec d;
@@ -195,8 +189,7 @@ opendir(path)
  * Close a directory.
  */
 
-closedir(dirp)
-	DIR *dirp;
+int closedir(DIR *dirp)
 {
 	if (hfsrunning()) {
 		WDPBRec pb;
@@ -212,9 +205,7 @@ closedir(dirp)
  * Read the next directory entry.
  */
 
-struct direct *
-readdir(dp)
-	DIR *dp;
+struct direct * readdir(DIR *dp)
 {
 	union {
 		DirInfo d;

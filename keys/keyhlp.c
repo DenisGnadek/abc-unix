@@ -67,7 +67,7 @@ Hidden int bindstart;		/* offset bindings field */
  * Print the bindings.
  */
 
-Visible Procedure putbindings(yfirst) int yfirst; {
+Visible Procedure putbindings(int yfirst) {
 	int h;
 	bool h_changed;
 	
@@ -89,7 +89,7 @@ Visible Procedure putbindings(yfirst) int yfirst; {
 	trmsync(yfirst, 0);
 }
 
-Visible Procedure setup_bindings(width, nlines) int width, *nlines; {
+Visible Procedure setup_bindings(int width, int *nlines) {
 	int h;
 	int code;
 	int len;
@@ -143,7 +143,7 @@ Visible Procedure fini_bindings() {
 
 #endif /* MEMTRACE */
 
-Hidden string getname(code) int code; {
+Hidden string getname(int code) {
 	tabent *d;
 	
 	for (d= deftab; d < deftab+ndefs; d++) {
@@ -153,7 +153,7 @@ Hidden string getname(code) int code; {
 	return "";
 }
 
-Hidden Procedure extendwithspaces(buffer, bound) string buffer; int bound; {
+Hidden Procedure extendwithspaces(string buffer, int bound) {
 	int len= strlen(buffer);
 	string pbuf= buffer+len;
 
@@ -162,7 +162,7 @@ Hidden Procedure extendwithspaces(buffer, bound) string buffer; int bound; {
 	*pbuf= '\0';
 }
 
-Visible Procedure bind_changed(code) int code; {
+Visible Procedure bind_changed(int code) {
 	int h;
 	
 	for (h= 0; h < nitems; h++) {
@@ -185,7 +185,7 @@ Visible Procedure bind_all_changed() { /* for redrawing the screen */
 #define Def(d)	((d)->def != NULL)
 #define Rep(d)	((d)->rep != NULL && (d)->rep[0] != '\0')
 
-Hidden Procedure getbindings(h) int h; {
+Hidden Procedure getbindings(int h) {
 	tabent *d;
 	int code= helpcode[h];
 	string buffer= helpitem[h].data;
@@ -205,7 +205,7 @@ Hidden Procedure getbindings(h) int h; {
 	helpitem[h].changed= No;
 }
 
-Hidden bool addbinding(repr, buffer) string repr, buffer; {
+Hidden bool addbinding(string repr, string buffer) {
 	string sep= buffer[bindstart] == '\0' ? "" : BINDSEP;
 	
 	if (strlen(buffer) + strlen(sep) + strlen(repr) > helpwidth)

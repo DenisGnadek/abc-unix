@@ -29,7 +29,7 @@
 #ifdef SIGNAL
 
 	jmp_buf lab;
-	SIGTYPE overflow(sig) int sig; { /* what to do on overflow/underflow */
+	SIGTYPE overflow(int sig) { /* what to do on overflow/underflow */
 		signal(sig, overflow);
 		longjmp(lab, 1);
 	}
@@ -38,7 +38,7 @@
 
 	/* Dummy routines instead */
 	int lab=1;
-	int setjmp(lab) int lab; { return(0); }
+	int setjmp(int lab) { return(0); }
 
 #endif /* !SIGNAL */
 
@@ -46,25 +46,25 @@
 #define min(x,y) (((x)<(y))?(x):(y))
 
 /* These routines are intended to defeat any attempt at optimisation */
-Dstore(a, b) double a, *b; { *b=a; }
-double Dsum(a, b) double a, b; { double r; Dstore(a+b, &r); return (r); }
-double Ddiff(a, b) double a, b; { double r; Dstore(a-b, &r); return (r); }
-double Dmul(a, b) double a, b; { double r; Dstore(a*b, &r); return (r); }
-double Ddiv(a, b) double a, b; { double r; Dstore(a/b, &r); return (r); }
+int Dstore(double a, double *b) { *b=a; }
+double Dsum(double a, double b) { double r; Dstore(a+b, &r); return (r); }
+double Ddiff(double a, double b) { double r; Dstore(a-b, &r); return (r); }
+double Dmul(double a, double b) { double r; Dstore(a*b, &r); return (r); }
+double Ddiv(double a, double b) { double r; Dstore(a/b, &r); return (r); }
 
-double power(x, n) int x, n; {
+double power(int x, int n) {
 	double r=1.0;
 	for (;n>0; n--) r*=x;
 	return r;
 }
 
-int floor_log(base, x) int base; double x; { /* return floor(log base(x)) */
+int floor_log(int base, double x) { /* return floor(log base(x)) */
 	int r=0;
 	while (x>=base) { r++; x/=base; }
 	return r;
 }
 
-int ceil_log(base, x) int base; double x; {
+int ceil_log(int base, double x) {
 	int r=0;
 	while (x>1.0) { r++; x/=base; }
 	return r;
@@ -80,7 +80,7 @@ typedef short intlet;
 typedef struct header { HEADER; } header;
 typedef struct value { HEADER; char **cts;} value;
 
-main(argc, argv) int argc; char *argv[]; {
+int main(int argc, char *argv[]) {
 	char co[4], oc[4];	/* Comment starter and ender symbols */
 	char c;
 	short newshort, maxshort, maxershort;

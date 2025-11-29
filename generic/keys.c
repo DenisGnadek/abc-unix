@@ -62,8 +62,7 @@ Visible struct tabent deftab[MAXDEFS] = {
  * mouse in TERMINIT and TERMDONE, see trmsense() in trm.c.
  */
 
-Visible string reprchar(c)
-     int c;
+Visible string reprchar(int c)
 {
 	static char str[20];
 

@@ -48,7 +48,7 @@ Visible Procedure setup_menus() {
 	DrawMenuBar();
 }
 
-Hidden Procedure adjust_menus(menusstatus) int menusstatus; {
+Hidden Procedure adjust_menus(int menusstatus) {
 	char *menus;
 	int m;
 	bool draw= No;
@@ -71,7 +71,7 @@ Hidden Procedure adjust_menus(menusstatus) int menusstatus; {
 	curmenusstat= menusstatus;
 }
 
-Visible Procedure editor_menus(at_cmdprompt) bool at_cmdprompt; {
+Visible Procedure editor_menus(bool at_cmdprompt) {
 	if (at_cmdprompt)
 		adjust_menus(Prompt_menus);
 	else
@@ -86,8 +86,7 @@ Visible Procedure disable_grrec() {
 	DisableItem(mh[FileID-AppleID], RecWsGroupItem);
 }
 
-Visible Procedure adjusteditmenu(athole, buffer, unpasted, undo, redo)
-bool athole, buffer, unpasted, undo, redo;
+Visible Procedure adjusteditmenu(bool athole, bool buffer, bool unpasted, bool undo, bool redo)
 {
 	MenuHandle em= mh[EditID-AppleID];
 	
@@ -149,7 +148,7 @@ Visible Procedure unda_menus() {
 
 /* handle menu choice: */
 
-Visible int do_menu_choice(menuchoice) int menuchoice; {
+Visible int do_menu_choice(int menuchoice) {
 	int id= ID(menuchoice);
 	int item= ITEM(menuchoice);
 	int result= HANDLED;
@@ -183,7 +182,7 @@ Visible int do_menu_choice(menuchoice) int menuchoice; {
 	return result;
 }
 
-Hidden int do_apple_choice(item) int item; {
+Hidden int do_apple_choice(int item) {
 	char acc_name[256];
 	int acc_number;
 	
@@ -197,7 +196,7 @@ Hidden int do_apple_choice(item) int item; {
 	return HANDLED;
 }
 
-Hidden int do_file_choice(item) int item; {
+Hidden int do_file_choice(int item) {
 	if (item != QuitItem) {
 		adjust_menus(Interpreter_menus);
 		clear_perm();	/* to file new locations and free memory */
@@ -251,24 +250,24 @@ Hidden int do_file_choice(item) int item; {
 	return HANDLED;
 }
 
-Hidden int do_edit_choice(item) int item; {
+Hidden int do_edit_choice(int item) {
 	/* SystemEdit done in trminput() in m1trm.c */
 	return EDIT+item;
 }
 
-Hidden int do_focus_choice(item) int item; {
+Hidden int do_focus_choice(int item) {
 	return FOCUS+item;	/* FOCUS in keys.h */
 }
 
-Hidden int do_special_choice(item) int item; {
+Hidden int do_special_choice(int item) {
 	return SPECIAL+item;
 }
 
-Hidden int do_pause_choice(item) int item; {
+Hidden int do_pause_choice(int item) {
 	return CANCEL;
 }
 
-Hidden int do_help_choice(item) int item; {
+Hidden int do_help_choice(int item) {
 	sethelptopic(item);
 	return HELP;	/* causes edit_document to call help() */
 }

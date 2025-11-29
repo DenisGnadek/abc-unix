@@ -36,7 +36,7 @@ Hidden FILE *messfp= NOT_OPENED;
 char *messbuf; /* used for messages with arguments */
 Hidden char buf[MESSBUFSIZE];
 
-Visible string getmess(nr) int nr;  {
+Visible string getmess(int nr) {
 	int last, c; char *cp= NULL;
 	bool new; int block; long ftell();
 	static int last_nr= 0;
@@ -122,8 +122,7 @@ Visible Procedure endmess() {
 
 /***************************************************************************/
 
-Visible Procedure putmess(m)
-     int m;
+Visible Procedure putmess(int m)
 {
 	putserr(getmess(m));
 	flusherr();
@@ -131,27 +130,19 @@ Visible Procedure putmess(m)
 
 #ifndef KEYS
 
-Visible Procedure putSmess(m, s)
-     int m;
-     string s;
+Visible Procedure putSmess(int m, string s)
 {
 	putsSerr(getmess(m), s);
 	flusherr();
 }
 
-Visible Procedure putDSmess(m, d, s)
-     int m;
-     int d;
-     string s;
+Visible Procedure putDSmess(int m, int d, string s)
 {
 	putsDSerr(getmess(m), d, s);
 	flusherr();
 }
 
-Visible Procedure put2Cmess(m, c1, c2)
-     int m;
-     char c1;
-     char c2;
+Visible Procedure put2Cmess(int m, char c1, char c2)
 {
 	puts2Cerr(getmess(m), c1, c2);
 	flusherr();

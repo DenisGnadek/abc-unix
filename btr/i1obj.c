@@ -10,14 +10,13 @@
 #include "i3typ.h"
 
 /*ARGSUSED*/
-Visible unsigned tltsyze(type, len, nptrs)
-	literal type; intlet len; int *nptrs;
+Visible unsigned tltsyze(literal type, intlet len, int *nptrs)
 {
 	*nptrs= 1;
 	return (unsigned) (sizeof(value));
 }
 
-Visible Procedure rel_subvalues(v) value v; {
+Visible Procedure rel_subvalues(value v) {
 	if (Is_tlt(v)) {
 		relbtree(Root(v), Itemtype(v));
 		v->type= '\0';
@@ -28,7 +27,7 @@ Visible Procedure rel_subvalues(v) value v; {
 
 #define INCOMP	MESS(500, "incompatible types %s and %s")
 
-Hidden Procedure incompatible(v, w) value v, w; {
+Hidden Procedure incompatible(value v, value w) {
 	value m1, m2, m3, m;
 	string s1, s2;
 	
@@ -49,7 +48,7 @@ Visible bool comp_ok = Yes; 		/* Temporary, to catch type errors */
 
 relation comp_tlt(), comp_text();	/* From b1lta.c */
 
-Visible relation compare(v, w) value v, w; {
+Visible relation compare(value v, value w) {
 	literal vt, wt;
 	int i;
 	relation rel;
@@ -97,9 +96,7 @@ Visible relation compare(v, w) value v, w; {
 }
 
 /* Used for set'random. Needs to be rewritten so that for small changes in v */
-/* you get large changes in hash(v) */
-
-Visible double hash(v) value v; {
+/* you get large changes in hash(*/ Visible double hash( v) value v) {
 	if (Is_number(v)) return numhash(v);
 	else if (Is_compound(v)) {
 		int len= Nfields(v), k; double d= .404*len;
@@ -138,7 +135,7 @@ Visible double hash(v) value v; {
 	}
 }
 
-Visible value convert(v, coll, outer) value v; bool coll, outer; {
+Visible value convert(value v, bool coll, bool outer) {
 	value t, quote, c, cv, sep, th, openbr, closebr; int k, len; char ch;
 	switch (Type(v)) {
 	case Num:
@@ -218,7 +215,7 @@ Visible value convert(v, coll, outer) value v; bool coll, outer; {
 	return t;
 }
 
-Hidden value adj(v, w, side) value v, w; char side; {
+Hidden value adj(value v, value w, char side) {
 	value t, c, sp, r, i;
 	int len, wid, delta, left, right;
 	c= convert(v, Yes, Yes);
@@ -247,15 +244,15 @@ Hidden value adj(v, w, side) value v, w; char side; {
 	}
 }
 
-Visible value adjleft(v, w) value v, w; {
+Visible value adjleft(value v, value w) {
 	return adj(v, w, 'L');
 }
 
-Visible value adjright(v, w) value v, w; {
+Visible value adjright(value v, value w) {
 	return adj(v, w, 'R');
 }
 
-Visible value centre(v, w) value v, w; {
+Visible value centre(value v, value w) {
 	return adj(v, w, 'C');
 }
 

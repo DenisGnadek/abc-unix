@@ -7,7 +7,7 @@
 
 /* read_table_of_texts */
 
-Visible Procedure abcinput(name_arg) char *name_arg; {
+Visible Procedure abcinput(char *name_arg) {
 	value name;
 	value tab, v;
 	value n, m;

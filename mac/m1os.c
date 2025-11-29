@@ -22,7 +22,7 @@ Visible Procedure poll_interrupt() {
 
 /* Rename a file. */
 
-Visible int rename(f, g) char *f, *g; {
+Visible int rename(char *f, char *g) {
 	OSErr err= Rename(f, 0, g);
 	return err == noErr ? 0 : -1;
 }
@@ -37,13 +37,13 @@ Visible int getseed() {
 
 /* Is a file descriptor interactive? */
 
-Visible bool isatty(fd) int fd; {
+Visible bool isatty(int fd) {
 	return ioctl(fd, FIOINTERACTIVE, (long*)0) == 0;
 }
 
 /* Assertion error. */
 
-Visible asserr(file, line) char *file; int line; {
+Visible asserr(char *file, int line) {
 	char mess[255];
 	sprintf(mess, "Assertion botched in file %s, line %d.",
 		file, line);

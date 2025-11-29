@@ -78,7 +78,7 @@ Hidden Procedure check_representations() {
  * Check a representation string.
  */
 
-Hidden Procedure checkstring(s, ich, sname) string s; int ich; string sname; {
+Hidden Procedure checkstring(string s, int ich, string sname) {
 	int i;
 	
 	if (s == NULL)

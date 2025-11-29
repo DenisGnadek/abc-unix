@@ -15,8 +15,7 @@
 
 /* open a directory */
 
-Visible DIR *opendir(name)
-     char *name;
+Visible DIR * opendir(char *name)
 {
 	register DIR *dirp;
 	register int fd;
@@ -52,8 +51,7 @@ struct	olddirect {
 
 /* get next entry in a directory */
 
-Visible struct direct *readdir(dirp)
-     register DIR *dirp;
+Visible struct direct * readdir(register DIR *dirp)
 {
 	register struct olddirect *dp;
 	static struct direct dir;
@@ -84,8 +82,7 @@ Visible struct direct *readdir(dirp)
 
 /* close a directory */
 
-Visible Procedure closedir(dirp)
-     register DIR *dirp;
+Visible Procedure closedir(register DIR *dirp)
 {
 	close(dirp->dd_fd);
 	dirp->dd_fd = -1;

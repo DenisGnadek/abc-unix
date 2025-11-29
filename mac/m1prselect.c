@@ -14,7 +14,7 @@
 Visible char **prfile= (char**)NULL;	/* array of filenames to print */
 Visible int nprfile= 0;	/* number of same */
 
-Visible bool init_slct(nfile) int nfile; {
+Visible bool init_slct(int nfile) {
 	prfile= (char**) getmem((unsigned) (nfile*sizeof(char*)));
 	if (prfile == (char**)NULL) {
 		macerr(NOMEM);
@@ -39,7 +39,7 @@ Visible Procedure end_slct() {
 
 /* write_table_of_texts */
 
-Hidden bool dumpval(locname) char *locname; {
+Hidden bool dumpval(char *locname) {
 	value name, pname;
 	value *aa;
 	value v;

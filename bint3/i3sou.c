@@ -41,24 +41,14 @@ bool ask_for();
 value stc_code();
 #endif
 
-#define Is_filed(v) (Is_indirect(v))
-
-/*****************************************************************************/
-
-/* def_perm(): add/replace the filename mapping of a how-to/location */
-
-Visible Procedure def_perm(pname, fname)
-     value pname;
-     value fname;
-{
+#define Is_filed((Is_indirect( v)) /*****************************************************************************/ /* def_perm(): add/replace the filename mapping of a how-to/location */ Visible Procedure def_perm(pname, fname) value pname) {
 	e_replace(fname, &(cur_env->perm), pname);
 	cur_env->permchanges = Yes;
 }
 
 /* free_perm(): remove the filename mapping of a how-to/location */
 
-Visible Procedure free_perm(pname)
-     value pname;
+Visible Procedure free_perm(value pname)
 {
 	e_delete(&(cur_env->perm), pname);
 	cur_env->permchanges = Yes;
@@ -66,9 +56,7 @@ Visible Procedure free_perm(pname)
 
 /* p_exists(): search the filename mapping of a how-to/location */
 
-Visible bool p_exists(pname, aa)
-     value pname;
-     value **aa;
+Visible bool p_exists(value pname, value **aa)
 {
 	return in_env(cur_env->perm, pname, aa);
 }
@@ -77,26 +65,21 @@ Visible bool p_exists(pname, aa)
 
 /* def_unit(): add/replace the how-to mapping of a user how-to */
 
-Visible Procedure def_unit(pname, u)
-     value pname;
-     value u;
+Visible Procedure def_unit(value pname, value u)
 {
 	e_replace(u, &(cur_env->units), pname);
 }
 
 /* free_unit(): remove the how-to mapping of a user how-to */
 
-Hidden Procedure free_unit(pname)
-     value pname;
+Hidden Procedure free_unit(value pname)
 {
 	e_delete(&(cur_env->units), pname);
 }
 
 /* u_exists(): search the how-to mapping of a user how-to */
 
-Visible bool u_exists(pname, aa)
-     value pname;
-     value **aa;
+Visible bool u_exists(value pname, value **aa)
 {
 	return in_env(cur_env->units, pname, aa);
 }
@@ -105,9 +88,7 @@ Visible bool u_exists(pname, aa)
 
 /* def_std_howto(): add/replace the how-to mapping of a standard how-to */
 
-Visible Procedure def_std_howto(pname, h)
-     value pname;
-     value h;
+Visible Procedure def_std_howto(value pname, value h)
 {
 	e_replace(h, &(std_env->units), pname);
 }
@@ -116,7 +97,7 @@ Visible Procedure def_std_howto(pname, h)
 
 #define t_exists(name, aa)	(in_env(prmnv->tab, name, aa))
 
-Visible Procedure def_target(name, t) value name, t; {
+Visible Procedure def_target(value name, value t) {
 	e_replace(t, &prmnv->tab, name);
 }
 
@@ -130,7 +111,7 @@ Visible Procedure def_target(name, t) value name, t; {
 #define USR_ALL		'1'
 #define USR_PARSED	'2'
 
-Hidden Procedure freeunits(which) literal which; {
+Hidden Procedure freeunits(literal which) {
 	intlet k, len;
 	value vkey, vassoc;
 	
@@ -152,9 +133,7 @@ Hidden Procedure freeunits(which) literal which; {
 	}
 }
 
-Visible Procedure rem_unit(u, wse)
-     parsetree u;
-     wsenvptr wse;
+Visible Procedure rem_unit(parsetree u, wsenvptr wse)
 {
 	value pname;
 	wsenvptr old_env;
@@ -168,7 +147,7 @@ Visible Procedure rem_unit(u, wse)
 
 /********************************************************************** */
 
-Visible value permkey(name, type) value name; literal type; {
+Visible value permkey(value name, literal type) {
 	char t[2];
 	value v, w;
 	
@@ -192,7 +171,7 @@ Visible string lastunitname() {
 
 /* get_ufname() is only invoked in the using workspace environment */
 
-Hidden value get_ufname(pname, silently) value pname; bool silently; {
+Hidden value get_ufname(value pname, bool silently) {
 	value fname;
 	value *aa;
 	
@@ -221,8 +200,7 @@ Hidden value get_ufname(pname, silently) value pname; bool silently; {
  * must be loaded.
  */
 
-Hidden Procedure del_perm(pname)
-     value pname;
+Hidden Procedure del_perm(value pname)
 {
 	value *aa;
 	if (p_exists(pname, &aa)) {
@@ -234,10 +212,7 @@ Hidden Procedure del_perm(pname)
 
 /***********************************************************************/
 
-Visible bool is_loaded(fname, pname, aa)
-     char *fname;
-     value pname;
-     value **aa;
+Visible bool is_loaded(char *fname, value pname, value **aa)
 {
 	value u = Vnil;
 	value npname = Vnil;
@@ -276,8 +251,7 @@ Visible bool is_loaded(fname, pname, aa)
 #define CANT_READ \
 	MESS(4003, "unable to find file")
 
-Hidden Procedure u_name_type(v, name, type) parsetree v; value *name;
-		literal *type; {
+Hidden Procedure u_name_type(parsetree v, value *name, literal *type) {
 	intlet adic;
 	switch (Nodetype(v)) {
 		case HOW_TO:	*type= Cmd; break;
@@ -292,8 +266,7 @@ Hidden Procedure u_name_type(v, name, type) parsetree v; value *name;
 	*name= copy(*Branch(v, UNIT_NAME));
 }
 
-Visible value get_unit(pname, filed, editing) value *pname; bool filed, editing;
-{
+Visible value get_unit(value *pname, bool filed, bool editing) {
 	value name; literal type;
 	parsetree u= unit(No, editing);
 	if (u == NilTree)
@@ -309,7 +282,7 @@ Visible value get_unit(pname, filed, editing) value *pname; bool filed, editing;
 	}
 }
 
-Visible value get_pname(v) parsetree v; {
+Visible value get_pname(parsetree v) {
 	value pname, name; literal type;
 	u_name_type(v, &name, &type);
 	pname= permkey(name, type);
@@ -317,7 +290,7 @@ Visible value get_pname(v) parsetree v; {
 	return pname;
 }
 
-Hidden Procedure get_heading(h, pname) parsetree *h; value *pname; {
+Hidden Procedure get_heading(parsetree *h, value *pname) {
 	*h= unit(Yes, No);
 	*pname= still_ok ? get_pname(*h) : Vnil;
 }
@@ -334,10 +307,7 @@ Hidden Procedure get_heading(h, pname) parsetree *h; value *pname; {
    - zeroadic and dyadic unit with the same name.
 */
 
-Hidden bool isfunction(name, type, wse)
-     value name;
-     literal *type;
-     wsenvptr *wse;
+Hidden bool isfunction(value name, literal *type, wsenvptr *wse)
 {
 	if      (is_unit(name, Zfd, PPnil, wse)) *type = Zfd;
 	else if (is_unit(name, Mfd, PPnil, wse)) *type = Mfd;
@@ -346,10 +316,7 @@ Hidden bool isfunction(name, type, wse)
 	return Yes;
 }
 
-Hidden bool ispredicate(name, type, wse)
-     value name;
-     literal *type;
-     wsenvptr *wse;
+Hidden bool ispredicate(value name, literal *type, wsenvptr *wse)
 {
 	if      (is_unit(name, Zpd, PPnil, wse)) *type = Zpd;
 	else if (is_unit(name, Mpd, PPnil, wse)) *type = Mpd;
@@ -358,10 +325,7 @@ Hidden bool ispredicate(name, type, wse)
 	return Yes;
 }
 
-Hidden bool islocation(name, type, wse)
-     value name;
-     literal *type;
-     wsenvptr *wse;
+Hidden bool islocation(value name, literal *type, wsenvptr *wse)
 {
 	value pname = permkey(name, Tar);
 	value *aa;
@@ -389,8 +353,7 @@ Hidden bool islocation(name, type, wse)
  * Is there a name conflict while creating a how-to ?
  */
 
-Hidden bool name_conflict_while_creating(pname)
-     value pname;
+Hidden bool name_conflict_while_creating(value pname)
 {
 	value name;
 	literal type;
@@ -436,8 +399,7 @@ Hidden bool name_conflict_while_creating(pname)
  * Is there a name clash after editing a how-to ?
  */
 
-Hidden bool name_clash_after_editing(pname)
-     value pname;
+Hidden bool name_clash_after_editing(value pname)
 {
 	value name;
 	literal type;
@@ -479,9 +441,7 @@ Hidden bool name_clash_after_editing(pname)
 /* do_discard() is only invoked in the using workspace environment */
 /* see comment at invoker above */
 
-Hidden bool do_discard(name, type)
-     value name;
-     literal type;
+Hidden bool do_discard(value name, literal type)
 {
 	if (is_intended(type == Tar ? ED_TAR : ED_EXIST)) {
 		if (type == Tar)
@@ -497,11 +457,7 @@ Hidden bool do_discard(name, type)
 	return No;
 }
 
-Hidden bool smash(name, type, ntype, wse)
-     value name;
-     literal type;
-     literal *ntype;
-     wsenvptr *wse;
+Hidden bool smash(value name, literal type, literal *ntype, wsenvptr *wse)
 {
 	if (is_unit(name, type, PPnil, wse) && IsUsingEnv(*wse)) {
 		*ntype = type;
@@ -651,8 +607,7 @@ Visible Procedure edit_unit() {
 
 #define NO_HOWTO MESS(4016, "%s isn't a how-to in this workspace")
 
-Hidden value which_funprd(name)
-     value name;
+Hidden value which_funprd(value name)
 {
 	/* There may be two units with the same name (functions
 	   or predicates of different adicity).  Check if this
@@ -720,9 +675,7 @@ Hidden value old_typecode= Vnil;
 		(Valid(old) && Valid(new) && compare(old, new) == 0))
 #endif
 
-Hidden Procedure ed_unit(pname, fname, creating) value *pname, *fname;
-		bool creating;
-{
+Hidden Procedure ed_unit(value *pname, value *fname, bool creating) {
 #ifdef CK_WS_WRITABLE
 	if (!ckws_writable(NO_U_WRITE))
 	  /* workspace is read-only and user don't want to display */
@@ -750,8 +703,7 @@ Hidden Procedure ed_unit(pname, fname, creating) value *pname, *fname;
 #endif
 }
 
-Hidden Procedure edunit(p_pname, p_fname, creating) value *p_pname, *p_fname;
-		bool creating; {
+Hidden Procedure edunit(value *p_pname, value *p_fname, bool creating) {
 	value pname= *p_pname, fname= *p_fname;
 	value npname= Vnil, u;
 	bool new_def, changed, samehead;
@@ -833,7 +785,7 @@ Hidden Procedure edunit(p_pname, p_fname, creating) value *p_pname, *p_fname;
 	release(npname); release(u);
 }
 
-Hidden Procedure free_original(pname) value pname; {
+Hidden Procedure free_original(value pname) {
 	if (First_edit) {
 		free_unit(pname); 
 		free_perm(pname);
@@ -843,7 +795,7 @@ Hidden Procedure free_original(pname) value pname; {
 
 #define cmd_unit(pname)	(Permtype(pname) == Cmd)
 
-Hidden bool same_heading(pname, npname, u_new) value pname, npname, u_new; {
+Hidden bool same_heading(value pname, value npname, value u_new) {
 	value *aa;
 	
 	if (!Valid(u_new) || !Valid(npname))
@@ -892,7 +844,7 @@ Hidden bool same_heading(pname, npname, u_new) value pname, npname, u_new; {
 
 /* rnm_file() is only invoked in the using workspace environment */
 
-Hidden bool rnm_file(fname, pname) value fname, pname; {
+Hidden bool rnm_file(value fname, value pname) {
 	value nfname;
 	
 	nfname= (Valid(pname) ? get_ufname(pname, Yes) : Vnil);
@@ -919,7 +871,7 @@ Hidden bool rnm_file(fname, pname) value fname, pname; {
    an initial \n, if there was one; this version just rewinds the file.)
    */
 
-Hidden bool still_there(fname) value fname; {
+Hidden bool still_there(value fname) {
 	int k;
 
 	ifile= fopen(strval(fname), "r");
@@ -945,7 +897,7 @@ Hidden bool still_there(fname) value fname; {
    one workspace to another.
 */
 
-Hidden bool ens_filed(pname, fname, unpacking) value pname, *fname; bool unpacking; {
+Hidden bool ens_filed(value pname, value *fname, bool unpacking) {
 	value *aa;
 	if (p_exists(pname, &aa) && !unpacking) {
 		*fname= copy(*aa);
@@ -981,7 +933,7 @@ Hidden bool ens_filed(pname, fname, unpacking) value pname, *fname; bool unpacki
 	}
 }
 
-Hidden int err_line(pname) value pname; {
+Hidden int err_line(value pname) {
 	value *aa;
 	if (!p_exists(last_unit, &aa) || compare(*aa, pname) != 0)
 		return 0;
@@ -1005,7 +957,7 @@ Hidden int err_line(pname) value pname; {
 
 Visible value errtname= Vnil;
 
-Hidden Procedure tarfiled(name, v) value name, v; {
+Hidden Procedure tarfiled(value name, value v) {
 	value p= mk_indirect(v);
 	def_target(name, p);
 	release(p);
@@ -1013,8 +965,7 @@ Hidden Procedure tarfiled(name, v) value name, v; {
 
 Visible value last_target= Vnil; /* last edited target */
 
-Visible Procedure del_target(name)
-     value name;
+Visible Procedure del_target(value name)
 {
 	value pname = permkey(name, Tar);
 	value *aa;
@@ -1033,7 +984,7 @@ Visible Procedure del_target(name)
 
 /* get_tfname() is only invoked in the using workspace environment */
 
-Hidden value get_tfname(name) value name; {
+Hidden value get_tfname(value name) {
 	value fname;
 	value pname= permkey(name, Tar);
 	value *aa;
@@ -1079,7 +1030,7 @@ Visible Procedure edit_target() {
    The contents may be completely deleted in which case the target is
    deleted. */
 
-Hidden Procedure ed_target(name, fname) value name, fname; {
+Hidden Procedure ed_target(value name, value fname) {
 	value v;
 
 #ifdef CK_WS_WRITABLE
@@ -1110,7 +1061,7 @@ Hidden Procedure ed_target(name, fname) value name, fname; {
 
 #define NO_TARGET MESS(4022, "%s isn't a location in this workspace")
 
-Hidden bool ens_tfiled(name, fname) value name, *fname; {
+Hidden bool ens_tfiled(value name, value *fname) {
 	value *aa;
 	if (!t_exists(name, &aa)) {
 		pprerrV(NO_TARGET, name);
@@ -1129,7 +1080,7 @@ Hidden bool ens_tfiled(name, fname) value name, *fname; {
 
 /***************************** Values on files ****************************/
 
-Visible value getval(fname, ct) value fname; literal ct; {
+Visible value getval(value fname, literal ct) {
 	char *buf; int k; parsetree w, code= NilTree; value v= Vnil;
 	ifile= fopen(strval(fname), "r");
 	if (ifile) {
@@ -1162,7 +1113,7 @@ Visible value getval(fname, ct) value fname; literal ct; {
 	return v;
 }
 
-Hidden bool env_ok(v) value v; {
+Hidden bool env_ok(value v) {
 	if (cntxt == In_prmnv || cntxt == In_wsgroup) {
 		if (!Is_table(v)) {
 			interr(MESS(4023, "value is not a table"));
@@ -1176,9 +1127,7 @@ Hidden bool env_ok(v) value v; {
 	return Yes;
 }
 
-Visible value gettarval(fname, name)
-     value fname;
-     value name;
+Visible value gettarval(value fname, value name)
 {
 	release(errtname); errtname = copy(name);
 	return getval(fname, In_tarval);
@@ -1210,12 +1159,7 @@ Visible Procedure initperm() {
 	cur_env->permchanges= No;
 }
 
-Visible Procedure putval(v, dir, name, ct, silently)
-     value v;
-     char *dir;
-     char *name;
-     literal ct;
-     bool silently;
+Visible Procedure putval(value v, char *dir, char *name, literal ct, bool silently)
 {
 	char *temp, *file;
 	value tname, fname;
@@ -1253,12 +1197,7 @@ Visible Procedure putval(v, dir, name, ct, silently)
 	free_path(file);
 }
 
-Visible Procedure puttarval(v, dir, fname, tname, silently)
-     value v;
-     char *dir;
-     value fname;
-     value tname;
-     bool silently;
+Visible Procedure puttarval(value v, char *dir, value fname, value tname, bool silently)
 {
 	release(errtname); errtname = copy(tname);
 	putval(v, dir, strval(fname), In_tarval, silently);
@@ -1343,7 +1282,7 @@ Visible Procedure endsou() {
  
 #define MORE MESS(4025, "Press [SPACE] for more, [RETURN] to exit list")
 
-Hidden bool isunitentry(pname) value pname; {
+Hidden bool isunitentry(value pname) {
 	if (!Is_text(pname) ||
 	    Permtype(pname) == Tar ||
 	    (Valid(last_unit) && compare(pname, last_unit) == 0) ||
@@ -1394,7 +1333,7 @@ Visible Procedure lst_uhds() {
 
 }
 
-Hidden Procedure lst_fileheading(v) value v; {
+Hidden Procedure lst_fileheading(value v) {
 	FILE *fn;
 	char *line;
 	char *pcolon, *pc;

@@ -10,8 +10,7 @@
 
 Visible bool intrptd= No; /* currently not used */
 
-Hidden SIGTYPE intsig(sig)
-     int sig;
+Hidden SIGTYPE intsig(int sig)
 {
 	signal(SIGINT, intsig);
 	intrptd= Yes;

@@ -10,9 +10,7 @@
 #include "i4bio.h"
 #include "port.h"
 
-Visible Procedure abcio(type, tabname)
-     int type;
-     char *tabname;
+Visible Procedure abcio(int type, char *tabname)
 {
 	sv_ifile= ifile= stdin;
 	
@@ -40,10 +38,10 @@ Visible Procedure abcio(type, tabname)
 	}
 }
 
-Visible Procedure bioerr(m) int m; {
+Visible Procedure bioerr(int m) {
 	putmess(m);
 }
 
-Visible Procedure bioerrV(m, v) int m; value v; {
+Visible Procedure bioerrV(int m, value v) {
 	putSmess(m, strval(v));
 }

@@ -22,8 +22,7 @@ Forward Hidden Procedure sendsave();
  * they are written by recursive calls.
  */
 
-Hidden Procedure savewalk(n, level, bp, fp) node n; int level;
-		bufadm *bp; FILE *fp; {
+Hidden Procedure savewalk(node n, int level, bufadm *bp, FILE *fp) {
 	string *rp;
 	string cp;
 	int nch;
@@ -84,7 +83,7 @@ Hidden Procedure savewalk(n, level, bp, fp) node n; int level;
 	}
 }
 
-Visible bool save(p, filename) path p; string filename; {
+Visible bool save(path p, string filename) {
 	bufadm b, *bp;
 	FILE *fp = fopen(filename, "w");
 	
@@ -99,7 +98,7 @@ Visible bool save(p, filename) path p; string filename; {
 }
 
 
-Hidden Procedure sendsave(p, bp, fp) path p; bufadm *bp; FILE *fp; {
+Hidden Procedure sendsave(path p, bufadm *bp, FILE *fp) {
 	p = pathcopy(p);
 	top(&p);
 	spaces = 0;
@@ -112,7 +111,7 @@ Hidden Procedure sendsave(p, bp, fp) path p; bufadm *bp; FILE *fp; {
  * Interface to top level.
  */
 
-Visible char *senddoc(p) path p; {
+Visible char * senddoc(path p) {
 	char *res;
 	bufadm b, *bp;
 	

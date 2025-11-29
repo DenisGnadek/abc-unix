@@ -13,10 +13,7 @@
 char *c2pstr();
 char *strcpy();
 
-int
-stat(path, buf)
-	char *path;
-	struct stat *buf;
+int stat(char *path, struct stat *buf)
 {
 	union {
 		DirInfo d;

@@ -76,26 +76,26 @@ Forward Hidden Procedure convbtext();
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Visible char charval(v) value v; {
+Visible char charval(value v) {
 	if (!Character(v))
 		syserr(MESS(215, "charval on non-char"));
 	return Bchar(Root(v), 0);
 }
 
-Visible char ncharval(n, v) int n; value v; {
+Visible char ncharval(int n, value v) {
 	value c= thof(n, v);
 	char ch= charval(c);
 	release(c);
 	return ch;
 }
 
-Visible bool character(v) value v; {
+Visible bool character(value v) {
 	return Character(v);
 }
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Hidden btreeptr mkbtext(s, len) string s; int len; {
+Hidden btreeptr mkbtext(string s, int len) {
 	btreeptr p; int chunk, i, n, nbig;
 
 	/*
@@ -137,7 +137,7 @@ Hidden btreeptr mkbtext(s, len) string s; int len; {
 	return p;
 }
 
-Visible value mk_text(s) string s; {
+Visible value mk_text(string s) {
 	value v; int len = strlen(s);
 
 	v = grab(Tex, Ct);
@@ -150,7 +150,7 @@ Visible value mk_text(s) string s; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Hidden string bstrval(buf, p) string buf; btreeptr p; {
+Hidden string bstrval(string buf, btreeptr p) {
 	/* Returns *next* available position in buffer */
 	int i, n = Lim(p);
 	if (IsInner(p)) {
@@ -165,7 +165,7 @@ Hidden string bstrval(buf, p) string buf; btreeptr p; {
 }
 
 Hidden char *buffer= NULL;
-Visible string strval(v) value v; {
+Visible string strval(value v) {
 	int len = Tltsize(v);
 	if (len == Bigsize) syserr(MESS(216, "strval on big text"));
 	if (len == 0) return "";
@@ -184,11 +184,11 @@ Visible Procedure endstrval() { 	/* hack to free static store */
 #endif
 }
 
-Visible string sstrval(v) value v; {
+Visible string sstrval(value v) {
 	return (string) savestr(strval(v));
 }
 
-Visible Procedure fstrval(s) string s; {
+Visible Procedure fstrval(string s) {
 	freestr(s);
 }
 
@@ -210,7 +210,7 @@ typedef stackelem *stackptr;
 extern stackptr unzip();
 extern int movnptrs();
 
-Hidden btreeptr zip(s1, sp1, s2, sp2) stackptr s1, sp1, s2, sp2; {
+Hidden btreeptr zip(stackptr s1, stackptr sp1, stackptr s2, stackptr sp2) {
 	btreeptr p1, p2, newptr[2]; int l1, l2, i, n, n2;
 #define q1 newptr[0]
 #define q2 newptr[1]
@@ -302,7 +302,7 @@ Hidden btreeptr zip(s1, sp1, s2, sp2) stackptr s1, sp1, s2, sp2; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Hidden value ibehead(v, h) value v; int h; { /* v@h */
+Hidden value ibehead(value v, int h) { /* v@h */
 	stack s; stackptr sp;
 	sp = (stackptr) unzip(Root(v), h-1, s);
 	v = grab(Tex, Ct);
@@ -310,7 +310,7 @@ Hidden value ibehead(v, h) value v; int h; { /* v@h */
 	return v;
 }
 
-Hidden value icurtail(v, t) value v; int t; { /* v|t */
+Hidden value icurtail(value v, int t) { /* v|t */
 	stack s; stackptr sp;
 	sp = (stackptr) unzip(Root(v), t, s);
 	v = grab(Tex, Ct);
@@ -318,7 +318,7 @@ Hidden value icurtail(v, t) value v; int t; { /* v|t */
 	return v;
 }
 
-Hidden value iconcat(v, w) value v, w; { /* v^w */
+Hidden value iconcat(value v, value w) { /* v^w */
 	stack s1, s2;
 	stackptr sp1 = (stackptr) unzip(Root(v), Tltsize(v), s1);
 	stackptr sp2 = (stackptr) unzip(Root(w), 0, s2);
@@ -329,7 +329,7 @@ Hidden value iconcat(v, w) value v, w; { /* v^w */
 
 #define Odd(n) (((n)&1) != 0)
 
-Hidden value irepeat(v, n) value v; int n; { /* v^^n */
+Hidden value irepeat(value v, int n) { /* v^^n */
 	value x, w = grab(Tex, Ct);
 	Root(w) = Bnil;
 	v = copy(v);
@@ -349,7 +349,7 @@ Hidden value irepeat(v, n) value v; int n; { /* v^^n */
 }
 
 #ifdef UNUSED_CODE
-Hidden value jrepeat(v, n) value v; int n; { /* v^^n, recursive solution */
+Hidden value jrepeat(value v, int n) { /* v^^n, recursive solution */
 	value w, x;
 	if (n <= 1) {
 		if (n == 1)
@@ -371,7 +371,7 @@ Hidden value jrepeat(v, n) value v; int n; { /* v^^n, recursive solution */
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Visible value curtail(t, after) value t, after; {
+Visible value curtail(value t, value after) {
 	int syzcurv, syztext;
 
 	if (!Is_text(t)) {
@@ -414,7 +414,7 @@ Visible value behead(t, before) value t, before; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Visible value concat(tleft, tright) value tleft, tright; {
+Visible value concat(value tleft, value tright) {
 	int syzleft, syzright;
 	if (!Is_text(tleft) || !Is_text(tright)) {
 		reqerr(CONCAT_TEX);
@@ -432,7 +432,7 @@ Visible value concat(tleft, tright) value tleft, tright; {
 	return iconcat(tleft, tright);
 }
 
-Visible Procedure concato(v, t) value* v; value t; {
+Visible Procedure concato(value *v, value t) {
 	value v1= *v;
 	*v= concat(*v, t);
 	release(v1);
@@ -440,7 +440,7 @@ Visible Procedure concato(v, t) value* v; value t; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Visible value repeat(t, n) value t, n; {
+Visible value repeat(value t, value n) {
 	int tsize, k;
 
 	if (!Is_text(t)) {
@@ -467,10 +467,7 @@ Visible value repeat(t, n) value t, n; {
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-Visible Procedure convtext(outproc, v, quote)
-     Procedure (*outproc)();
-     value v;
-     char quote;
+Visible Procedure convtext(Procedure ( *outproc)(), value v, char quote)
 {
 	if (!Valid(v) || !Is_text(v)) {
 		(*outproc)('?');
@@ -481,10 +478,7 @@ Visible Procedure convtext(outproc, v, quote)
 	if (quote) (*outproc)(quote);
 }
 
-Hidden Procedure convbtext(outproc, p, quote)
-     Procedure (*outproc)();
-     btreeptr p;
-     char quote;
+Hidden Procedure convbtext(Procedure ( *outproc)(), btreeptr p, char quote)
 {
 	int i, n = Lim(p); char c;
 

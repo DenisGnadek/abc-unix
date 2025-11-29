@@ -51,9 +51,7 @@ Forward value copyout();
  * if it is only a hole.
  */
 
-Visible bool
-deltext(ep)
-	register environ *ep;
+Visible bool deltext(register environ *ep)
 {
 	higher(ep);
 	shrink(ep);
@@ -71,9 +69,7 @@ deltext(ep)
  * Delete the focus under the assumption that it contains some text.
  */
 
-Visible bool
-delbody(ep)
-	register environ *ep;
+Visible bool delbody(register environ *ep)
 {
 	ep->changed = Yes;
 
@@ -105,9 +101,7 @@ delbody(ep)
  * Delete portion (ep->mode == SUBRANGE) of varying text ((ep->s1&1) == 0).
  */
 
-Hidden bool
-delvarying(ep)
-	register environ *ep;
+Hidden bool delvarying(register environ *ep)
 {
 	auto queue q = Qnil;
 	register node n = tree(ep->focus);
@@ -149,9 +143,7 @@ delvarying(ep)
  * Delete portion (ep->mode == SUBRANGE) of fixed text ((ep->s1&1) == 1).
  */
 
-Hidden bool
-delfixed(ep)
-	register environ *ep;
+Hidden bool delfixed(register environ *ep)
 {
 	register node n = tree(ep->focus);
 	char buf[15]; /* Long enough for all fixed texts */
@@ -200,9 +192,7 @@ delfixed(ep)
  * (the latter being sent to qq)
  */
 
-Hidden bool hole_ify_keywords(ep, qq)
-	register environ *ep;
-	queue *qq;
+Hidden bool hole_ify_keywords(register environ *ep, queue *qq)
 {
 	treereplace(&ep->focus, gram(Kw_plus));
 	ep->mode= VHOLE;
@@ -221,10 +211,7 @@ Hidden bool hole_ify_keywords(ep, qq)
  * Delete focus if ep->mode == SUBSET.
  */
 
-Hidden bool
-delsubset(ep, hack)
-	register environ *ep;
-	bool hack;
+Hidden bool delsubset(register environ *ep, bool hack)
 {
 	auto queue q = Qnil;
 	auto queue q2 = Qnil;
@@ -309,8 +296,7 @@ delsubset(ep, hack)
  * Delete the focus if ep->mode == SUBLIST.
  */
 
-delsublist(ep)
-	register environ *ep;
+int delsublist(register environ *ep)
 {
 	register node n;
 	register int i;
@@ -368,9 +354,7 @@ delsublist(ep)
  * Delete the focus if ep->mode == WHOLE.
  */
 
-Hidden bool
-delwhole(ep)
-	register environ *ep;
+Hidden bool delwhole(register environ *ep)
 {
 	register int sym = symbol(tree(ep->focus));
 
@@ -387,9 +371,7 @@ delwhole(ep)
  * Assume shrink() has been called before!
  */
 
-Hidden bool
-delhole(ep)
-	register environ *ep;
+Hidden bool delhole(register environ *ep)
 {
 	node n;
 	int sym;
@@ -478,9 +460,7 @@ delhole(ep)
  * Subroutine to delete the focus.
  */
 
-Visible Procedure
-delfocus(pp)
-	register path *pp;
+Visible Procedure delfocus(register path *pp)
 {
 	register path pa = parent(*pp);
 	register int sympa = pa ? symbol(tree(pa)) : Rootsymbol;
@@ -495,9 +475,7 @@ delfocus(pp)
  * empty (just a hole).
  */
 
-Visible bool
-copyinout(ep)
-	register environ *ep;
+Visible bool copyinout(register environ *ep)
 {
 	shrink(ep);
 	if (!ishole(ep)) {
@@ -520,9 +498,7 @@ copyinout(ep)
  * Copy the focus to the copy buffer.
  */
 
-Visible value
-copyout(ep)
-	register environ *ep;
+Visible value copyout(register environ *ep)
 {
 	auto queue q = Qnil;
 	auto path p;
@@ -585,9 +561,7 @@ copyout(ep)
  * Subroutine to ensure the copy buffer doesn't start with a newline.
  */
 
-Hidden Procedure
-nonewline(pq)
-	register queue *pq;
+Hidden Procedure nonewline(register queue *pq)
 {
 	register node n;
 	register int c;
@@ -622,9 +596,7 @@ nonewline(pq)
  * matching \b is immediately following.
  */
 
-Hidden Procedure
-balance(ep)
-	environ *ep;
+Hidden Procedure balance(environ *ep)
 {
 	string *rp = noderepr(tree(ep->focus));
 	int i;
@@ -648,10 +620,7 @@ balance(ep)
  * Copy the copy buffer to the focus.
  */
 
-Hidden bool
-copyin(ep, q)
-	register environ *ep;
-	/*auto*/ queue q;
+Hidden bool copyin(register environ *ep, /*auto*/ queue q)
 {
 	auto queue q2 = Qnil;
 	bool res;
@@ -684,9 +653,7 @@ copyin(ep, q)
  * Assumes shrink(ep) has already been performed.
  */
 
-Visible bool
-ishole(ep)
-	register environ *ep;
+Visible bool ishole(register environ *ep)
 {
 	register int sym;
 
@@ -764,9 +731,7 @@ colonhack(ep, all)
  * (i.e. containing only spaces, colons and the allowed control characters).
  */
 
-Hidden bool
-allright(repr)
-	string repr;
+Hidden bool allright(string repr)
 {
 	if (repr) {
 		for (; *repr; ++repr) {

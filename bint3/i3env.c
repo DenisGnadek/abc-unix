@@ -26,7 +26,7 @@ Visible intlet i_lino;
 
 Visible context read_context;
 
-Visible Procedure sv_context(sc) context *sc; {
+Visible Procedure sv_context(context *sc) {
 	sc->curnv= curnv;
 	sc->bndtgs= bndtgs;
 	sc->cntxt= cntxt;
@@ -36,7 +36,7 @@ Visible Procedure sv_context(sc) context *sc; {
 	sc->cur_lino= curlino;
 }
 
-Visible Procedure set_context(sc) context *sc; {
+Visible Procedure set_context(context *sc) {
 	curnv= sc->curnv;
 	bndtgs= sc->bndtgs;
 	cntxt= sc->cntxt;
@@ -46,8 +46,7 @@ Visible Procedure set_context(sc) context *sc; {
 	curlino= sc->cur_lino;
 }
 
-Visible Procedure sethowtoname(v)
-     value v;
+Visible Procedure sethowtoname(value v)
 {
 	release(howtoname);
 	howtoname = v;
@@ -94,7 +93,7 @@ Visible Procedure setprmnv() {
 	curnv= prmnv;
 }
 
-Visible Procedure e_replace(v, t, k) value v, *t, k; {
+Visible Procedure e_replace(value v, value *t, value k) {
 	if (Is_compound(*t)) {
 		int n= SmallIntVal(k);
 		uniql(t);
@@ -105,7 +104,7 @@ Visible Procedure e_replace(v, t, k) value v, *t, k; {
 	else replace(v, t, k);
 }
 
-Visible Procedure e_delete(t, k) value *t, k; {
+Visible Procedure e_delete(value *t, value k) {
 	if (Is_compound(*t) && IsSmallInt(k)) {
 		int n= SmallIntVal(k);
 		if (*Field(*t, n) != Vnil) {
@@ -117,7 +116,7 @@ Visible Procedure e_delete(t, k) value *t, k; {
 	else if (in_keys(k, *t)) delete(t, k);
 }
 
-Visible value* envassoc(t, ke) value t, ke; {
+Visible value* envassoc(value t, value ke) {
 	if (Is_compound(t) && IsSmallInt(ke)) {
 		int n= SmallIntVal(ke);
 		if (*Field(t, n) == Vnil) return Pnil;
@@ -127,7 +126,7 @@ Visible value* envassoc(t, ke) value t, ke; {
 	return adrassoc(t, ke);
 }
 
-Visible bool in_env(tab, ke, aa) value tab, ke, **aa; {
+Visible bool in_env(value tab, value ke, value **aa) {
 	/* IF ke in keys tab:
 		PUT tab[ke] IN aa
 		SUCCEED
@@ -137,7 +136,7 @@ Visible bool in_env(tab, ke, aa) value tab, ke, **aa; {
 	return (*aa != Pnil);
 }
 
-Visible Procedure extbnd_tags(btl, et) value btl; envtab et; {
+Visible Procedure extbnd_tags(value btl, envtab et) {
 	/* Copy bound targets to the invoking environment */
 	/* FOR tag IN btl: \ btl is the bound tag list
 	       IF tag in keys et: \ et is the environment we're just leaving

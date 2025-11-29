@@ -12,14 +12,14 @@
 /* All the routines in this file are temporary */
 /* Thus length() has been put here too */
 
-Visible int length(v) value v; {
+Visible int length(value v) {
 	value s= size(v);
 	int len= intval(s);
 	release(s);
 	return len;
 }
 
-Visible btype loctype(l) loc l; {
+Visible btype loctype(loc l) {
 	value *ll;
 	if (Is_simploc(l)) {
 		simploc *sl= Simploc(l);
@@ -45,7 +45,7 @@ Visible btype loctype(l) loc l; {
 	}
 }
 
-Visible btype valtype(v) value v; {
+Visible btype valtype(value v) {
 	if (Is_number(v)) return mk_integer(0);
 	else if (Is_text(v)) return mk_text("");
 	else if (Is_compound(v)) {
@@ -76,7 +76,7 @@ Visible btype valtype(v) value v; {
 	}
 }
 
-Visible Procedure must_agree(t, u, m) btype t, u; int m; {
+Visible Procedure must_agree(btype t, btype u, int m) {
 	intlet k, len;
 	value vt, vu;
 	if (t == Tnil || u == Tnil || t == u) return;
